@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/app/member_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/app/member_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/app/member_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/module/domain/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/module/domain/build" />
+      <excludeFolder url="file://$MODULE_DIR$/module/domain/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data_remote/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data_remote/build" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data_remote/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data/build" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/app/staff_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/app/staff_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/app/staff_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/common_widget/build" />
+      <excludeFolder url="file://$MODULE_DIR$/common_widget/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/common_widget/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data_local/build" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data_local/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/module/data_local/.dart_tool" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
+  </component>
+</module>
