@@ -1,4 +1,4 @@
-import '../../env_manager.dart';
+import 'package:config/config.dart';
 
 Uri buildUrl(String unencodedPath, [Map<String, String>? queryParameters]) =>
     Uri.http(

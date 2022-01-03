@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:domain/model/exception.dart';
+import 'package:domain/model/location.dart';
+import 'package:domain/model/user.dart';
+import 'package:domain/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,12 +15,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
+import 'package:utils/utils.dart';
 
-import '../../domain/model/exception.dart';
-import '../../domain/model/location.dart';
-import '../../domain/model/user.dart';
-import '../../domain/repository/user_repository.dart';
-import '../../utils/utils.dart';
 import '../local/search_keyword_source.dart';
 import '../local/user_local.dart';
 import '../local/user_local_source.dart';
@@ -192,7 +192,7 @@ class UserRepositoryImpl implements UserRepository {
     await _googleSignIn.signOut();
 
     // facebook
-    await _facebookAuth.logOut();
+    //await _facebookAuth.logOut();
 
     // firebase
     await _auth.signOut();

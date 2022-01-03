@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
+import 'package:utils/utils.dart';
 
-import '../../utils/utils.dart';
 import 'response/error_response.dart';
 
 AppHttpClientLogger? get _logger => AppClientLoggerDefaults.logger;

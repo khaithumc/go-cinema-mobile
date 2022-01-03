@@ -19,16 +19,36 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
+  flutter: '>=2.0.0'
 
 dependencies:
+  rx_shared_preferences: ^2.1.0
+  http: ^0.13.3
+  socket_io_client: ^2.0.0-beta.4-nullsafety.0
+  google_sign_in: ^5.0.3
+  firebase_storage: ^8.0.6
+  firebase_auth: ^1.1.4
+
+  domain:
+    path: ../domain
+  config:
+    path: ../../config
+  utils:
+    path: ../../utils
+
   flutter:
     sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.3
+  flutter_facebook_auth: ^3.5.7
+  firebase_messaging: ^11.2.4
 
 dev_dependencies:
+  build_runner: ^1.12.2
+  built_value_generator: ^8.0.6
+
   flutter_test:
     sdk: flutter
 
@@ -57,7 +77,7 @@ flutter:
   # section here, in this "flutter" section. Each entry in this list should
   # have a "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  # example:
+  # khaithu:
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -82,5 +102,5 @@ flutter:
   # identifiers, which may be completely independent or the same as these.
   module:
     androidX: true
-    androidPackage: com.example.data
-    iosBundleIdentifier: com.example.data
+    androidPackage: com.khaithu.data
+    iosBundleIdentifier: com.khaithu.data
