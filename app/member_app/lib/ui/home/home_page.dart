@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> with DisposeBagMixin {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Enjoy movies'),
+        title: Text('Go Cinema'),
         actions: [
           const ChangeLanguageButton(iconColor: null),
           IconButton(
@@ -252,12 +252,12 @@ class _HomePageState extends State<HomePage> with DisposeBagMixin {
               type: MovieType.comingSoon,
             ),
             //
-            const RecommendedHeader(),
-            HomeHorizontalMoviesList(
-              key: ValueKey(MovieType.recommended),
-              bloc: recommendedBloc,
-              type: MovieType.recommended,
-            ),
+            // const RecommendedHeader(),
+            // HomeHorizontalMoviesList(
+            //   key: ValueKey(MovieType.recommended),
+            //   bloc: recommendedBloc,
+            //   type: MovieType.recommended,
+            // ),
             //
             const MostFavoriteHeader(),
             HomeHorizontalMoviesList(

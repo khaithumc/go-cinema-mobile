@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage>
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.6),
-                    BlendMode.darken,
+                    BlendMode.color,
                   ),
                 ),
               ),
@@ -153,7 +153,7 @@ class _LoginPageState extends State<LoginPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Image.asset('assets/images/enjoy.png'),
+                    Image.asset('assets/images/logo.png'),
                     const SizedBox(height: 24),
                     Text(
                       S.of(context).loginToYourAccount,
