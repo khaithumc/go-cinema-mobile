@@ -5,11 +5,11 @@ import 'category.dart';
 import 'person.dart';
 
 class Movie {
-  final String id;
+  final String? id;
 
-  final bool isActive;
+  final bool? isActive;
 
-  final String title;
+  final String? title;
 
   final String trailerVideoUrl;
 
@@ -23,9 +23,9 @@ class Movie {
 
   final String originalLanguage;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   final AgeType ageType;
 
@@ -35,11 +35,11 @@ class Movie {
 
   final List<Category>? categories;
 
-  final double rateStar;
+  final double? rateStar;
 
-  final int totalFavorite;
+  final int? totalFavorite;
 
-  final int totalRate;
+  final int? totalRate;
 
   Movie({
     required this.id,

@@ -20,10 +20,10 @@ class GoogleSignInBloc extends DisposeCallbackBaseBloc {
   final Stream<LoginMessage> message$;
 
   GoogleSignInBloc._({
-    @required this.isLoading$,
-    @required this.message$,
-    @required this.submitLogin,
-    @required void Function() dispose,
+    required this.isLoading$,
+    required this.message$,
+    required this.submitLogin,
+    required void Function() dispose,
   }) : super(dispose);
 
   factory GoogleSignInBloc(UserRepository userRepository) {
@@ -60,9 +60,9 @@ class GoogleSignInBloc extends DisposeCallbackBaseBloc {
   }
 
   static Stream<LoginMessage> performLogin(
-    UserRepository userRepository,
-    Sink<bool> isLoadingController,
-  ) async* {
+      UserRepository userRepository,
+      Sink<bool> isLoadingController,
+      ) async* {
     isLoadingController.add(true);
     try {
       await userRepository.googleSignIn();

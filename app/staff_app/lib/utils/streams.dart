@@ -6,7 +6,7 @@ extension DebugMapStreamsExtension on Map<String, Stream<dynamic>> {
   List<StreamSubscription<dynamic>> debug() {
     return entries
         .map((entry) =>
-            entry.value.cast<dynamic>().debug(identifier: entry.key).collect())
+        entry.value.cast<dynamic>().debug(identifier: entry.key).collect())
         .toList(growable: false);
   }
 }

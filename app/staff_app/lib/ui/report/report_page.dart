@@ -21,17 +21,17 @@ class ReportPage extends StatefulWidget {
 
   final Theatre theatre;
 
-  const ReportPage({Key key, @required this.theatre}) : super(key: key);
+  const ReportPage({Key? key, required this.theatre}) : super(key: key);
 
   @override
   _ReportPageState createState() => _ReportPageState();
 }
 
 class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
-  final dayS = BehaviorSubject.seeded(DateTime.now(), sync: true);
+  final dayS = BehaviorSubject<DateTime?>.seeded(DateTime.now(), sync: true);
   final formatter = DateFormat('MM/yyyy');
 
-  LoaderBloc<BuiltMap<String, int>> bloc;
+  late LoaderBloc<BuiltMap<String, int>> bloc;
 
   @override
   void initState() {
@@ -41,14 +41,14 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc ??= () {
+    bloc = () {
       final repo = Provider.of<ShowTimesRepository>(context);
 
       final s = LoaderBloc(
         loaderFunction: () => Rx.fromCallable(
-          () => repo.report(
+              () => repo.report(
             widget.theatre.id,
-            formatter.format(dayS.value),
+            formatter.format(dayS.value!),
           ),
         ),
         logger: print,
@@ -133,13 +133,13 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
                 builder: (context, snapshot) {
                   final state = snapshot.data;
 
-                  if (state.isLoading) {
+                  if (state!.isLoading) {
                     return Center(
                       child: SizedBox(
                         width: 56,
                         height: 56,
                         child: LoadingIndicator(
-                          color: Theme.of(context).accentColor,
+                          colors: [Theme.of(context).accentColor],
                           indicatorType: Indicator.ballClipRotatePulse,
                         ),
                       ),
@@ -155,7 +155,7 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
                     );
                   }
 
-                  return buildCharts(state.content, context);
+                  return buildCharts(state.content!, context);
                 },
               ),
             ),
@@ -175,8 +175,8 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
         domainFn: (t, i) => t.item1,
         measureFn: (t, i) => t.item2,
         data: [
-          Tuple2('Sold', amount_sold),
-          Tuple2('Not sold yet', amount - amount_sold),
+          Tuple2('Sold', amount_sold!),
+          Tuple2('Not sold yet', amount! - amount_sold),
         ],
         colorFn: (t, i) {
           if (i == 0) {
@@ -196,8 +196,8 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
         domainFn: (t, i) => t.item1,
         measureFn: (t, i) => t.item2,
         data: [
-          Tuple2('Sold', tickets_sold),
-          Tuple2('Not sold yet', tickets - tickets_sold),
+          Tuple2('Sold', tickets_sold!),
+          Tuple2('Not sold yet', tickets! - tickets_sold),
         ],
         colorFn: (t, i) {
           if (i == 0) {
@@ -223,7 +223,7 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
                 showMeasures: true,
                 legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
                 measureFormatter: (value) =>
-                    '${defaultLegendMeasureFormatter(value)} VND ~ ${amount == 0 ? 0 : (value / amount * 100).toStringAsFixed(2)}%',
+                '${defaultLegendMeasureFormatter(value!)} VND ~ ${amount == 0 ? 0 : (value / amount * 100).toStringAsFixed(2)}%',
               ),
             ],
           ),
@@ -242,7 +242,7 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
                 showMeasures: true,
                 legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
                 measureFormatter: (value) =>
-                    '${defaultLegendMeasureFormatter(value)} tickets ~ ${tickets == 0 ? 0 : (value / tickets * 100).toStringAsFixed(2)}%',
+                '${defaultLegendMeasureFormatter(value!)} tickets ~ ${tickets == 0 ? 0 : (value / tickets * 100).toStringAsFixed(2)}%',
               ),
             ],
           ),

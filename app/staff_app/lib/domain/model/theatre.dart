@@ -40,7 +40,7 @@ class Theatre {
   @override
   String toString() =>
       'Theatre{location: $location, isActive: $isActive, rooms: $rooms, id: $id,'
-      ' name: $name, address: $address, phoneNumber: $phoneNumber, description:'
-      ' $description, email: $email, openingHours: $openingHours, roomSummary: $roomSummary,'
-      ' createdAt: $createdAt, updatedAt: $updatedAt, cover: $cover, thumbnail: $thumbnail}';
+          ' name: $name, address: $address, phoneNumber: $phoneNumber, description:'
+          ' $description, email: $email, openingHours: $openingHours, roomSummary: $roomSummary,'
+          ' createdAt: $createdAt, updatedAt: $updatedAt, cover: $cover, thumbnail: $thumbnail}';
 }

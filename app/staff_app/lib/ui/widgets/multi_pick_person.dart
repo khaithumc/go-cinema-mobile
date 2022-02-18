@@ -11,7 +11,7 @@ class MultiPickPersonWidget extends StatefulWidget {
   final MovieUploadBloc bloc;
   final Function1<List<Person>, void> onPickPerson;
 
-  MultiPickPersonWidget({@required this.bloc, @required this.onPickPerson});
+  MultiPickPersonWidget({required this.bloc, required this.onPickPerson});
 
   @override
   _MultiPickPersonState createState() => _MultiPickPersonState();
@@ -86,7 +86,7 @@ class _MultiPickPersonState extends State<MultiPickPersonWidget> {
   }
 
   Widget _buildListView() {
-    return StreamBuilder<List<Person>>(
+    return StreamBuilder<List<Person>?>(
         stream: widget.bloc.showSearch$,
         initialData: <Person>[],
         builder: (context, snapshot) {
@@ -94,28 +94,28 @@ class _MultiPickPersonState extends State<MultiPickPersonWidget> {
           return listData == null
               ? Center(child: CircularProgressIndicator())
               : ListView.builder(
-                  itemCount: listData.length,
-                  itemBuilder: (context, index) {
-                    final isContain =
-                        listPersonChoices.contains(listData[index]);
-                    return ListTile(
-                      onTap: () {
-                        setState(() {
-                          if (isContain) {
-                            listPersonChoices.remove(listData[index]);
-                          } else {
-                            listPersonChoices.add(listData[index]);
-                          }
-                        });
-                      },
-                      tileColor: Colors.white,
-                      leading: _buildAvatar(40, context, listData[index]),
-                      title: Text(listData[index].full_name),
-                      trailing: isContain
-                          ? Icon(Icons.check, color: Colors.deepPurple)
-                          : SizedBox(width: 0),
-                    );
-                  });
+              itemCount: listData.length,
+              itemBuilder: (context, index) {
+                final isContain =
+                listPersonChoices.contains(listData[index]);
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      if (isContain) {
+                        listPersonChoices.remove(listData[index]);
+                      } else {
+                        listPersonChoices.add(listData[index]);
+                      }
+                    });
+                  },
+                  tileColor: Colors.white,
+                  leading: _buildAvatar(40, context, listData[index]),
+                  title: Text(listData[index].full_name),
+                  trailing: isContain
+                      ? Icon(Icons.check, color: Colors.deepPurple)
+                      : SizedBox(width: 0),
+                );
+              });
         });
   }
 
@@ -139,44 +139,44 @@ class _MultiPickPersonState extends State<MultiPickPersonWidget> {
       child: ClipOval(
         child: person.avatar == null
             ? Center(
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: imageSize * 0.7,
-                ),
-              )
+          child: Icon(
+            Icons.person,
+            color: Colors.white,
+            size: imageSize * 0.7,
+          ),
+        )
             : CachedNetworkImage(
-                imageUrl: person.avatar,
-                fit: BoxFit.cover,
-                width: imageSize,
-                height: imageSize,
-                progressIndicatorBuilder: (
-                  BuildContext context,
-                  String url,
-                  progress,
-                ) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: progress.progress,
-                      strokeWidth: 2.0,
-                      valueColor: AlwaysStoppedAnimation(Colors.white),
-                    ),
-                  );
-                },
-                errorWidget: (
-                  BuildContext context,
-                  String url,
-                  dynamic error,
-                ) {
-                  return Center(
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: imageSize * 0.7,
-                    ),
-                  );
-                },
+          imageUrl: person.avatar,
+          fit: BoxFit.cover,
+          width: imageSize,
+          height: imageSize,
+          progressIndicatorBuilder: (
+              BuildContext context,
+              String url,
+              progress,
+              ) {
+            return Center(
+              child: CircularProgressIndicator(
+                value: progress.progress,
+                strokeWidth: 2.0,
+                valueColor: AlwaysStoppedAnimation(Colors.white),
               ),
+            );
+          },
+          errorWidget: (
+              BuildContext context,
+              String url,
+              dynamic error,
+              ) {
+            return Center(
+              child: Icon(
+                Icons.person,
+                color: Colors.white,
+                size: imageSize * 0.7,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

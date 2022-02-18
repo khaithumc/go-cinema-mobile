@@ -19,13 +19,13 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  MovieBloc _bloc;
-  ScrollController _scrollController;
+  late MovieBloc _bloc;
+  late ScrollController _scrollController;
 
   @override
   void didChangeDependencies() {
-    _bloc ??= BlocProvider.of<MovieBloc>(context)..loadMovies();
-    _scrollController ??= ScrollController()
+    _bloc = BlocProvider.of<MovieBloc>(context)..loadMovies();
+    _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels + 100 >=
             _scrollController.position.maxScrollExtent) {
@@ -57,17 +57,17 @@ class _MoviePageState extends State<MoviePage> {
                   itemCount: data == null
                       ? 1
                       : data.item2
-                          ? movies.length + 1
-                          : movies.length,
+                      ? movies!.length + 1
+                      : movies!.length,
                   itemBuilder: (context, i) {
                     return i < (movies?.length ?? 0)
-                        ? MovieCell(movies[i], (_) {})
+                        ? MovieCell(movies![i], (_) {})
                         : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: CircularProgressIndicator(strokeWidth: 3),
-                            ),
-                          );
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 3),
+                      ),
+                    );
                   },
                 );
               },
@@ -82,7 +82,7 @@ class _MoviePageState extends State<MoviePage> {
 class MovieCell extends StatelessWidget {
   final Movie item;
   final Function1<Movie, void> onToggle;
-  final Function1<Movie, void> onTap;
+  final Function1<Movie, void>? onTap;
 
   MovieCell(this.item, this.onToggle, [this.onTap]);
 
@@ -91,22 +91,22 @@ class MovieCell extends StatelessWidget {
     const imageHeight = 154.0;
     const imageWidth = imageHeight * 0.7;
 
-    final titleStyle = Theme.of(context).textTheme.headline6.copyWith(
-          fontSize: 17,
-          color: const Color(0xff687189),
-        );
+    final titleStyle = Theme.of(context).textTheme.headline6!.copyWith(
+      fontSize: 17,
+      color: const Color(0xff687189),
+    );
     final durationStyle =
-        Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 14);
+    Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 14);
 
     final rateStyle = titleStyle.copyWith(fontSize: 20);
 
     return InkWell(
       onTap: onTap != null
-          ? () => onTap(item)
+          ? () => onTap!(item)
           : () {
-              AppScaffold.of(context)
-                  .pushNamed(MovieInfoPage.routeName, arguments: item);
-            },
+        AppScaffold.of(context)!
+            .pushNamed(MovieInfoPage.routeName, arguments: item);
+      },
       child: Container(
         margin: const EdgeInsets.only(
           left: 6,
@@ -170,7 +170,7 @@ class MovieCell extends StatelessWidget {
                                   'Load image error',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle2
+                                      .subtitle2!
                                       .copyWith(fontSize: 12),
                                 ),
                               ],
@@ -196,7 +196,7 @@ class MovieCell extends StatelessWidget {
                   children: [
                     const SizedBox(height: 8),
                     Text(
-                      item.title,
+                      item.title ?? '',
                       style: titleStyle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -219,7 +219,7 @@ class MovieCell extends StatelessWidget {
                         const SizedBox(width: 4),
                         RichText(
                           text: TextSpan(
-                            text: item.rateStar.toStringAsFixed(2),
+                            text: item.rateStar!.toStringAsFixed(2),
                             style: rateStyle,
                             children: [
                               TextSpan(

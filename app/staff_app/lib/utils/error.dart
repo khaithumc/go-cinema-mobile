@@ -48,10 +48,10 @@ String getErrorMessage(dynamic error) {
 
   // firebase & platform errors
   if (error is FirebaseAuthException) {
-    return error.message;
+    return error.message!;
   }
   if (error is PlatformException) {
-    return error.message;
+    return error.message!;
   }
 
   return 'Error: $error';

@@ -27,14 +27,14 @@ class TheatresPage extends StatefulWidget {
   static const routeName = '/home/theatres';
   final TheatresMode mode;
 
-  const TheatresPage({Key key, @required this.mode}) : super(key: key);
+  const TheatresPage({Key? key, required this.mode}) : super(key: key);
 
   @override
   _TheatresPageState createState() => _TheatresPageState();
 }
 
 class _TheatresPageState extends State<TheatresPage> {
-  LoaderBloc<List<Theatre>> bloc;
+  late LoaderBloc<List<Theatre>> bloc;
 
   @override
   void didChangeDependencies() {
@@ -73,7 +73,7 @@ class _TheatresPageState extends State<TheatresPage> {
                   width: 56,
                   height: 56,
                   child: LoadingIndicator(
-                    color: Theme.of(context).accentColor,
+                    colors: [Theme.of(context).accentColor],
                     indicatorType: Indicator.ballClipRotatePulse,
                   ),
                 ),
@@ -91,7 +91,7 @@ class _TheatresPageState extends State<TheatresPage> {
 
             final items = state.content;
 
-            if (items.isEmpty) {
+            if (items!.isEmpty) {
               return Center(
                 child: EmptyWidget(
                   message: 'Empty theatre',
@@ -117,13 +117,13 @@ class _TheatresPageState extends State<TheatresPage> {
                       onTap: () {
                         switch (widget.mode) {
                           case TheatresMode.showTimes:
-                            AppScaffold.of(context).pushNamed(
+                            AppScaffold.of(context)!.pushNamed(
                               ShowTimesPage.routeName,
                               arguments: item,
                             );
                             break;
                           case TheatresMode.theatreInfo:
-                            AppScaffold.of(context).pushNamed(
+                            AppScaffold.of(context)!.pushNamed(
                               TheatreInfoPage.routeName,
                               arguments: item,
                             );
@@ -155,12 +155,12 @@ class _TheatresPageState extends State<TheatresPage> {
                               },
                             ).then((value) {
                               if (identical(value, true)) {
-                                AppScaffold.of(context).pop(item);
+                                AppScaffold.of(context)!.pop(item);
                               }
                             });
                             break;
                           case TheatresMode.report:
-                            AppScaffold.of(context).pushNamed(
+                            AppScaffold.of(context)!.pushNamed(
                               ReportPage.routeName,
                               arguments: item,
                             );
@@ -188,10 +188,10 @@ class _TheatresPageState extends State<TheatresPage> {
                                     item.name,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle2
+                                        .subtitle2!
                                         .copyWith(
-                                            fontSize: 14,
-                                            color: const Color(0xff5B64CF)),
+                                        fontSize: 14,
+                                        color: const Color(0xff5B64CF)),
                                     maxLines: 1,
                                   ),
                                   const SizedBox(height: 8),
@@ -199,7 +199,7 @@ class _TheatresPageState extends State<TheatresPage> {
                                     item.address,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle1
+                                        .subtitle1!
                                         .copyWith(fontSize: 11),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -220,16 +220,16 @@ class _TheatresPageState extends State<TheatresPage> {
       ),
       floatingActionButton: widget.mode == TheatresMode.theatreInfo
           ? FloatingActionButton(
-              onPressed: () async {
-                final added = await AppScaffold.of(context).pushNamed(
-                  AddTheatrePage.routeName,
-                );
-                if (added != null) {
-                  await bloc.refresh();
-                }
-              },
-              child: Icon(Icons.add),
-            )
+        onPressed: () async {
+          final added = await AppScaffold.of(context)!.pushNamed(
+            AddTheatrePage.routeName,
+          );
+          if (added != null) {
+            await bloc.refresh();
+          }
+        },
+        child: Icon(Icons.add),
+      )
           : const SizedBox(),
     );
   }

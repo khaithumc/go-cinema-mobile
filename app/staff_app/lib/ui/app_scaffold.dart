@@ -7,23 +7,23 @@ class AppScaffold extends StatefulWidget {
   final List<AppScaffoldWidgetBuilder> builders;
 
   const AppScaffold({
-    Key key,
-    @required this.items,
-    @required this.builders,
+    Key? key,
+    required this.items,
+    required this.builders,
   }) : super(key: key);
 
   @override
   _AppScaffoldState createState() => _AppScaffoldState();
 
-  static NavigatorState of(BuildContext context, {int newTabIndex}) {
+  static NavigatorState? of(BuildContext context, {int? newTabIndex}) {
     final appScaffoldState =
-        context.findAncestorStateOfType<_AppScaffoldState>();
-    final currentIndex = appScaffoldState.index;
+    context.findAncestorStateOfType<_AppScaffoldState>();
+    final currentIndex = appScaffoldState!.index;
     final navigatorKeys = appScaffoldState.navigatorKeys;
 
     if (newTabIndex != null &&
         newTabIndex != currentIndex &&
-        appScaffoldState.mounted) {
+        appScaffoldState!.mounted) {
       appScaffoldState.onTap(newTabIndex);
       return navigatorKeys[newTabIndex].currentState;
     }
@@ -41,7 +41,7 @@ class _AppScaffoldState extends State<AppScaffold> {
     super.initState();
     navigatorKeys = List.generate(
       widget.builders.length,
-      (_) => GlobalKey<NavigatorState>(),
+          (_) => GlobalKey<NavigatorState>(),
     );
   }
 
@@ -50,10 +50,10 @@ class _AppScaffoldState extends State<AppScaffold> {
     return WillPopScope(
       onWillPop: () {
         final navigatorState = navigatorKeys[index].currentState;
-        final canPop = navigatorState.canPop();
+        final canPop = navigatorState!.canPop();
 
         if (canPop) {
-          navigatorState.maybePop();
+          navigatorState!.maybePop();
         }
 
         if (!canPop && index > 0) {

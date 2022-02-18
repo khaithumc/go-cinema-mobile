@@ -7,7 +7,7 @@ class Credential {
   final String email;
   final String password;
 
-  const Credential({this.email, this.password});
+  const Credential({required this.email, required this.password});
 }
 
 @immutable
@@ -18,7 +18,7 @@ class LoginSuccessMessage implements LoginMessage {
 }
 
 class LoginErrorMessage implements LoginMessage {
-  final Object error;
+  final Object? error;
   final String message;
 
   const LoginErrorMessage(this.message, [this.error]);

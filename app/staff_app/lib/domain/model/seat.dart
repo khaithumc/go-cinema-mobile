@@ -12,10 +12,10 @@ abstract class SeatCoordinates
   SeatCoordinates._();
 
   factory SeatCoordinates([void Function(SeatCoordinatesBuilder) updates]) =
-      _$SeatCoordinates;
+  _$SeatCoordinates;
 
-  factory SeatCoordinates.from({@required int x, @required int y}) =
-      _$SeatCoordinates._;
+  factory SeatCoordinates.from({required int x, required int y}) =
+  _$SeatCoordinates._;
 }
 
 abstract class Seat implements Built<Seat, SeatBuilder> {

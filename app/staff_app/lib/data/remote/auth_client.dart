@@ -15,33 +15,33 @@ abstract class AppClient extends BaseClient {
       this.get(url, headers: headers).then(_parseResult);
 
   Future<dynamic> postBody(
-    Uri url, {
-    Map<String, String>? headers,
-    Map<String, dynamic>? body,
-  }) =>
+      Uri url, {
+        Map<String, String>? headers,
+        Map<String, dynamic>? body,
+      }) =>
       this
           .post(
-            url,
-            headers: {
-              ...?headers,
-              HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-            },
-            body: jsonEncode(body),
-          )
+        url,
+        headers: {
+          ...?headers,
+          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+        },
+        body: jsonEncode(body),
+      )
           .then(_parseResult);
 
   Future<dynamic> putBody(
-    Uri url, {Map<String, String>? headers, Map<String, dynamic>? body,
-  }) =>
+      Uri url, {Map<String, String>? headers, Map<String, dynamic>? body,
+      }) =>
       this
           .put(
-            url,
-            headers: {
-              ...?headers,
-              HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-            },
-            body: body != null ? jsonEncode(body) : null,
-          )
+        url,
+        headers: {
+          ...?headers,
+          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+        },
+        body: body != null ? jsonEncode(body) : null,
+      )
           .then(_parseResult);
 
   Future<dynamic> deleteBody(dynamic url, {Map<String, String>? headers}) =>
@@ -103,14 +103,14 @@ class AuthClient extends AppClient {
   final Duration _timeout;
 
   final Function0<Future<void>> _onSignOut;
-  final Function0<Future<String>> _getToken;
+  final Function0<Future<String?>> _getToken;
 
   AuthClient(
-    this._client,
-    this._timeout,
-    this._onSignOut,
-    this._getToken,
-  );
+      this._client,
+      this._timeout,
+      this._onSignOut,
+      this._getToken,
+      );
 
   @override
   Future<StreamedResponse> send(BaseRequest request) async {

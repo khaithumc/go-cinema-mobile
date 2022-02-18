@@ -14,7 +14,7 @@ class MovieInfoPage extends StatefulWidget {
   static const routeName = '/movie_info_page';
   final Movie movie;
 
-  const MovieInfoPage({Key key, this.movie}) : super(key: key);
+  const MovieInfoPage({Key? key,required this.movie}) : super(key: key);
 
   @override
   _MovieInfoPageState createState() => _MovieInfoPageState();
@@ -61,8 +61,8 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      movie.title,
-                      style: themeData.textTheme.headline4.copyWith(
+                      movie.title ?? '',
+                      style: themeData.textTheme.headline4!.copyWith(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xff687189),
@@ -92,11 +92,11 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                     const SizedBox(height: 6),
                     Wrap(
                       children: [
-                        for (var c in movie.categories) ...[
+                        for (var c in movie.categories!) ...[
                           ActionChip(
                             label: Text(
                               '#${c.name}',
-                              style: themeData.textTheme.subtitle1
+                              style: themeData.textTheme.subtitle1!
                                   .copyWith(fontSize: 12),
                             ),
                             onPressed: () {},
@@ -124,7 +124,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                             child: Text(
                               'STORYLINE',
                               maxLines: 1,
-                              style: themeData.textTheme.headline6.copyWith(
+                              style: themeData.textTheme.headline6!.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
@@ -148,25 +148,25 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                     Text(
                       'CAST OVERVIEW',
                       maxLines: 1,
-                      style: themeData.textTheme.headline6.copyWith(
+                      style: themeData.textTheme.headline6!.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xff687189),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    PeopleList(people: movie.actors),
+                    PeopleList(people: movie.actors ?? []),
                     Text(
                       'DIRECTORS',
                       maxLines: 1,
-                      style: themeData.textTheme.headline6.copyWith(
+                      style: themeData.textTheme.headline6!.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xff687189),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    PeopleList(people: movie.directors),
+                    PeopleList(people: movie.directors ?? []),
                   ],
                 ),
               ),
@@ -178,8 +178,8 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
 
 class DetailAppBar extends StatelessWidget {
   const DetailAppBar({
-    Key key,
-    @required this.movie,
+    Key? key,
+    required this.movie,
   }) : super(key: key);
 
   final Movie movie;
@@ -218,7 +218,7 @@ class DetailAppBar extends StatelessWidget {
                           'Load image error',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
+                              .subtitle2!
                               .copyWith(fontSize: 12),
                         ),
                       ],
@@ -328,8 +328,8 @@ class DetailAppBar extends StatelessWidget {
 
 class PeopleList extends StatelessWidget {
   const PeopleList({
-    Key key,
-    @required this.people,
+    Key? key,
+    required this.people,
   }) : super(key: key);
 
   final List<Person> people;
@@ -339,11 +339,11 @@ class PeopleList extends StatelessWidget {
     const width = 96.0;
     const height = width * 1.5;
 
-    final textStyle = Theme.of(context).textTheme.subtitle2.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xff687189),
-        );
+    final textStyle = Theme.of(context).textTheme.subtitle2!.copyWith(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: const Color(0xff687189),
+    );
 
     return Container(
       height: 200,

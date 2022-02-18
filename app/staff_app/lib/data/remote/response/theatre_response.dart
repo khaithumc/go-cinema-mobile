@@ -67,9 +67,9 @@ class TheatreResponse {
         'coordinates': location.longitude == null || location.latitude == null
             ? null
             : [
-                location.longitude,
-                location.latitude,
-              ]
+          location.longitude,
+          location.latitude,
+        ]
       },
       'is_active': isActive,
       'rooms': rooms,

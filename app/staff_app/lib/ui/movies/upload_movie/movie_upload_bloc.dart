@@ -19,18 +19,18 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
   final Function1<MovieUploadInput, void> uploadMovie;
 
   final Stream<List<Category>> fetchCategory$;
-  final Stream<List<Person>> showSearch$;
+  final Stream<List<Person>?> showSearch$;
   final Stream<ButtonState> stateStream$;
   final Stream<Object> error$;
 
   MovieUploadBloc._({
-    @required this.loadPerson,
-    @required this.uploadMovie,
-    @required this.fetchCategory$,
-    @required this.showSearch$,
-    @required this.stateStream$,
-    @required this.error$,
-    @required Function0<void> dispose,
+    required this.loadPerson,
+    required this.uploadMovie,
+    required this.fetchCategory$,
+    required this.showSearch$,
+    required this.stateStream$,
+    required this.error$,
+    required Function0<void> dispose,
   }) : super(dispose);
 
   factory MovieUploadBloc(MovieRepository repository) {
@@ -41,23 +41,23 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
 
     final categoryStream = loadCategorySubject
         .flatMap((value) => Rx.defer(() async* {
-              final result = await repository.getListCategory();
-              yield result;
-            }))
+      final result = await repository.getListCategory();
+      yield result;
+    }))
         .publishValue();
 
     final personStream = loadPersonSubject
         .debounceTime(Duration(milliseconds: 300))
         .distinct((p, e) => p == e)
         .exhaustMap((value) => Rx.defer(() async* {
-              if (value.isEmpty) {
-                yield <Person>[];
-              } else {
-                yield null;
-                final result = await repository.getListSearchPerson(value);
-                yield result;
-              }
-            }))
+      if (value.isEmpty) {
+        yield <Person>[];
+      } else {
+        yield null;
+        final result = await repository.getListSearchPerson(value);
+        yield result;
+      }
+    }))
         .publish();
 
     final uploadStream = uploadMovieSubject
@@ -65,57 +65,57 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
         .where((e) => e.isHasData())
         .debug(identifier: '22222222222222')
         .exhaustMap((input) async* {
-          yield ButtonState.loading;
+      yield ButtonState.loading;
 
-          try {
-            String poster;
-            if (input.posterType == UrlType.FILE) {
-              print('Start upload poster: ${input.posterFile}');
-              poster = await repository.uploadUrl(input.posterFile.path);
-            } else {
-              poster = input.posterUrl;
-            }
+      try {
+        String poster;
+        if (input.posterType == UrlType.FILE) {
+          print('Start upload poster: ${input.posterFile}');
+          poster = await repository.uploadUrl(input.posterFile!.path);
+        } else {
+          poster = input.posterUrl;
+        }
 
-            String trailer;
-            if (input.trailerType == UrlType.FILE) {
-              print('Start upload trailer: ${input.trailerFile}');
-              trailer =
-                  await repository.uploadUrl(input.trailerFile.path, true);
-            } else {
-              trailer = input.trailerVideoUrl;
-            }
-            await repository.uploadMovie(
-              Movie(
-                posterUrl: poster,
-                trailerVideoUrl: trailer,
-                id: null,
-                isActive: null,
-                title: input.title,
-                overview: input.overview,
-                releasedDate: input.releasedDate.toUtc(),
-                duration: input.duration,
-                originalLanguage: input.originalLanguage,
-                createdAt: null,
-                updatedAt: null,
-                ageType: input.ageType,
-                actors: input.actors,
-                directors: input.directors,
-                categories: input.categorys,
-                rateStar: null,
-                totalFavorite: null,
-                totalRate: null,
-              ),
-            );
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>RES');
-            yield ButtonState.success;
-          } catch (e, s) {
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR');
-            errorS.add(e);
-            print(e);
-            print(s);
-            yield ButtonState.fail;
-          }
-        })
+        String trailer;
+        if (input.trailerType == UrlType.FILE) {
+          print('Start upload trailer: ${input.trailerFile}');
+          trailer =
+          await repository.uploadUrl(input.trailerFile!.path, true);
+        } else {
+          trailer = input.trailerVideoUrl;
+        }
+        await repository.uploadMovie(
+          Movie(
+            posterUrl: poster,
+            trailerVideoUrl: trailer,
+            id: null,
+            isActive: null,
+            title: input.title,
+            overview: input.overview,
+            releasedDate: input.releasedDate!.toUtc(),
+            duration: input.duration,
+            originalLanguage: input.originalLanguage,
+            createdAt: null,
+            updatedAt: null,
+            ageType: input.ageType,
+            actors: input.actors,
+            directors: input.directors,
+            categories: input.categorys,
+            rateStar: null,
+            totalFavorite: null,
+            totalRate: null,
+          ),
+        );
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>RES');
+        yield ButtonState.success;
+      } catch (e, s) {
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR');
+        errorS.add(e.toString());
+        print(e);
+        print(s);
+        yield ButtonState.fail;
+      }
+    })
         .debug(identifier: '33333333333333333333333')
         .publish();
 

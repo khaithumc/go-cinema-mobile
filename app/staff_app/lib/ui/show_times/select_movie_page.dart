@@ -23,9 +23,9 @@ import 'add_show_time_page.dart';
 class SelectMoviePage extends StatefulWidget {
   static const routeName = '/home/show-times/select-movie';
 
-  final Theatre theatre;
+  final Theatre? theatre;
 
-  const SelectMoviePage({Key key, this.theatre}) : super(key: key);
+  const SelectMoviePage({Key? key, this.theatre}) : super(key: key);
 
   @override
   _SelectMoviePageState createState() => _SelectMoviePageState();
@@ -37,7 +37,7 @@ class _SelectMoviePageState extends State<SelectMoviePage>
   final termS = StreamController<String>(sync: true);
   final retryS = StreamController<String>(sync: true);
 
-  DistinctValueStream<SearchState> state$;
+  late DistinctValueStream<SearchState> state$;
 
   @override
   void initState() {
@@ -59,12 +59,12 @@ class _SelectMoviePageState extends State<SelectMoviePage>
           .debug(identifier: 'TERM')
           .switchMap(
             (value) => Rx.fromCallable(() => repo.search(value))
-                .map((movies) => SearchState(movies, null, false))
-                .onErrorReturnWith((error) => SearchState(null, error, false))
-                .startWith(SearchState(null, null, true)),
-          )
+            .map((movies) => SearchState(movies, null, false))
+            .onErrorReturnWith((error,_) => SearchState(null, error, false))
+            .startWith(SearchState(null, null, true)),
+      )
           .shareValueDistinct(SearchState(<Movie>[].build(), null, false))
-            ..listen(null).disposedBy(bag);
+        ..listen(null).disposedBy(bag);
     }();
   }
 
@@ -125,16 +125,16 @@ class _SelectMoviePageState extends State<SelectMoviePage>
   }
 
   Widget _buildListView() {
-    return RxStreamBuilder<SearchState>(
+    return RxStreamBuilder<SearchState?>(
       stream: state$,
       builder: (context, state) {
-        if (state.isLoading) {
+        if (state!.isLoading ?? true) {
           return Center(
             child: SizedBox(
               width: 56,
               height: 56,
               child: LoadingIndicator(
-                color: Theme.of(context).accentColor,
+                colors: [Theme.of(context).accentColor],
                 indicatorType: Indicator.ballScaleMultiple,
               ),
             ),
@@ -155,7 +155,7 @@ class _SelectMoviePageState extends State<SelectMoviePage>
 
         final list = state.movies;
         assert(list != null);
-        if (list.isEmpty) {
+        if (list!.isEmpty) {
           return Center(
             child: EmptyWidget(
               message: 'Empty movie',
@@ -164,12 +164,12 @@ class _SelectMoviePageState extends State<SelectMoviePage>
         }
 
         return ListView.builder(
-          itemCount: list.length,
+          itemCount: list!.length,
           itemBuilder: (context, index) => MovieCell(
             list[index],
-            (_) {},
-            (movie) {
-              AppScaffold.of(context).pushNamed(
+                (_) {},
+                (movie) {
+              AppScaffold.of(context)!.pushNamed(
                 AppShowTimePage.routeName,
                 arguments: {
                   'theatre': widget.theatre,
@@ -185,20 +185,20 @@ class _SelectMoviePageState extends State<SelectMoviePage>
 }
 
 class SearchState {
-  final BuiltList<Movie> movies;
-  final Object error;
-  final bool isLoading;
+  final BuiltList<Movie>? movies;
+  final Object? error;
+  final bool? isLoading;
 
   SearchState(this.movies, this.error, this.isLoading);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SearchState &&
-          runtimeType == other.runtimeType &&
-          movies == other.movies &&
-          error == other.error &&
-          isLoading == other.isLoading;
+          other is SearchState &&
+              runtimeType == other.runtimeType &&
+              movies == other.movies &&
+              error == other.error &&
+              isLoading == other.isLoading;
 
   @override
   int get hashCode => movies.hashCode ^ error.hashCode ^ isLoading.hashCode;

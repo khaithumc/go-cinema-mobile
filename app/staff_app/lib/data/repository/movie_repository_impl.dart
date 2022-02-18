@@ -96,13 +96,13 @@ class MovieRepositoryImpl implements MovieRepository {
           .child('movies')
           .child(uuid.Uuid().v4())
           .putFile(
-            File(path),
-            identical(isVideo, true)
-                ? SettableMetadata(
-                    contentType: 'video/mp4',
-                  )
-                : null,
-          );
+        File(path),
+        identical(isVideo, true)
+            ? SettableMetadata(
+          contentType: 'video/mp4',
+        )
+            : null,
+      );
       await task;
       return await task.snapshot.ref.getDownloadURL();
     } on PlatformException catch (e) {
@@ -150,48 +150,48 @@ Movie searchMovieResToDomain(SearchMovieRes r) {
 }
 
 class SearchMovieRes {
-  bool isActive;
-  String ageType;
-  List<String> actors;
-  List<String> directors;
-  String title;
-  String trailerVideoUrl;
-  String posterUrl;
-  String overview;
-  String releasedDate;
-  int duration;
-  String originalLanguage;
-  String createdAt;
-  String updatedAt;
-  double rateStar;
-  int totalFavorite;
-  int totalRate;
-  String id;
+  late bool isActive;
+  late String ageType;
+  late List<String> actors;
+  late List<String> directors;
+  late String title;
+  late String trailerVideoUrl;
+  late String posterUrl;
+  late String overview;
+  late String releasedDate;
+  late int duration;
+  late String originalLanguage;
+  late String createdAt;
+  late String updatedAt;
+  late double rateStar;
+  late int totalFavorite;
+  late int totalRate;
+  late String id;
 
 
   SearchMovieRes(
       {required this.isActive,
-      required this.ageType,
-      required this.actors,
-      required this.directors,
-      required this.title,
-      required this.trailerVideoUrl,
-      required this.posterUrl,
-      required this.overview,
-      required this.releasedDate,
-      required this.duration,
-      required this.originalLanguage,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.rateStar,
-      required this.totalFavorite,
-      required this.totalRate,
-      required this.id});
+        required this.ageType,
+        required this.actors,
+        required this.directors,
+        required this.title,
+        required this.trailerVideoUrl,
+        required this.posterUrl,
+        required this.overview,
+        required this.releasedDate,
+        required this.duration,
+        required this.originalLanguage,
+        required this.createdAt,
+        required this.updatedAt,
+        required this.rateStar,
+        required this.totalFavorite,
+        required this.totalRate,
+        required this.id});
 
   SearchMovieRes.fromJson(Map<String, dynamic> json) {
     isActive = json['is_active'];
     ageType = json['age_type'];
-    actors = json['actors'].cast<String>();
+    actors = json['actors'] as List<String>;
     directors = json['directors'].cast<String>();
     id = json['_id'];
     title = json['title'];

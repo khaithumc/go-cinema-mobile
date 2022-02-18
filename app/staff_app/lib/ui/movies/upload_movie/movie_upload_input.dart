@@ -28,15 +28,15 @@ class MovieUploadInput {
     );
   }
 
-  String title;
+  String? title;
   String trailerVideoUrl;
-  File trailerFile;
+  File? trailerFile;
   UrlType trailerType;
   String posterUrl;
-  File posterFile;
+  File? posterFile;
   UrlType posterType;
   String overview;
-  DateTime releasedDate;
+  DateTime? releasedDate;
   int duration;
   List<Person> directors;
   List<Person> actors;
@@ -45,21 +45,21 @@ class MovieUploadInput {
   List<Category> categorys;
 
   bool isHasData() =>
-      title.isNotEmpty &&
-      (trailerType == UrlType.FILE
-          ? trailerFile != null
-          : trailerVideoUrl.isNotEmpty) &&
-      (posterType == UrlType.FILE
-          ? posterFile != null
-          : posterUrl.isNotEmpty) &&
-      overview.isNotEmpty &&
-      releasedDate != null &&
-      duration != null &&
-      duration > 0 &&
-      directors.isNotEmpty &&
-      ageType != null &&
-      actors.isNotEmpty &&
-      categorys.isNotEmpty;
+      title!.isNotEmpty &&
+          (trailerType == UrlType.FILE
+              ? trailerFile != null
+              : trailerVideoUrl.isNotEmpty) &&
+          (posterType == UrlType.FILE
+              ? posterFile != null
+              : posterUrl.isNotEmpty) &&
+          overview.isNotEmpty &&
+          releasedDate != null &&
+          duration != null &&
+          duration > 0 &&
+          directors.isNotEmpty &&
+          ageType != null &&
+          actors.isNotEmpty &&
+          categorys.isNotEmpty;
 
   @override
   String toString() {
@@ -67,39 +67,39 @@ class MovieUploadInput {
   }
 
   MovieUploadInput._({
-    @required this.title,
-    @required this.trailerVideoUrl,
-    @required this.trailerFile,
-    @required this.trailerType,
-    @required this.posterUrl,
-    @required this.posterFile,
-    @required this.posterType,
-    @required this.overview,
-    @required this.releasedDate,
-    @required this.duration,
-    @required this.directors,
-    @required this.actors,
-    @required this.originalLanguage,
-    @required this.ageType,
-    @required this.categorys,
+    required this.title,
+    required this.trailerVideoUrl,
+    required this.trailerFile,
+    required this.trailerType,
+    required this.posterUrl,
+    required this.posterFile,
+    required this.posterType,
+    required this.overview,
+    required this.releasedDate,
+    required this.duration,
+    required this.directors,
+    required this.actors,
+    required this.originalLanguage,
+    required this.ageType,
+    required this.categorys,
   });
 }
 
 class MovieUploadState {
   MovieUploadState._({
-    @required this.title,
-    @required this.trailerVideoUrl,
-    @required this.posterUrl,
-    @required this.overview,
-    @required this.releasedDate,
-    @required this.duration,
-    @required this.directors,
-    @required this.actors,
-    @required this.originalLanguage,
-    @required this.ageType,
-    @required this.categorys,
-    @required this.typeUrlTrailer,
-    @required this.typeUrlPoster,
+    required this.title,
+    required this.trailerVideoUrl,
+    required this.posterUrl,
+    required this.overview,
+    required this.releasedDate,
+    required this.duration,
+    required this.directors,
+    required this.actors,
+    required this.originalLanguage,
+    required this.ageType,
+    required this.categorys,
+    required this.typeUrlTrailer,
+    required this.typeUrlPoster,
   });
 
   factory MovieUploadState.init() {

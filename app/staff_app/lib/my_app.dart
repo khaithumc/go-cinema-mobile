@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    cacheImage ??= Future.wait([
+    cacheImage = Future.wait([
       precacheImage(
         AssetImage('assets/images/splash_bg.png'),
         context,
@@ -88,7 +88,7 @@ class _SplashPageState extends State<SplashPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    checkAuthFuture ??= () async {
+    checkAuthFuture = () async {
       final stopwatch = Stopwatch()..start();
       final authState = await Provider.of<UserRepository>(context).checkAuth();
       stopwatch.stop();
@@ -106,9 +106,9 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     final routes = Provider.of<Map<String, WidgetBuilder>>(context);
     final textStyle = Theme.of(context).textTheme.headline6?.copyWith(
-          fontSize: 18,
-          color: Colors.white,
-        );
+      fontSize: 18,
+      color: Colors.white,
+    );
 
     return FutureBuilder<AuthState>(
       future: checkAuthFuture,

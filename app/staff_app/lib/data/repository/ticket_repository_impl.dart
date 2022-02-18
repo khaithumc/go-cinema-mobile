@@ -21,7 +21,7 @@ class TicketRepositoryImpl implements TicketRepository {
   @override
   Stream<BuiltList<Ticket>> getTicketsByShowTimeId(String id) async* {
     final json =
-        await _authClient.getBody(buildUrl('/seats/tickets/show-times/$id'));
+    await _authClient.getBody(buildUrl('/seats/tickets/show-times/$id'));
 
     final tickets = serializers.deserialize(
       json,
@@ -45,7 +45,7 @@ class TicketRepositoryImpl implements TicketRepository {
     };
 
     return Rx.fromCallable(
-      () => _authClient.getBody(
+          () => _authClient.getBody(
         buildUrl(
           '/admin-reservations/show-times/${id}',
         ),
@@ -82,7 +82,7 @@ class TicketRepositoryImpl implements TicketRepository {
     };
 
     return Rx.fromCallable(
-      () => _authClient.getBody(
+          () => _authClient.getBody(
         buildUrl(
           '/admin-seats/seats/theatres/${id}',
         ),

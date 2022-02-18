@@ -9,8 +9,8 @@ abstract class Result<T> {}
 
 abstract class Success<T>
     implements Built<Success<T>, SuccessBuilder<T>>, Result<T> {
-  @nullable
-  T get result;
+
+  T? get result;
 
   Success._();
 
@@ -21,8 +21,7 @@ abstract class Failure<T>
     implements Built<Failure<T>, FailureBuilder<T>>, Result<T> {
   String get message;
 
-  @nullable
-  Object get error;
+  Object? get error;
 
   Failure._();
 
@@ -31,7 +30,7 @@ abstract class Failure<T>
 
 extension FlatMapResultExtension<T> on Stream<Result<T>> {
   Stream<Result<R>> flatMapResult<R>(
-      Stream<Result<R>> Function(T result) mapper) {
+      Stream<Result<R>> Function(T? result) mapper) {
     ArgumentError.checkNotNull(mapper, 'mapper');
     return flatMap((result) {
       if (result is Failure<T>) {

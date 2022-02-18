@@ -27,7 +27,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
     with DisposeBagMixin {
   final releasedDateFormat = DateFormat.yMMMd();
   final key = GlobalKey<ScaffoldState>();
-  _RowTextType showSearch;
+  late _RowTextType? showSearch;
   final controllers = {
     _RowTextType.TITLE: TextEditingController(),
     _RowTextType.ORIGIN_LANG: TextEditingController(),
@@ -37,13 +37,13 @@ class _UploadMoviePageState extends State<UploadMoviePage>
   };
   MovieUploadInput movieUploadInput = MovieUploadInput.init();
 
-  MovieUploadBloc bloc;
-  Object listen;
+  late MovieUploadBloc bloc;
+  late Object listen;
 
   @override
   void didChangeDependencies() {
-    bloc ??= BlocProvider.of<MovieUploadBloc>(context);
-    listen ??= bloc.error$.listen((event) {
+    bloc = BlocProvider.of<MovieUploadBloc>(context);
+    listen = bloc.error$.listen((event) {
       key.showSnackBar('Error ${getErrorMessage(event)}');
     }).disposedBy(bag);
     super.didChangeDependencies();
@@ -68,7 +68,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
             setState(() {
               showSearch != null
                   ? showSearch = null
-                  : AppScaffold.of(context).pop();
+                  : AppScaffold.of(context)!.pop();
             });
           },
         ),
@@ -85,57 +85,57 @@ class _UploadMoviePageState extends State<UploadMoviePage>
         },
         child: showSearch != null
             ? MultiPickPersonWidget(
-                bloc: bloc,
-                onPickPerson: (persons) {
-                  if (showSearch == _RowTextType.DIRECTOR) {
-                    movieUploadInput.directors = persons;
-                  } else {
-                    movieUploadInput.actors = persons;
-                  }
-                  setState(() {
-                    showSearch = null;
-                  });
-                })
+            bloc: bloc,
+            onPickPerson: (persons) {
+              if (showSearch == _RowTextType.DIRECTOR) {
+                movieUploadInput.directors = persons;
+              } else {
+                movieUploadInput.actors = persons;
+              }
+              setState(() {
+                showSearch = null;
+              });
+            })
             : ListView(
-                children: _RowTextType.values
-                    .map((e) => Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: _typeToWidget(
-                                e,
-                              ) ??
-                              Text('11111'),
-                        ))
-                    .toList(),
-              ),
+          children: _RowTextType.values
+              .map((e) => Padding(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: _typeToWidget(
+              e,
+            ) ??
+                Text('11111'),
+          ))
+              .toList(),
+        ),
       ),
     );
   }
 
   Widget _buildTextRow({
-    @required String textTitle,
-    @required String textHint,
-    @required TextEditingController controller,
-    int maxLines,
-    TextInputType textInputType,
+    required String textTitle,
+    required String textHint,
+    required TextEditingController? controller,
+    int? maxLines,
+    TextInputType? textInputType,
   }) {
     return Row(
       crossAxisAlignment: maxLines == null || maxLines == 1
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         SizedBox(
           width: 100,
           child: Text(
             textTitle,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
-        Container(
+        SizedBox(
           width: 200,
           child: TextFormField(
             controller: controller,
@@ -145,31 +145,31 @@ class _UploadMoviePageState extends State<UploadMoviePage>
                 hintText: textHint,
                 border: maxLines == null || maxLines == 1
                     ? UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(8))
+                    borderRadius: BorderRadius.circular(8))
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8)),
                 contentPadding: EdgeInsets.all(5.0),
                 hintStyle: TextStyle(color: Colors.grey)),
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
       ],
     );
   }
 
   Widget _buildUrlOption({
-    @required String title,
-    @required UrlType typeUrl,
+    required String title,
+    required UrlType typeUrl,
   }) {
     final isPoster = title == 'Poster url: ';
     return Row(
       children: <Widget>[
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         SizedBox(
           width: 100,
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -179,71 +179,71 @@ class _UploadMoviePageState extends State<UploadMoviePage>
         Expanded(
           child: typeUrl == UrlType.FILE
               ? RaisedButton(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.deepPurpleAccent)),
-                  elevation: 3,
-                  onPressed: () async {
-                    final imagePicker = ImagePicker();
-                    if (isPoster) {
-                      final image = await imagePicker.getImage(
-                        source: ImageSource.gallery,
-                        maxWidth: 720,
-                        maxHeight: 720,
-                      );
-                      if (image == null) return;
-                      movieUploadInput.posterFile = File(image.path);
-                    } else {
-                      final video = await imagePicker.getVideo(
-                          source: ImageSource.gallery,
-                          maxDuration: Duration(minutes: 30));
-                      if (video == null) return;
-                      movieUploadInput.trailerFile = File(video.path);
-                    }
-                    setState(() {});
-                  },
-                  child: Text(
-                    isPoster
-                        ? movieUploadInput.posterFile?.toString() ?? 'Empty'
-                        : movieUploadInput.trailerFile?.toString() ?? 'Empty',
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                      color: Colors.black,
-                      fontSize: 14,
-                    ),
-                  ),
-                )
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: const BorderSide(color: Colors.deepPurpleAccent)),
+            elevation: 3,
+            onPressed: () async {
+              final imagePicker = ImagePicker();
+              if (isPoster) {
+                final image = await imagePicker.getImage(
+                  source: ImageSource.gallery,
+                  maxWidth: 720,
+                  maxHeight: 720,
+                );
+                if (image == null) return;
+                movieUploadInput.posterFile = File(image.path);
+              } else {
+                final video = await imagePicker.getVideo(
+                    source: ImageSource.gallery,
+                    maxDuration: const Duration(minutes: 30));
+                if (video == null) return;
+                movieUploadInput.trailerFile = File(video.path);
+              }
+              setState(() {});
+            },
+            child: Text(
+              isPoster
+                  ? movieUploadInput.posterFile?.toString() ?? 'Empty'
+                  : movieUploadInput.trailerFile?.toString() ?? 'Empty',
+              style: const TextStyle(
+                decoration: TextDecoration.none,
+                color: Colors.black,
+                fontSize: 14,
+              ),
+            ),
+          )
               : TextFormField(
-                  initialValue: isPoster
-                      ? movieUploadInput.posterUrl
-                      : movieUploadInput.trailerVideoUrl,
-                  onChanged: (value) => isPoster
-                      ? movieUploadInput.posterUrl = value
-                      : movieUploadInput.trailerVideoUrl = value,
-                  keyboardType: TextInputType.text,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                      hintText: 'Url',
-                      border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      contentPadding: EdgeInsets.all(5.0),
-                      hintStyle: TextStyle(color: Colors.grey)),
+            initialValue: isPoster
+                ? movieUploadInput.posterUrl
+                : movieUploadInput.trailerVideoUrl,
+            onChanged: (value) => isPoster
+                ? movieUploadInput.posterUrl = value
+                : movieUploadInput.trailerVideoUrl = value,
+            keyboardType: TextInputType.text,
+            maxLines: 1,
+            decoration: InputDecoration(
+                hintText: 'Url',
+                border: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                contentPadding: const EdgeInsets.all(5.0),
+                hintStyle: const TextStyle(color: Colors.grey)),
+          ),
         ),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
         PopupMenuButton<UrlType>(
             child: Row(
               children: [
                 Text(
                   typeUrl.toString().split('.')[1],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Icon(Icons.arrow_drop_down),
+                const Icon(Icons.arrow_drop_down),
               ],
             ),
             onSelected: (e) {
@@ -257,18 +257,18 @@ class _UploadMoviePageState extends State<UploadMoviePage>
             itemBuilder: (context) => UrlType.values
                 .map(
                   (e) => PopupMenuItem(
-                    value: e,
-                    child: Text(
-                      e.toString().split('.')[1],
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                value: e,
+                child: Text(
+                  e.toString().split('.')[1],
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                   ),
-                )
+                ),
+              ),
+            )
                 .toList()),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
       ],
     );
   }
@@ -276,8 +276,8 @@ class _UploadMoviePageState extends State<UploadMoviePage>
   Widget _buildReleasedDayTextField() {
     return Row(
       children: [
-        SizedBox(width: 10),
-        Text(
+        const SizedBox(width: 10),
+        const Text(
           'Released day: ',
           style: TextStyle(
             color: Colors.black,
@@ -308,25 +308,25 @@ class _UploadMoviePageState extends State<UploadMoviePage>
                   : null;
             },
             onChanged: (v) => movieUploadInput.releasedDate = v,
-            resetIcon: Icon(Icons.delete, color: Colors.deepPurpleAccent),
+            resetIcon: const Icon(Icons.delete, color: Colors.deepPurpleAccent),
             decoration: InputDecoration(
-              prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8.0),
+              prefixIcon: const Padding(
+                padding: EdgeInsetsDirectional.only(end: 8.0),
                 child: Icon(
                   Icons.date_range,
                   color: Colors.deepPurpleAccent,
                 ),
               ),
               labelText: 'Released date',
-              labelStyle: TextStyle(color: Colors.black54),
+              labelStyle: const TextStyle(color: Colors.black54),
               fillColor: Colors.deepPurpleAccent,
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.deepPurpleAccent)),
+                  borderSide: const BorderSide(color: Colors.deepPurpleAccent)),
             ),
           ),
         ),
-        SizedBox(width: 20)
+        const SizedBox(width: 20)
       ],
     );
   }
@@ -337,12 +337,12 @@ class _UploadMoviePageState extends State<UploadMoviePage>
         : movieUploadInput.directors.length;
     return Row(
       children: <Widget>[
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         SizedBox(
           width: 100,
           child: Text(
             type == _RowTextType.ACTOR ? 'Actor: ' : 'Director: ',
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -353,20 +353,20 @@ class _UploadMoviePageState extends State<UploadMoviePage>
           color: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: Colors.deepPurpleAccent)),
+              side: const BorderSide(color: Colors.deepPurpleAccent)),
           onPressed: () {
             setState(() {
               showSearch = type;
             });
           },
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: length == 0
-                ? Text('Search...')
+                ? const Text('Search...')
                 : Text(
-                    length.toString() +
-                        (type == _RowTextType.ACTOR ? ' Actors' : ' Directors'),
-                  ),
+              length.toString() +
+                  (type == _RowTextType.ACTOR ? ' Actors' : ' Directors'),
+            ),
           ),
         ),
       ],
@@ -386,13 +386,13 @@ class _UploadMoviePageState extends State<UploadMoviePage>
           textTitle: 'Overview: ',
           textHint: 'Enter overview',
           maxLines: 5,
-          controller: controllers[e],
+          controller: controllers![e],
         );
       case _RowTextType.DURATION:
         return _buildTextRow(
           textTitle: 'Duration: ',
           textHint: 'Enter duration',
-          controller: controllers[e],
+          controller: controllers![e],
           textInputType: TextInputType.number,
         );
       case _RowTextType.ORIGIN_LANG:
@@ -425,7 +425,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
             stream: bloc.stateStream$,
             builder: (context, snapshot) {
               if (snapshot.data == ButtonState.success) {
-                AppScaffold.of(context).pop();
+                AppScaffold.of(context)!.pop();
               }
               return _buildLoadingButton(snapshot.data ?? ButtonState.idle);
             });
@@ -523,7 +523,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
             child: movieUploadInput.categorys.isEmpty
                 ? Text('Pick...')
                 : Text(movieUploadInput.categorys.length.toString() +
-                    ' categories'),
+                ' categories'),
           ),
         ),
         SizedBox(width: 10),
@@ -570,16 +570,16 @@ class _UploadMoviePageState extends State<UploadMoviePage>
               itemBuilder: (context) => AgeType.values
                   .map(
                     (e) => PopupMenuItem(
-                      value: e,
-                      child: Text(
-                        e.toString().split('.')[1],
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                  value: e,
+                  child: Text(
+                    e.toString().split('.')[1],
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
                     ),
-                  )
+                  ),
+                ),
+              )
                   .toList()),
         ),
         SizedBox(width: 10),
@@ -588,12 +588,12 @@ class _UploadMoviePageState extends State<UploadMoviePage>
   }
 
   void updateDataForInput() {
-    movieUploadInput.title = controllers[_RowTextType.TITLE].text;
-    movieUploadInput.overview = controllers[_RowTextType.OVERVIEW].text;
+    movieUploadInput.title = controllers[_RowTextType.TITLE]!.text;
+    movieUploadInput.overview = controllers[_RowTextType.OVERVIEW]!.text;
     movieUploadInput.duration =
-        int.tryParse(controllers[_RowTextType.DURATION].text);
+        int.tryParse(controllers[_RowTextType.DURATION]!.text)!;
     movieUploadInput.originalLanguage =
-        controllers[_RowTextType.ORIGIN_LANG].text;
+        controllers[_RowTextType.ORIGIN_LANG]!.text;
   }
 }
 
@@ -617,9 +617,9 @@ class _PickCategoryWidget extends StatefulWidget {
   final Function1<List<Category>, void> onSelectedCategory;
 
   const _PickCategoryWidget({
-    Key key,
-    @required this.bloc,
-    @required this.onSelectedCategory,
+    Key? key,
+    required this.bloc,
+    required this.onSelectedCategory,
   }) : super(key: key);
 
   @override

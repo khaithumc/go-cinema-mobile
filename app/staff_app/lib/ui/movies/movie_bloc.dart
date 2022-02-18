@@ -20,14 +20,14 @@ class MovieBloc extends DisposeCallbackBaseBloc {
   final Stream<bool> loading$;
 
   MovieBloc._({
-    @required Function0<void> dispose,
-    @required this.loadMovies,
-    @required this.removeMovie,
-    @required this.addMovie,
-    @required this.loadMovies$,
-    @required this.removeMovies$,
-    @required this.addMovies$,
-    @required this.loading$,
+    required Function0<void> dispose,
+    required this.loadMovies,
+    required this.removeMovie,
+    required this.addMovie,
+    required this.loadMovies$,
+    required this.removeMovies$,
+    required this.addMovies$,
+    required this.loading$,
   }) : super(dispose);
 
   factory MovieBloc(MovieRepository repository) {
@@ -41,15 +41,16 @@ class MovieBloc extends DisposeCallbackBaseBloc {
         loadMovieSubject
             .map((_) => currentLengthList)
             .exhaustMap((numberList) => Rx.fromCallable(
-                    () => repository.getListMovie(numberList ~/ 10 + 1, 10))
-                .doOnListen(() => loadingSubject.add(true))
-                .doOnCancel(() => loadingSubject.add(false)))
-            .scan((accumulated, value, index) =>
-                <Movie>[...?accumulated, ...value])
+                () => repository.getListMovie(numberList ~/ 10 + 1, 10))
+            .doOnListen(() => loadingSubject.add(true))
+            .doOnCancel(() => loadingSubject.add(false)))
+        //TODO- k hieu
+        //     .scan((accumulated, value, index) =>
+        // <Movie>[...?accumulated, ...value])
             .doOnData((list) => currentLengthList = list.length)
             .debug(identifier: '??????'),
         loadingSubject.stream,
-        (List<Movie> v1, bool v2) => Tuple2(v1, v2)).share();
+            (List<Movie> v1, bool v2) => Tuple2(v1, v2)).share();
 
     final controllers = [loadMovieSubject, removeMovieSubject, addMovieSubject];
     final streams = [loadMovieStream];

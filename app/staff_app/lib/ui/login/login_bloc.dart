@@ -20,20 +20,20 @@ class LoginBloc extends DisposeCallbackBaseBloc {
   final Function0<void> submitLogin;
 
   /// Streams
-  final Stream<String> emailError$;
-  final Stream<String> passwordError$;
+  final Stream<String?> emailError$;
+  final Stream<String?> passwordError$;
   final Stream<LoginMessage> message$;
   final Stream<bool> isLoading$;
 
   LoginBloc._({
-    @required Function0<void> dispose,
-    @required this.emailChanged,
-    @required this.passwordChanged,
-    @required this.submitLogin,
-    @required this.emailError$,
-    @required this.passwordError$,
-    @required this.message$,
-    @required this.isLoading$,
+    required Function0<void> dispose,
+    required this.emailChanged,
+    required this.passwordChanged,
+    required this.submitLogin,
+    required this.emailError$,
+    required this.passwordError$,
+    required this.message$,
+    required this.isLoading$,
   }) : super(dispose);
 
   factory LoginBloc(final UserRepository userRepository) {
@@ -58,14 +58,14 @@ class LoginBloc extends DisposeCallbackBaseBloc {
       emailController.stream.map(Validator.isValidEmail),
       passwordController.stream.map(Validator.isValidPassword),
       isLoadingController.stream,
-      (isValidEmail, isValidPassword, isLoading) =>
-          isValidEmail && isValidPassword && !isLoading,
+          (bool isValidEmail,bool isValidPassword,bool isLoading) =>
+      isValidEmail && isValidPassword && !isLoading,
     ).shareValueSeeded(false);
 
     final credential$ = Rx.combineLatest2(
       emailController.stream,
       passwordController.stream,
-      (email, password) => Credential(email: email, password: password),
+          (String email,String password) => Credential(email: email, password: password),
     );
 
     final submit$ = submitLoginController.stream
@@ -78,24 +78,24 @@ class LoginBloc extends DisposeCallbackBaseBloc {
           .withLatestFrom(credential$, (_, Credential c) => c)
           .exhaustMap(
             (credential) => Rx.defer(() async* {
-              await userRepository.login(credential.email, credential.password);
-              yield null;
-            })
-                .doOnListen(() => isLoadingController.add(true))
-                .doOnData((_) => isLoadingController.add(false))
-                .doOnError((e, s) {
-                  print(e);
-                  print(s);
-                  isLoadingController.add(false);
-                })
-                .map<LoginMessage>((_) => const LoginSuccessMessage())
-                .onErrorReturnWith(
-                  (error) => LoginErrorMessage(
-                    'Login error: ${getErrorMessage(error)}',
-                    error,
-                  ),
-                ),
+          await userRepository.login(credential.email, credential.password);
+          yield null;
+        })
+            .doOnListen(() => isLoadingController.add(true))
+            .doOnData((_) => isLoadingController.add(false))
+            .doOnError((e, s) {
+          print(e);
+          print(s);
+          isLoadingController.add(false);
+        })
+            .map<LoginMessage>((_) => const LoginSuccessMessage())
+            .onErrorReturnWith(
+              (error,_) => LoginErrorMessage(
+            'Login error: ${getErrorMessage(error)}',
+            error,
           ),
+        ),
+      ),
       submit$
           .where((isValid) => !isValid)
           .map((_) => const InvalidInformationMessage())
@@ -103,17 +103,17 @@ class LoginBloc extends DisposeCallbackBaseBloc {
 
     final emailError$ = emailController.stream
         .map((email) {
-          if (Validator.isValidEmail(email)) return null;
-          return 'Invalid email address';
-        })
+      if (Validator.isValidEmail(email)) return null;
+      return 'Invalid email address';
+    })
         .distinct()
         .share();
 
     final passwordError$ = passwordController.stream
         .map((password) {
-          if (Validator.isValidPassword(password)) return null;
-          return 'Password must be at least 6 characters';
-        })
+      if (Validator.isValidPassword(password)) return null;
+      return 'Password must be at least 6 characters';
+    })
         .distinct()
         .share();
 

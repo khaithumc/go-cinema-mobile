@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -19,7 +20,7 @@ class QRCodePage extends StatefulWidget {
 
 class _QRCodePageState extends State<QRCodePage> with DisposeBagMixin {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController controller;
+  late QRViewController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _QRCodePageState extends State<QRCodePage> with DisposeBagMixin {
             // we need to listen for Flutter SizeChanged notification and update controller
             child: NotificationListener<SizeChangedLayoutNotification>(
               onNotification: (notification) {
-                Future.microtask(() => controller?.updateDimensions(qrKey));
+                Future.microtask(() => QRViewController.updateDimensions(qrKey,const MethodChannel('')));
                 return false;
               },
               child: SizeChangedLayoutNotifier(
@@ -53,20 +54,20 @@ class _QRCodePageState extends State<QRCodePage> with DisposeBagMixin {
     this.controller = controller;
 
     controller.scannedDataStream
-        .where((event) => event != null && event.isNotEmpty)
-        // .startWith('5fdf4b930976ba0004b08358')
+        //.where((event) => event != null && event.isNotEmpty)
+    // .startWith('5fdf4b930976ba0004b08358')
         .switchMap(
           (id) => Rx.fromCallable(
             () => Provider.of<AuthClient>(context)
-                .getBody(buildUrl('admin-reservations/$id')),
-          ),
-        )
+            .getBody(buildUrl('admin-reservations/$id')),
+      ),
+    )
         .cast<Map<String, dynamic>>()
         .listen(
-      (event) {
+          (event) {
         print(event);
         context.showSnackBar('Successfully');
-        AppScaffold.of(context).push(
+        AppScaffold.of(context)!.push(
           MaterialPageRoute(
             builder: (context) => _DetailPage(map: event),
           ),
@@ -90,7 +91,7 @@ class _QRCodePageState extends State<QRCodePage> with DisposeBagMixin {
 class _DetailPage extends StatelessWidget {
   final Map<String, dynamic> map;
 
-  const _DetailPage({Key key, this.map}) : super(key: key);
+  const _DetailPage({Key? key,required this.map}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

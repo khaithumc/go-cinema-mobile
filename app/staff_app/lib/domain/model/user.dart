@@ -1,7 +1,10 @@
+import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 
 import 'location.dart';
 import 'theatre.dart';
+
+part 'user.g.dart';
 
 enum Gender { MALE, FEMALE }
 enum Role { ADMIN, STAFF, USER }
@@ -10,50 +13,38 @@ extension ToString on Role {
   String string() => this == Role.ADMIN
       ? 'ADMIN'
       : this == Role.STAFF
-          ? 'STAFF'
-          : 'USER';
+      ? 'STAFF'
+      : 'USER';
 }
 
-class User {
-  final String uid;
+abstract class User implements Built<User, UserBuilder> {
+  String get uid;
 
-  final String email;
+  String get email;
 
-  final String phoneNumber;
+  String get phoneNumber;
 
-  final String fullName;
+  String get fullName;
 
-  final Gender gender;
+  Gender get gender;
 
-  final String avatar;
+  String get avatar;
 
-  final String address;
+  String get address;
 
-  final DateTime birthday;
+  DateTime get birthday;
 
-  final Location location;
+  Location get location;
 
-  final bool isCompleted;
+  bool get isCompleted;
 
-  final bool isActive;
+  bool get isActive;
 
-  final Role role;
+  Role get role;
 
-  final Theatre theatre;
+  Theatre get theatre;
 
-  User({
-    required this.uid,
-    required this.email,
-    required this.phoneNumber,
-    required this.fullName,
-    required this.gender,
-    required this.avatar,
-    required this.address,
-    required this.birthday,
-    required this.location,
-    required this.isCompleted,
-    required this.isActive,
-    required this.role,
-    required this.theatre,
-  });
+  User._();
+
+  factory User([void Function(UserBuilder) updates]) = _$User;
 }

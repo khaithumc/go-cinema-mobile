@@ -4,9 +4,9 @@ import 'type_defs.dart';
 
 extension GroupByIterableExtension<T> on Iterable<T> {
   Map<K, List<V>> groupBy<K, V>(
-    Function1<T, K> keySelector,
-    Function1<T, V> valueTransform,
-  ) {
+      Function1<T, K> keySelector,
+      Function1<T, V> valueTransform,
+      ) {
     final map = <K, List<V>>{};
     forEach((e) {
       final key = keySelector(e);
@@ -28,7 +28,7 @@ extension SafeReplaceListBuilderExtension<T> on ListBuilder<T> {
 }
 
 extension FirstOrNullIterableExtension<T> on Iterable<T> {
-  T get firstOrNull => isEmpty ? null : first;
+  T? get firstOrNull => isEmpty ? null : first;
 }
 
 extension MapIndexedIterableExt<T> on Iterable<T> {
@@ -58,4 +58,11 @@ int compareComparable<T extends Comparable<T>>(T a, T b) => a.compareTo(b);
 
 extension IterableEntriesToMap<K, V> on Iterable<MapEntry<K, V>> {
   Map<K, V> toMap() => Map.fromEntries(this);
+}
+
+extension IsNullOrEmptyIterableExtension<T> on Iterable<T>? {
+  bool get isNullOrEmpty {
+    final self = this;
+    return self == null || self.isEmpty;
+  }
 }

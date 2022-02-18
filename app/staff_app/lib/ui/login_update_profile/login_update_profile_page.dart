@@ -6,8 +6,8 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_provider/flutter_provider.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:google_maps_webservice/places.dart' hide Location;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
@@ -26,9 +26,9 @@ import '../main_page.dart';
 class UpdateProfilePage extends StatefulWidget {
   static const routeName = '/profile_update';
 
-  final User user;
+  final User? user;
 
-  const UpdateProfilePage({Key key, this.user}) : super(key: key);
+  const UpdateProfilePage({Key? key,this.user}) : super(key: key);
 
   @override
   _UpdateProfilePageState createState() => _UpdateProfilePageState();
@@ -40,21 +40,21 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
   final formKey = GlobalKey<FormState>();
   final birthDayDateFormat = intl.DateFormat.yMMMd();
 
-  AnimationController loginButtonController;
-  Animation<double> buttonSqueezeAnimation;
-  TextStyle textFieldStyle;
+  late AnimationController loginButtonController;
+  late Animation<double> buttonSqueezeAnimation;
+  late TextStyle textFieldStyle;
 
   final phoneNumberFocusNode = FocusNode();
   final addressFocusNode = FocusNode();
 
-  String fullName;
-  String phoneNumber;
-  String address;
-  DateTime birthday;
-  final gender$ = BehaviorSubject.seeded(Gender.MALE);
-  Location location;
-  final avatarFile$ = BehaviorSubject<File>.seeded(null);
-  final avatar$ = BehaviorSubject<String>.seeded(null);
+  late String fullName;
+  late String phoneNumber;
+  late String address;
+  late DateTime birthday;
+  final gender$ = BehaviorSubject<Gender?>.seeded(Gender.MALE);
+  late Location location;
+  final avatarFile$ = BehaviorSubject<File?>.seeded(null);
+  final avatar$ = BehaviorSubject<String?>.seeded(null);
   var isLoading = false;
 
   final fullNameRegex = RegExp(r"^[\p{L} .'-]+$", unicode: true);
@@ -69,7 +69,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
   final birthdayTextController = TextEditingController();
 
   dynamic checkAuthToken;
-  ValueStream<Tuple2<File, String>> avatarTuple$;
+  late ValueStream<Tuple2<File?, String?>> avatarTuple$;
   final isFetching$ = BehaviorSubject.seeded(false);
 
   @override
@@ -102,7 +102,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
     avatarTuple$ = Rx.combineLatest2(
       avatarFile$,
       avatar$,
-      (File a, String b) => Tuple2(a, b),
+          (File? a, String? b) => Tuple2(a, b),
     ).shareValueSeeded(Tuple2(avatarFile$.value, avatar$.value))
       ..listen(null).disposedBy(bag);
 
@@ -114,10 +114,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
     ]);
   }
 
-  void populateUser(User user) {
+  void populateUser(User? user) {
     print('>>> populateUser $user');
 
-    fullName = user.fullName;
+    fullName = user!.fullName;
     fullNameTextController.text = fullName;
 
     phoneNumber = user.phoneNumber;
@@ -143,9 +143,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    textFieldStyle ??= Theme.of(context)
+    textFieldStyle = Theme.of(context)
         .textTheme
-        .subtitle1
+        .subtitle1!
         .copyWith(fontSize: 15.0, color: Colors.white);
 
     if (widget.user != null) {
@@ -161,9 +161,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           .doOnData((_) => isFetching$.add(false))
           .doOnError((_, __) => isFetching$.add(false))
           .listen(
-            populateUser,
-            onError: (e, s) => print('Fetch user error $e $s'),
-          )
+        populateUser,
+        onError: (e, s) => print('Fetch user error $e $s'),
+      )
           .disposedBy(bag);
     }
   }
@@ -182,42 +182,42 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
         title: Text('Update profile'),
         actions: widget.user == null
             ? [
-                IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () async {
-                    final shouldLogout = await showDialog<bool>(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Logout out'),
-                          content: Text('Are you sure you want to logout?'),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () => Navigator.of(context).pop(false),
-                            ),
-                            TextButton(
-                              child: Text('OK'),
-                              onPressed: () => Navigator.of(context).pop(true),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Logout out'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () => Navigator.of(context).pop(false),
+                      ),
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () => Navigator.of(context).pop(true),
+                      ),
+                    ],
+                  );
+                },
+              );
 
-                    if (identical(shouldLogout, true)) {
-                      try {
-                        await Provider.of<UserRepository>(context).logout();
-                      } catch (e, s) {
-                        print('logout $e $s');
-                        context.showSnackBar(
-                            'Logout failed: ${getErrorMessage(e)}');
-                      }
-                    }
-                  },
-                ),
-              ]
+              if (identical(shouldLogout, true)) {
+                try {
+                  await Provider.of<UserRepository>(context).logout();
+                } catch (e, s) {
+                  print('logout $e $s');
+                  context.showSnackBar(
+                      'Logout failed: ${getErrorMessage(e)}');
+                }
+              }
+            },
+          ),
+        ]
             : null,
       ),
       body: Stack(
@@ -265,11 +265,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
                 stream: isFetching$,
                 builder: (context, data) {
                   if (data) {
-                    return SizedBox(
+                    return const SizedBox(
                       width: 64,
                       height: 64,
                       child: LoadingIndicator(
-                        color: Colors.white,
+                        colors: [Colors.white],
                         indicatorType: Indicator.ballScaleMultiple,
                       ),
                     );
@@ -345,7 +345,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           ],
         ),
         child: ClipOval(
-          child: RxStreamBuilder<Tuple2<File, String>>(
+          child: RxStreamBuilder<Tuple2<File?, String?>>(
             stream: avatarTuple$,
             builder: (context, data) {
               final avatarFile = data.item1;
@@ -367,10 +367,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
                   width: imageSize,
                   height: imageSize,
                   progressIndicatorBuilder: (
-                    BuildContext context,
-                    String url,
-                    progress,
-                  ) {
+                      BuildContext context,
+                      String url,
+                      progress,
+                      ) {
                     return Center(
                       child: CircularProgressIndicator(
                         value: progress.progress,
@@ -380,11 +380,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
                     );
                   },
                   errorWidget: (
-                    BuildContext context,
-                    String url,
-                    dynamic error,
-                  ) {
-                    return Center(
+                      BuildContext context,
+                      String url,
+                      dynamic error,
+                      ) {
+                    return const Center(
                       child: Icon(
                         Icons.person,
                         color: Colors.white,
@@ -395,7 +395,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
                 );
               }
 
-              return Center(
+              return const Center(
                 child: Icon(
                   Icons.person,
                   color: Colors.white,
@@ -412,9 +412,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
   Widget buildFullNameTextField() {
     return TextFormField(
       autocorrect: true,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         prefixIcon: Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0),
+          padding: EdgeInsetsDirectional.only(end: 8.0),
           child: Icon(
             Icons.person,
             color: Colors.white,
@@ -435,7 +435,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
       autofocus: true,
       onFieldSubmitted: (_) =>
           FocusScope.of(context).requestFocus(phoneNumberFocusNode),
-      validator: (v) => fullNameRegex.hasMatch(v) ? null : 'Invalid full name',
+      validator: (v) => fullNameRegex.hasMatch(v!) ? null : 'Invalid full name',
       controller: fullNameTextController,
     );
   }
@@ -443,9 +443,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
   Widget buildPhoneNumber() {
     return TextFormField(
       autocorrect: true,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         prefixIcon: Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0),
+          padding: EdgeInsetsDirectional.only(end: 8.0),
           child: Icon(
             Icons.phone,
             color: Colors.white,
@@ -467,7 +467,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           FocusScope.of(context).requestFocus(addressFocusNode),
       focusNode: phoneNumberFocusNode,
       validator: (v) =>
-          phoneNumberRegex.hasMatch(v) ? null : 'Invalid phone number',
+      phoneNumberRegex.hasMatch(v!) ? null : 'Invalid phone number',
       controller: phoneNumberTextController,
     );
   }
@@ -479,9 +479,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           child: TextFormField(
             controller: addressTextController,
             autocorrect: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8.0),
+                padding: EdgeInsetsDirectional.only(end: 8.0),
                 child: Icon(
                   Icons.label,
                   color: Colors.white,
@@ -501,7 +501,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(),
             focusNode: addressFocusNode,
-            validator: (v) => v.isEmpty ? 'Empty address' : null,
+            validator: (v) => v!.isEmpty ? 'Empty address' : null,
           ),
         ),
         const SizedBox(width: 8),
@@ -510,7 +510,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           elevation: 2,
           type: MaterialType.transparency,
           shape: RoundedRectangleBorder(
-            side: BorderSide(
+            side: const BorderSide(
               color: Colors.white,
               width: 1,
             ),
@@ -519,7 +519,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           child: Padding(
             padding: const EdgeInsets.all(6),
             child: IconButton(
-              icon: Icon(Icons.location_on, color: Colors.white),
+              icon: const Icon(Icons.location_on, color: Colors.white),
               onPressed: searchLocation,
             ),
           ),
@@ -537,7 +537,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
           onSubmit();
         },
         color: Theme.of(context).backgroundColor,
-        child: Text(
+        child: const Text(
           'UPDATE',
           style: TextStyle(
             color: Colors.white,
@@ -550,7 +550,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
       builder: (context, child) {
         final value = buttonSqueezeAnimation.value;
 
-        return Container(
+        return SizedBox(
           width: value,
           height: 60.0,
           child: Material(
@@ -560,9 +560,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
             borderRadius: BorderRadius.circular(30.0),
             child: value > 75.0
                 ? child
-                : Center(
-                    child: CircularProgressIndicator(strokeWidth: 2.0),
-                  ),
+                : const Center(
+              child: CircularProgressIndicator(strokeWidth: 2.0),
+            ),
           ),
         );
       },
@@ -589,11 +589,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
         }
         return date.isAfter(DateTime.now()) ? 'Invalid birthday' : null;
       },
-      onChanged: (v) => birthday = v,
-      resetIcon: Icon(Icons.delete, color: Colors.white),
-      decoration: InputDecoration(
+      onChanged: (v) => birthday = v!,
+      resetIcon: const Icon(Icons.delete, color: Colors.white),
+      decoration: const InputDecoration(
         prefixIcon: Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0),
+          padding: EdgeInsetsDirectional.only(end: 8.0),
           child: Icon(
             Icons.date_range,
             color: Colors.white,
@@ -642,7 +642,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
         fullName: fullName,
         phoneNumber: phoneNumber,
         address: address,
-        gender: gender$.value,
+        gender: gender$.value ?? Gender.MALE,
         location: location,
         birthday: birthday,
         avatarFile: avatarFile$.value,
@@ -652,10 +652,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
         await Navigator.pushNamedAndRemoveUntil(
           context,
           MainPage.routeName,
-          (route) => false,
+              (route) => false,
         );
       } else {
-        await Navigator.pop(context);
+        Navigator.pop(context);
       }
     } catch (e, s) {
       print('loginUpdateProfile $e $s');
@@ -688,13 +688,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
       }
 
       final details = (await GoogleMapsPlaces(apiKey: apiKey)
-              .getDetailsByPlaceId(prediction.placeId))
+          .getDetailsByPlaceId(prediction.placeId ?? ''))
           .result;
 
-      address = details.formattedAddress;
-      location = Location(
-        latitude: details.geometry.location.lat,
-        longitude: details.geometry.location.lng,
+      address = details.formattedAddress!;
+      location = Location((b) => b..
+        latitude = details.geometry!.location.lat..
+        longitude = details.geometry!.location.lng,
       );
 
       addressTextController.text = address;
@@ -708,7 +708,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
       data: Theme.of(context).copyWith(
         unselectedWidgetColor: Colors.white.withOpacity(0.4),
       ),
-      child: RxStreamBuilder<Gender>(
+      child: RxStreamBuilder<Gender?>(
         stream: gender$,
         builder: (context, gender) {
           return Row(
@@ -762,7 +762,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
       source: ImageSource.gallery,
       maxWidth: 720,
       maxHeight: 720,
-    ))
+    ))!
         .path;
     avatarFile$.add(File(path));
   }

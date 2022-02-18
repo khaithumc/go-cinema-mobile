@@ -1,7 +1,7 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:khaithu/data/serializers.dart';
 
-import '../../serializers.dart';
 import 'seat_response.dart';
 
 part 'ticket_response.g.dart';
@@ -11,13 +11,11 @@ abstract class TicketResponse
   @BuiltValueField(wireName: '_id')
   String get id;
 
-  @nullable
-  bool get is_active;
+  bool? get is_active;
 
   int get price;
 
-  @nullable
-  String get reservation;
+  String? get reservation;
 
   SeatResponse get seat;
 
@@ -30,13 +28,15 @@ abstract class TicketResponse
   TicketResponse._();
 
   factory TicketResponse([void Function(TicketResponseBuilder) updates]) =
-      _$TicketResponse;
+  _$TicketResponse;
 
   static Serializer<TicketResponse> get serializer =>
       _$ticketResponseSerializer;
 
   factory TicketResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<TicketResponse>(serializer, json);
+      serializers.deserializeWith<TicketResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }

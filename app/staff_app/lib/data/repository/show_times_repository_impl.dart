@@ -19,28 +19,28 @@ class ShowTimesRepositoryImpl implements ShowTimesRepository {
       String id, int page, int perPage) {
     return _authClient
         .getBody(
-          buildUrl(
-            '/admin-show-times/theatres/$id',
-            {
-              'page': page.toString(),
-              'per_page': perPage.toString(),
-            },
-          ),
-        )
+      buildUrl(
+        '/admin-show-times/theatres/$id',
+        {
+          'page': page.toString(),
+          'per_page': perPage.toString(),
+        },
+      ),
+    )
         .then(
           (value) => [
-            for (final r in value as List)
-              mappers.showTimeResponseToShowTime(ShowTimeResponse.fromJson(r)),
-          ],
-        );
+        for (final r in value as List)
+          mappers.showTimeResponseToShowTime(ShowTimeResponse.fromJson(r)),
+      ],
+    );
   }
 
   @override
   Future<void> addShowTime(
-      {String movieId,
-      String theatreId,
-      DateTime startTime,
-      List<Tuple2<String, int>> tickets}) async {
+      {required String movieId,
+        required String theatreId,
+        required DateTime startTime,
+        required List<Tuple2<String, int>> tickets}) async {
     final res = await _authClient.postBody(
       buildUrl('/admin-show-times'),
       body: {

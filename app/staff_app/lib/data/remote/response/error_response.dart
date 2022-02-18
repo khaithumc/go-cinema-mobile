@@ -59,9 +59,9 @@ class ParseErrorResponseException implements Exception {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ParseErrorResponseException &&
-          runtimeType == other.runtimeType &&
-          errors == other.errors;
+          other is ParseErrorResponseException &&
+              runtimeType == other.runtimeType &&
+              errors == other.errors;
 
   @override
   int get hashCode => errors.hashCode;

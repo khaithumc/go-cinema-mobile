@@ -9,14 +9,14 @@ class TheatreInfoPage extends StatelessWidget {
   static const routeName = '/home/theatres/info';
 
   final Theatre theatre;
-  final bool automaticallyImplyLeading;
-  final Widget child;
+  final bool? automaticallyImplyLeading;
+  final Widget? child;
 
   TheatreInfoPage(
-      {Key key,
-      @required this.theatre,
-      this.automaticallyImplyLeading,
-      this.child})
+      {Key? key,
+        required this.theatre,
+        this.automaticallyImplyLeading,
+        this.child})
       : super(key: key);
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -26,7 +26,7 @@ class TheatreInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
-    final textStyle = themeData.textTheme.subtitle1.copyWith(
+    final textStyle = themeData.textTheme.subtitle1!.copyWith(
       fontSize: 14,
       color: const Color(0xff687189),
       fontWeight: FontWeight.w500,
@@ -49,7 +49,7 @@ class TheatreInfoPage extends StatelessWidget {
                 children: [
                   Text(
                     theatre.name,
-                    style: themeData.textTheme.headline4.copyWith(
+                    style: themeData.textTheme.headline4!.copyWith(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xff687189),
@@ -78,7 +78,7 @@ class TheatreInfoPage extends StatelessWidget {
                           child: Text(
                             'DESCRIPTION',
                             maxLines: 1,
-                            style: themeData.textTheme.headline6.copyWith(
+                            style: themeData.textTheme.headline6!.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -186,7 +186,7 @@ class TheatreInfoPage extends StatelessWidget {
                     ],
                   ),
                   if (child != null) ...[
-                    child,
+                    child ?? const SizedBox.shrink(),
                     const SizedBox(height: 32),
                   ] else
                     const SizedBox(height: 200)
@@ -201,10 +201,10 @@ class TheatreInfoPage extends StatelessWidget {
 }
 
 class DetailAppBar extends StatelessWidget {
-  final bool automaticallyImplyLeading;
+  final bool? automaticallyImplyLeading;
 
   const DetailAppBar(
-      {Key key, @required this.theatre, this.automaticallyImplyLeading})
+      {Key? key, required this.theatre, this.automaticallyImplyLeading})
       : super(key: key);
 
   final Theatre theatre;
@@ -253,7 +253,7 @@ class DetailAppBar extends StatelessWidget {
                           'Load image error',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
+                              .subtitle2!
                               .copyWith(fontSize: 12),
                         ),
                       ],

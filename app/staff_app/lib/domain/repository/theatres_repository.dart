@@ -11,14 +11,14 @@ abstract class TheatresRepository {
   Future<List<Theatre>> getTheatres();
 
   Future<Theatre> addTheatre({
-    @required String name,
-    @required String address,
-    @required String phone_number,
-    @required String email,
-    @required String description,
-    @required Location location,
-    @required File cover,
-    @required File thumbnail,
-    @required BuiltList<Seat> seats,
+    required String name,
+    required String address,
+    required String phone_number,
+    required String email,
+    required String description,
+    required Location location,
+    required File cover,
+    required File thumbnail,
+    required BuiltList<Seat> seats,
   });
 }

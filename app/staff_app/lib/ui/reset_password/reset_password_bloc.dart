@@ -18,17 +18,17 @@ class ResetPasswordBloc extends DisposeCallbackBaseBloc {
   final Function0<void> submit;
 
   /// Streams
-  final Stream<String> emailError$;
+  final Stream<String?> emailError$;
   final Stream<Message> message$;
   final Stream<bool> isLoading$;
 
   ResetPasswordBloc._({
-    @required Function0<void> dispose,
-    @required this.emailChanged,
-    @required this.submit,
-    @required this.emailError$,
-    @required this.message$,
-    @required this.isLoading$,
+    required Function0<void> dispose,
+    required this.emailChanged,
+    required this.submit,
+    required this.emailError$,
+    required this.message$,
+    required this.isLoading$,
   }) : super(dispose);
 
   factory ResetPasswordBloc(final UserRepository userRepository) {
@@ -47,12 +47,11 @@ class ResetPasswordBloc extends DisposeCallbackBaseBloc {
     ///
     /// Streams
     ///
-
     final submit$ = submitController.stream
         .withLatestFrom(
-          emailController.stream.map(Validator.isValidEmail).startWith(false),
+      emailController.stream.map(Validator.isValidEmail).startWith(false),
           (_, bool isValid) => isValid,
-        )
+    )
         .share();
 
     final message$ = Rx.merge([
@@ -61,20 +60,20 @@ class ResetPasswordBloc extends DisposeCallbackBaseBloc {
           .withLatestFrom(emailController, (_, String email) => email)
           .exhaustMap(
             (email) => Rx.defer(() async* {
-              await userRepository.resetPassword(email);
-              yield email;
-            })
-                .doOnListen(() => isLoadingController.add(true))
-                .doOnData((_) => isLoadingController.add(false))
-                .doOnError((e, s) => isLoadingController.add(false))
-                .map<Message>((email) => SuccessMessage(email))
-                .onErrorReturnWith(
-                  (error) => ErrorMessage(
-                    'Reset password error: ${getErrorMessage(error)}',
-                    error,
-                  ),
-                ),
+          await userRepository.resetPassword(email);
+          yield email;
+        })
+            .doOnListen(() => isLoadingController.add(true))
+            .doOnData((_) => isLoadingController.add(false))
+            .doOnError((e, s) => isLoadingController.add(false))
+            .map<Message>((email) => SuccessMessage(email))
+            .onErrorReturnWith(
+              (error,_) => ErrorMessage(
+            'Reset password error: ${getErrorMessage(error)}',
+            error,
           ),
+        ),
+      ),
       submit$
           .where((isValid) => !isValid)
           .map((_) => const InvalidInformationMessage())
@@ -82,16 +81,16 @@ class ResetPasswordBloc extends DisposeCallbackBaseBloc {
 
     final emailError$ = emailController.stream
         .map((email) {
-          if (Validator.isValidEmail(email)) return null;
-          return 'Invalid email address';
-        })
+      if (Validator.isValidEmail(email)) return null;
+      return 'Invalid email address';
+    })
         .distinct()
         .share();
 
     final subscriptions = <String, Stream>{
       'emailError': emailError$,
       'isValidSubmit':
-          emailController.stream.map(Validator.isValidEmail).startWith(false),
+      emailController.stream.map(Validator.isValidEmail).startWith(false),
       'message': message$,
       'isLoading': isLoadingController,
     }.debug();

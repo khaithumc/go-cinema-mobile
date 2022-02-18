@@ -1,7 +1,10 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
+import 'package:khaithu/domain/model/movie.dart';
+import 'package:khaithu/ui/theatres/seat.dart';
 
 import '../domain/model/theatre.dart';
 import '../domain/model/user.dart';
@@ -33,7 +36,7 @@ import 'users/manager_users_page.dart';
 class MainPage extends StatefulWidget {
   static const routeName = '/main';
 
-  const MainPage({Key key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -55,7 +58,7 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
       );
     },
     MovieInfoPage.routeName: (context, setting) {
-      return MovieInfoPage(movie: setting.arguments);
+      return MovieInfoPage(movie: setting.arguments as Movie);
     },
     UploadMoviePage.routeName: (context, setting) {
       return BlocProvider<MovieUploadBloc>(
@@ -64,22 +67,22 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
       );
     },
     TheatresPage.routeName: (context, setting) {
-      return TheatresPage(mode: setting.arguments);
+      return TheatresPage(mode: setting.arguments as TheatresMode);
     },
     TheatreInfoPage.routeName: (context, settings) {
-      return TheatreInfoPage(theatre: settings.arguments);
+      return TheatreInfoPage(theatre: settings.arguments as Theatre);
     },
     AddTheatrePage.routeName: (context, settings) {
       return AddTheatrePage();
     },
     SeatsPage.routeName: (context, settings) {
-      return SeatsPage(seats: settings.arguments);
+      return SeatsPage(seats: settings.arguments as BuiltList<Seat>?);
     },
     ShowTimesPage.routeName: (context, settings) {
-      return ShowTimesPage(theatre: settings.arguments);
+      return ShowTimesPage(theatre: settings.arguments as Theatre);
     },
     SelectMoviePage.routeName: (context, settings) {
-      return SelectMoviePage(theatre: settings.arguments);
+      return SelectMoviePage(theatre: settings.arguments as Theatre?);
     },
     TicketsPage.routeName: (ctx, settings) {
       final args = settings.arguments as Map<String, dynamic>;
@@ -103,7 +106,7 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
     UpdateProfilePage.routeName: (context, settings) {
       final args = settings.arguments;
       assert(args != null && args is User);
-      return UpdateProfilePage(user: args);
+      return UpdateProfilePage(user: args as User);
     },
   };
 
@@ -116,9 +119,9 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
         .user$
         .where((userOptional) => userOptional != null && userOptional is None)
         .listen((event) => Navigator.of(context).pushNamedAndRemoveUntil(
-              LoginPage.routeName,
-              (route) => false,
-            ))
+      LoginPage.routeName,
+          (route) => false,
+    ))
         .disposedBy(bag);
   }
 
@@ -126,8 +129,8 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
   Widget build(BuildContext context) {
     return AppScaffold(
       builders: [
-        (context, settings) => homeRoutes[settings.name](context, settings),
-        (context, settings) => profileRoutes[settings.name](context, settings),
+            (context, settings) => homeRoutes[settings.name]!(context, settings),
+            (context, settings) => profileRoutes[settings.name]!(context, settings),
       ],
       items: [
         BottomNavigationBarItem(

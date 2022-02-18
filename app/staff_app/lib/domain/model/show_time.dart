@@ -14,7 +14,7 @@ class ShowTime {
   final DateTime startTime;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final Theatre theatre;
+  final Theatre? theatre;
 
   ShowTime({
     required this.isActive,
@@ -27,25 +27,25 @@ class ShowTime {
     required this.startTime,
     required this.createdAt,
     required this.updatedAt,
-    required this.theatre,
+    this.theatre,
   });
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ShowTime &&
-          runtimeType == other.runtimeType &&
-          isActive == other.isActive &&
-          id == other.id &&
-          movie == other.movie &&
-          movieId == other.movieId &&
-          theatreId == other.theatreId &&
-          room == other.room &&
-          endTime == other.endTime &&
-          startTime == other.startTime &&
-          createdAt == other.createdAt &&
-          updatedAt == other.updatedAt &&
-          theatre == other.theatre;
+          other is ShowTime &&
+              runtimeType == other.runtimeType &&
+              isActive == other.isActive &&
+              id == other.id &&
+              movie == other.movie &&
+              movieId == other.movieId &&
+              theatreId == other.theatreId &&
+              room == other.room &&
+              endTime == other.endTime &&
+              startTime == other.startTime &&
+              createdAt == other.createdAt &&
+              updatedAt == other.updatedAt &&
+              theatre == other.theatre;
 
   @override
   int get hashCode =>

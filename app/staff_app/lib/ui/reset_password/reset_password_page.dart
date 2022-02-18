@@ -16,13 +16,13 @@ class ResetPasswordPage extends StatefulWidget {
 class _ResetPasswordPageState extends State<ResetPasswordPage>
     with SingleTickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  DisposeBag disposeBag;
+  late DisposeBag disposeBag;
 
-  AnimationController buttonController;
-  Animation<double> buttonSqueezeAnimation;
+  late AnimationController buttonController;
+  late Animation<double> buttonSqueezeAnimation;
 
-  FocusNode passwordFocusNode;
-  TextEditingController emailController;
+  late FocusNode passwordFocusNode;
+  late TextEditingController emailController;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    disposeBag ??= () {
+    disposeBag = () {
       final loginBloc = BlocProvider.of<ResetPasswordBloc>(context);
       return DisposeBag([
         loginBloc.message$.listen(handleMessage),
@@ -128,10 +128,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
                     const SizedBox(height: 24),
                     Text(
                       'Enter your Email to reset Password',
-                      style: Theme.of(context).textTheme.headline6.copyWith(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
@@ -158,8 +158,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
     if (message is SuccessMessage) {
       scaffoldKey.showSnackBar(
           'Reset successfully. Please check your email to reset password!');
-      await delay(1000);
-      await Navigator.of(context).pop(message.email);
+      await delayUtil(1000);
+      Navigator.of(context).pop(message.email);
     }
     if (message is ErrorMessage) {
       scaffoldKey.showSnackBar(message.message);
@@ -170,7 +170,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
   }
 
   Widget emailTextField(ResetPasswordBloc bloc) {
-    return StreamBuilder<String>(
+    return StreamBuilder<String?>(
       stream: bloc.emailError$,
       builder: (context, snapshot) {
         return TextField(
@@ -238,8 +238,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
             child: value > 75.0
                 ? child
                 : Center(
-                    child: CircularProgressIndicator(strokeWidth: 2.0),
-                  ),
+              child: CircularProgressIndicator(strokeWidth: 2.0),
+            ),
           ),
         );
       },

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:google_maps_webservice/places.dart' hide Location;
 import 'package:image_picker/image_picker.dart';
@@ -29,15 +29,15 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
   );
   final imagePicker = ImagePicker();
 
-  String name;
-  String phone;
-  String email;
-  String description;
-  String address;
-  File cover;
-  File thumbnail;
-  BuiltList<Seat> seats;
-  Location location;
+  late String name;
+  late String phone;
+  late String email;
+  late String description;
+  late String address;
+  late File cover;
+  late File thumbnail;
+  late BuiltList<Seat> seats;
+  late Location location;
   final addressTextController = TextEditingController();
 
   var isLoading = false;
@@ -71,7 +71,7 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
                 RaisedButton(
                   color: Theme.of(context).primaryColor,
                   onPressed: () async {
-                    final newSeats = await AppScaffold.of(context).pushNamed(
+                    final newSeats = await AppScaffold.of(context)!.pushNamed(
                       SeatsPage.routeName,
                       arguments: seats,
                     );
@@ -123,8 +123,8 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
             keyboardType: TextInputType.text,
             maxLines: 1,
             textInputAction: TextInputAction.done,
-            onSaved: (v) => address = v,
-            validator: (v) => v.isEmpty ? 'Empty address' : null,
+            onSaved: (v) => address = v!,
+            validator: (v) => v!.isEmpty ? 'Empty address' : null,
             autovalidateMode: AutovalidateMode.always,
             decoration: InputDecoration(
               prefixIcon: const Padding(
@@ -154,9 +154,9 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
       maxLines: 8,
       minLines: 4,
       textInputAction: TextInputAction.newline,
-      onSaved: (v) => description = v,
+      onSaved: (v) => description = v!,
       autovalidateMode: AutovalidateMode.always,
-      validator: (v) => v.isEmpty ? 'Empty description' : null,
+      validator: (v) => v!.isEmpty ? 'Empty description' : null,
       decoration: InputDecoration(
         prefixIcon: const Padding(
           padding: EdgeInsetsDirectional.only(end: 8.0),
@@ -175,8 +175,8 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
       maxLines: 1,
       autovalidateMode: AutovalidateMode.always,
       textInputAction: TextInputAction.next,
-      onSaved: (v) => email = v,
-      validator: (v) => Validator.isValidEmail(v) ? null : 'Invalid email',
+      onSaved: (v) => email = v!,
+      validator: (v) => Validator.isValidEmail(v!) ? null : 'Invalid email',
       decoration: InputDecoration(
         prefixIcon: const Padding(
           padding: EdgeInsetsDirectional.only(end: 8.0),
@@ -195,9 +195,9 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
       keyboardType: TextInputType.phone,
       maxLines: 1,
       textInputAction: TextInputAction.next,
-      onSaved: (v) => phone = v,
+      onSaved: (v) => phone = v!,
       validator: (v) =>
-          !phoneNumberRegex.hasMatch(v) ? 'Invalid phone number' : null,
+      !phoneNumberRegex.hasMatch(v!) ? 'Invalid phone number' : null,
       decoration: InputDecoration(
         prefixIcon: const Padding(
           padding: EdgeInsetsDirectional.only(end: 8.0),
@@ -216,8 +216,8 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
       keyboardType: TextInputType.text,
       maxLines: 1,
       textInputAction: TextInputAction.next,
-      onSaved: (v) => name = v,
-      validator: (v) => v.isEmpty ? 'Empty name' : null,
+      onSaved: (v) => name = v!,
+      validator: (v) => v!.isEmpty ? 'Empty name' : null,
       decoration: InputDecoration(
         prefixIcon: const Padding(
           padding: EdgeInsetsDirectional.only(end: 8.0),
@@ -366,13 +366,13 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
       }
 
       final details = (await GoogleMapsPlaces(apiKey: apiKey)
-              .getDetailsByPlaceId(prediction.placeId))
+          .getDetailsByPlaceId(prediction.placeId ?? ''))
           .result;
 
-      address = details.formattedAddress;
-      location = Location(
-        latitude: details.geometry.location.lat,
-        longitude: details.geometry.location.lng,
+      address = details.formattedAddress!;
+      location = Location((b) => b..
+        latitude = details.geometry!.location.lat..
+        longitude = details.geometry!.location.lng,
       );
 
       addressTextController.text = address;
@@ -384,7 +384,7 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
   void submit(BuildContext context) async {
     final state = Form.of(context);
 
-    state.save();
+    state!.save();
 
     print('>>>>> FORM_VALUE name= ${name}');
     print('>>>>> FORM_VALUE phone= ${phone}');
@@ -427,12 +427,12 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
         seats: seats,
       );
 
-      await delay(500);
+      await delayUtil(500);
       if (mounted) {
         context.showSnackBar('Add successfully');
       }
 
-      navigatorState.pop(added);
+      navigatorState!.pop(added);
     } catch (e) {
       if (mounted) {
         context.showSnackBar('Error: ${getErrorMessage(e)}');

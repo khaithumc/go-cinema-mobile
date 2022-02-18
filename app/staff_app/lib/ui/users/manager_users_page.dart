@@ -26,11 +26,11 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
     with DisposeBagMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isOpeningSlide = false;
-  ScrollController _listUserController;
+  late ScrollController _listUserController;
 
-  SlidableController _slidableController;
+  late SlidableController _slidableController;
 
-  ManagerUsersBloc _bloc;
+  late ManagerUsersBloc _bloc;
 
   final _listUsers = <User>[];
 
@@ -41,7 +41,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
     _slidableController = SlidableController(
       onSlideAnimationChanged: (_) {},
       onSlideIsOpenChanged: (isOpen) {
-        setState(() => _isOpeningSlide = isOpen);
+        setState(() => _isOpeningSlide = isOpen!);
       },
     );
     _listUserController = ScrollController()
@@ -94,9 +94,9 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
       floatingActionButton: _isOpeningSlide == true
           ? null
           : FloatingActionButton(
-              onPressed: null,
-              child: Icon(Icons.add),
-            ),
+        onPressed: null,
+        child: Icon(Icons.add),
+      ),
     );
   }
 
@@ -113,9 +113,9 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
               controller: _listUserController,
               itemBuilder: (context, index) => index == _listUsers.length
                   ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [CircularProgressIndicator()],
-                    )
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [CircularProgressIndicator()],
+              )
                   : _buildItemUserByIndex(_listUsers[index]),
               itemCount: snapShort.data is LoadingUsersState
                   ? _listUsers.length + 1
@@ -125,8 +125,8 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
         });
   }
 
-  Future<bool> _showDialogConfirm(String text, String description) {
-    return showDialog<bool>(
+  Future<bool?> _showDialogConfirm(String text, String description) {
+    return showDialog<bool?>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -151,113 +151,113 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
     return user.uid == null
         ? Text('Error')
         : StreamBuilder<Map<String, DestroyUserType>>(
-            stream: _bloc.renderItemRemove$,
-            builder: (context, snapShort) {
-              return Slidable.builder(
-                key: Key(user.uid),
-                controller: _slidableController,
-                actionPane: SlidableScrollActionPane(),
-                actionExtentRatio: 0.2,
-                child: UserItemWidget(user),
-                actionDelegate: SlideActionBuilderDelegate(
-                  actionCount: 1,
-                  builder: (context, index, animation, renderingMode) {
-                    final data = snapShort.data ?? {};
-                    return data[user.uid] == DestroyUserType.CHANGE_ROLE
-                        ? Center(child: CircularProgressIndicator())
-                        : IconSlideAction(
-                            caption:
-                                user.role == Role.USER ? 'To staff' : 'To user',
-                            color: Colors.blue,
-                            icon: user.role == Role.USER
-                                ? Icons.arrow_circle_up
-                                : Icons.arrow_circle_down,
-                            onTap: () async {
-                              Theatre theatre;
+      stream: _bloc.renderItemRemove$,
+      builder: (context, snapShort) {
+        return Slidable.builder(
+          key: Key(user.uid),
+          controller: _slidableController,
+          actionPane: SlidableScrollActionPane(),
+          actionExtentRatio: 0.2,
+          child: UserItemWidget(user),
+          actionDelegate: SlideActionBuilderDelegate(
+            actionCount: 1,
+            builder: (context, index, animation, renderingMode) {
+              final data = snapShort.data ?? {};
+              return data[user.uid] == DestroyUserType.CHANGE_ROLE
+                  ? Center(child: CircularProgressIndicator())
+                  : IconSlideAction(
+                caption:
+                user.role == Role.USER ? 'To staff' : 'To user',
+                color: Colors.blue,
+                icon: user.role == Role.USER
+                    ? Icons.arrow_circle_up
+                    : Icons.arrow_circle_down,
+                onTap: () async {
+                  Theatre? theatre;
 
-                              if (user.role == Role.USER) {
-                                theatre =
-                                    await AppScaffold.of(context).pushNamed(
-                                  TheatresPage.routeName,
-                                  arguments: TheatresMode.pick,
-                                ) as Theatre;
-                                if (theatre == null) {
-                                  return;
-                                }
-                              }
+                  if (user.role == Role.USER) {
+                    theatre =
+                    await AppScaffold.of(context)!.pushNamed(
+                      TheatresPage.routeName,
+                      arguments: TheatresMode.pick,
+                    ) as Theatre;
+                    if (theatre == null) {
+                      return;
+                    }
+                  }
 
-                              print(theatre);
-                              _bloc.destroyUser(
-                                Tuple3(
-                                  user,
-                                  DestroyUserType.CHANGE_ROLE,
-                                  theatre?.id,
-                                ),
-                              );
-                            },
-                          );
-                  },
-                ),
-                secondaryActionDelegate: SlideActionBuilderDelegate(
-                  actionCount: 2,
-                  builder: (context, index, animation, renderingMode) {
-                    final data = snapShort.data ?? {};
-                    final iconBlock = data[user.uid] == DestroyUserType.BLOCK ||
-                            data[user.uid] == DestroyUserType.UNBLOCK
-                        ? Center(child: CircularProgressIndicator())
-                        : IconSlideAction(
-                            caption: user.isActive ? 'Block' : 'Unblock',
-                            color:
-                                user.isActive ? Colors.limeAccent : Colors.grey,
-                            icon: Icons.block,
-                            onTap: () async {
-                              final isDismiss = await _showDialogConfirm(
-                                user.isActive
-                                    ? 'Block this user'
-                                    : 'Unblock this user',
-                                user.isActive
-                                    ? 'User will be block '
-                                    : 'User will be unblock ',
-                              );
-                              if (isDismiss) {
-                                _bloc.destroyUser(
-                                  Tuple3(
-                                    user,
-                                    user.isActive
-                                        ? DestroyUserType.BLOCK
-                                        : DestroyUserType.UNBLOCK,
-                                    null,
-                                  ),
-                                );
-                              }
-                            },
-                          );
-                    final iconRemove = data[user.uid] == DestroyUserType.REMOVE
-                        ? Center(child: CircularProgressIndicator())
-                        : IconSlideAction(
-                            caption: 'Delete',
-                            color: Colors.red,
-                            icon: Icons.delete,
-                            onTap: () async {
-                              final isDismiss = await _showDialogConfirm(
-                                'Delete this user',
-                                'User will be deleted ',
-                              );
-                              if (isDismiss) {
-                                _bloc.destroyUser(Tuple3(
-                                  user,
-                                  DestroyUserType.REMOVE,
-                                  null,
-                                ));
-                              }
-                            },
-                          );
-                    return index == 0 ? iconBlock : iconRemove;
-                  },
-                ),
+                  print(theatre);
+                  _bloc.destroyUser(
+                    Tuple3(
+                      user,
+                      DestroyUserType.CHANGE_ROLE,
+                      theatre!.id,
+                    ),
+                  );
+                },
               );
             },
-          );
+          ),
+          secondaryActionDelegate: SlideActionBuilderDelegate(
+            actionCount: 2,
+            builder: (context, index, animation, renderingMode) {
+              final data = snapShort.data ?? {};
+              final iconBlock = data[user.uid] == DestroyUserType.BLOCK ||
+                  data[user.uid] == DestroyUserType.UNBLOCK
+                  ? Center(child: CircularProgressIndicator())
+                  : IconSlideAction(
+                caption: user.isActive ? 'Block' : 'Unblock',
+                color:
+                user.isActive ? Colors.limeAccent : Colors.grey,
+                icon: Icons.block,
+                onTap: () async {
+                  final isDismiss = await _showDialogConfirm(
+                    user.isActive
+                        ? 'Block this user'
+                        : 'Unblock this user',
+                    user.isActive
+                        ? 'User will be block '
+                        : 'User will be unblock ',
+                  );
+                  if (isDismiss!) {
+                    _bloc.destroyUser(
+                      Tuple3(
+                        user,
+                        user.isActive
+                            ? DestroyUserType.BLOCK
+                            : DestroyUserType.UNBLOCK,
+                        null,
+                      ),
+                    );
+                  }
+                },
+              );
+              final iconRemove = data[user.uid] == DestroyUserType.REMOVE
+                  ? Center(child: CircularProgressIndicator())
+                  : IconSlideAction(
+                caption: 'Delete',
+                color: Colors.red,
+                icon: Icons.delete,
+                onTap: () async {
+                  final isDismiss = await _showDialogConfirm(
+                    'Delete this user',
+                    'User will be deleted ',
+                  );
+                  if (isDismiss!) {
+                    _bloc.destroyUser(Tuple3(
+                      user,
+                      DestroyUserType.REMOVE,
+                      null,
+                    ));
+                  }
+                },
+              );
+              return index == 0 ? iconBlock : iconRemove;
+            },
+          ),
+        );
+      },
+    );
   }
 
   void _listenStateChange(
@@ -267,7 +267,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
     if (state is LoadUserSuccess) {
       _listUsers.addAll(
         state.users.where(
-          (user) => !_isHasUserInList(user, _listUsers),
+              (user) => !_isHasUserInList(user, _listUsers),
         ),
       );
     }
@@ -364,44 +364,44 @@ class UserItemWidget extends StatelessWidget {
       child: ClipOval(
         child: user.avatar == null
             ? Center(
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: imageSize * 0.7,
-                ),
-              )
+          child: Icon(
+            Icons.person,
+            color: Colors.white,
+            size: imageSize * 0.7,
+          ),
+        )
             : CachedNetworkImage(
-                imageUrl: user.avatar,
-                fit: BoxFit.cover,
-                width: imageSize,
-                height: imageSize,
-                progressIndicatorBuilder: (
-                  BuildContext context,
-                  String url,
-                  progress,
-                ) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: progress.progress,
-                      strokeWidth: 2.0,
-                      valueColor: AlwaysStoppedAnimation(Colors.white),
-                    ),
-                  );
-                },
-                errorWidget: (
-                  BuildContext context,
-                  String url,
-                  dynamic error,
-                ) {
-                  return Center(
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: imageSize * 0.7,
-                    ),
-                  );
-                },
+          imageUrl: user.avatar,
+          fit: BoxFit.cover,
+          width: imageSize,
+          height: imageSize,
+          progressIndicatorBuilder: (
+              BuildContext context,
+              String url,
+              progress,
+              ) {
+            return Center(
+              child: CircularProgressIndicator(
+                value: progress.progress,
+                strokeWidth: 2.0,
+                valueColor: AlwaysStoppedAnimation(Colors.white),
               ),
+            );
+          },
+          errorWidget: (
+              BuildContext context,
+              String url,
+              dynamic error,
+              ) {
+            return Center(
+              child: Icon(
+                Icons.person,
+                color: Colors.white,
+                size: imageSize * 0.7,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -433,8 +433,8 @@ class UserItemWidget extends StatelessWidget {
               color: user.role == Role.ADMIN
                   ? Colors.lightBlueAccent
                   : user.role == Role.STAFF
-                      ? Colors.cyanAccent
-                      : Colors.lightGreenAccent,
+                  ? Colors.cyanAccent
+                  : Colors.lightGreenAccent,
               borderRadius: BorderRadius.circular(2)),
           child: Text(
             user.role.string().toLowerCase(),

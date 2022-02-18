@@ -23,13 +23,13 @@ abstract class UserRepository {
   Future<void> login(String email, String password);
 
   Future<void> loginUpdateProfile({
-    @required String fullName,
-    @required String phoneNumber,
-    @required String address,
-    @required Gender gender,
-    Location location,
-    DateTime birthday,
-    File avatarFile,
+    required String fullName,
+    required String phoneNumber,
+    required String address,
+    required Gender gender,
+    Location? location,
+    DateTime? birthday,
+    File? avatarFile,
   });
 
   Future<void> resetPassword(String email);

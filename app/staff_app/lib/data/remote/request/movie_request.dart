@@ -32,16 +32,16 @@ class MovieRequest {
   String toRawJson() => json.encode(toJson());
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'trailer_video_url': trailerVideoUrl,
-        'poster_url': posterUrl,
-        'overview': overview,
-        'released_date': releasedDate,
-        'duration': duration,
-        'director_ids': directorIds,
-        'actor_ids': actorIds,
-        'original_language': originalLanguage,
-        'age_type': ageType,
-        'category_ids': categoryIds,
-      };
+    'title': title,
+    'trailer_video_url': trailerVideoUrl,
+    'poster_url': posterUrl,
+    'overview': overview,
+    'released_date': releasedDate,
+    'duration': duration,
+    'director_ids': directorIds,
+    'actor_ids': actorIds,
+    'original_language': originalLanguage,
+    'age_type': ageType,
+    'category_ids': categoryIds,
+  };
 }

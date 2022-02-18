@@ -21,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  ValueStream<Optional<User>> user$;
+  late ValueStream<Optional<User>> user$;
 
   @override
   void didChangeDependencies() {
@@ -45,8 +45,8 @@ class _ProfilePageState extends State<ProfilePage> {
           }
 
           return data.fold(
-            () => NotLoggedIn(),
-            (user) => LoggedIn(user),
+                () => NotLoggedIn(),
+                (user) => LoggedIn(user),
           );
         },
       ),
@@ -71,7 +71,7 @@ class LoggedIn extends StatelessWidget {
       fontSize: 13,
     );
     final detailInfoStyle =
-        Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 17);
+    Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 17);
     final accentColor = Theme.of(context).accentColor;
 
     return Stack(
@@ -92,12 +92,12 @@ class LoggedIn extends StatelessWidget {
   }
 
   Widget buildListInfos(
-    double height,
-    double imageSize,
-    TextStyle detailHeaderStyle,
-    TextStyle detailInfoStyle,
-    Color accentColor,
-  ) {
+      double height,
+      double imageSize,
+      TextStyle detailHeaderStyle,
+      TextStyle detailInfoStyle,
+      Color accentColor,
+      ) {
     return Positioned.fill(
       top: height + imageSize / 2 - 16,
       left: 0,
@@ -183,7 +183,7 @@ class LoggedIn extends StatelessWidget {
             ),
             dense: true,
             leading: FaIcon(
-              () {
+                  () {
                 switch (user.gender) {
                   case Gender.MALE:
                     return FontAwesomeIcons.mars;
@@ -248,7 +248,7 @@ class LoggedIn extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => AppScaffold.of(context).pushNamed(
+            onTap: () => AppScaffold.of(context)!.pushNamed(
               UpdateProfilePage.routeName,
               arguments: user,
             ),
@@ -291,44 +291,44 @@ class LoggedIn extends StatelessWidget {
           child: ClipOval(
             child: user.avatar == null
                 ? Center(
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: imageSize * 0.7,
-                    ),
-                  )
+              child: Icon(
+                Icons.person,
+                color: Colors.white,
+                size: imageSize * 0.7,
+              ),
+            )
                 : CachedNetworkImage(
-                    imageUrl: user.avatar,
-                    fit: BoxFit.cover,
-                    width: imageSize,
-                    height: imageSize,
-                    progressIndicatorBuilder: (
-                      BuildContext context,
-                      String url,
-                      progress,
-                    ) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: progress.progress,
-                          strokeWidth: 2.0,
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                        ),
-                      );
-                    },
-                    errorWidget: (
-                      BuildContext context,
-                      String url,
-                      dynamic error,
-                    ) {
-                      return Center(
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: imageSize * 0.7,
-                        ),
-                      );
-                    },
+              imageUrl: user.avatar,
+              fit: BoxFit.cover,
+              width: imageSize,
+              height: imageSize,
+              progressIndicatorBuilder: (
+                  BuildContext context,
+                  String url,
+                  progress,
+                  ) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: progress.progress,
+                    strokeWidth: 2.0,
+                    valueColor: AlwaysStoppedAnimation(Colors.white),
                   ),
+                );
+              },
+              errorWidget: (
+                  BuildContext context,
+                  String url,
+                  dynamic error,
+                  ) {
+                return Center(
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: imageSize * 0.7,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

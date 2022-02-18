@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:khaithu/data/remote/response/user_response.dart';
 
 import '../utils/custom_iso_8601_date_time_serializer.dart';
 import 'remote/response/full_reservation_response.dart';
@@ -32,23 +33,24 @@ const builtListSeatResponse = FullType(
   FullReservationResponse,
   PromotionResponse,
   ProductResponse,
+  UserResponse,
 ])
 final Serializers _serializers = _$_serializers;
 
 final Serializers serializers = (_serializers.toBuilder()
-      ..add(UserResponseSerializer())
-      ..addBuilderFactory(
-        builtListTicketResponse,
+  ..add(UserResponseSerializer())
+  ..addBuilderFactory(
+    builtListTicketResponse,
         () => ListBuilder<TicketResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListFullReservationResponse,
+  )
+  ..addBuilderFactory(
+    builtListFullReservationResponse,
         () => ListBuilder<FullReservationResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListSeatResponse,
+  )
+  ..addBuilderFactory(
+    builtListSeatResponse,
         () => ListBuilder<SeatResponse>(),
-      )
-      ..add(CustomIso8601DateTimeSerializer())
-      ..addPlugin(StandardJsonPlugin()))
+  )
+  ..add(CustomIso8601DateTimeSerializer())
+  ..addPlugin(StandardJsonPlugin()))
     .build();

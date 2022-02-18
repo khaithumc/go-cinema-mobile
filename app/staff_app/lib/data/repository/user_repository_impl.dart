@@ -34,45 +34,45 @@ class UserRepositoryImpl implements UserRepository {
   final ValueConnectableStream<Optional<User>> _user$;
 
   UserRepositoryImpl(
-    this._auth,
-    this._userLocalSource,
-    this._authClient,
-    this._userResponseToUserLocal,
-    this._storage,
-    Function1<UserLocal, User> userLocalToUserDomain,
-    this._googleSignIn,
-  ) : _user$ = valueConnectableStream(
-          _auth,
-          _userLocalSource,
-          userLocalToUserDomain,
-        );
+      this._auth,
+      this._userLocalSource,
+      this._authClient,
+      this._userResponseToUserLocal,
+      this._storage,
+      Function1<UserLocal, User> userLocalToUserDomain,
+      this._googleSignIn,
+      ) : _user$ = valueConnectableStream(
+    _auth,
+    _userLocalSource,
+    userLocalToUserDomain,
+  );
 
   static ValueConnectableStream<Optional<User>> valueConnectableStream(
-    FirebaseAuth _auth,
-    UserLocalSource _userLocalSource,
-    Function1<UserLocal, User> userLocalToUserDomain,
-  ) =>
-      Rx.combineLatest3<dynamic, UserLocal, String, Optional<User>>(
-              _auth.userChanges(),
-              _userLocalSource.user$,
-              _userLocalSource.token$,
-              (user, UserLocal local, String token) =>
-                  user == null || local == null || token == null
-                      ? Optional.none()
-                      : Optional.some(userLocalToUserDomain(local)))
-          .publishValueSeeded(null)
-            ..connect();
+      FirebaseAuth _auth,
+      UserLocalSource _userLocalSource,
+      Function1<UserLocal, User> userLocalToUserDomain,
+      ) =>
+      Rx.combineLatest3<dynamic, UserLocal?, String?, Optional<User>>(
+          _auth.userChanges(),
+          _userLocalSource.user$,
+          _userLocalSource.token$,
+              (user, UserLocal? local, String? token) =>
+          user == null || local == null || token == null
+              ? Optional.none()
+              : Optional.some(userLocalToUserDomain(local)))
+          .publishValueSeeded(Optional.none())
+        ..connect();
 
-  Future<AuthState> _isUserLocalCompletedLogin([UserLocal local]) async {
+  Future<AuthState> _isUserLocalCompletedLogin([UserLocal? local]) async {
     local ??= await _userLocalSource.user$.first;
 
     return local == null
         ? AuthState.notLoggedIn
         : local.is_completed
-            ? local.role == Role.USER.string()
-                ? AuthState.notForRole
-                : AuthState.loggedIn
-            : AuthState.notCompletedLogin;
+        ? local.role == Role.USER.string()
+        ? AuthState.notForRole
+        : AuthState.loggedIn
+        : AuthState.notCompletedLogin;
   }
 
   Future<AuthState> _checkAuthInternal() async {
@@ -82,7 +82,7 @@ class UserRepositoryImpl implements UserRepository {
       return AuthState.notLoggedIn;
     }
 
-    await _userLocalSource.saveToken(await _auth.currentUser.getIdToken(true));
+    await _userLocalSource.saveToken(await _auth.currentUser?.getIdToken(true));
 
     try {
       final json = await _authClient.getBody(buildUrl('users/me'));
@@ -124,7 +124,7 @@ class UserRepositoryImpl implements UserRepository {
   Future _checkCompletedLoginAfterFirebaseLogin() async {
     final currentUser = _auth.currentUser;
 
-    final token = await currentUser.getIdToken();
+    final token = await currentUser?.getIdToken();
     await _userLocalSource.saveToken(token);
 
     UserResponse userResponse;
@@ -190,13 +190,13 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> loginUpdateProfile(
-      {String fullName,
-      String phoneNumber,
-      String address,
-      Gender gender,
-      Location location,
-      DateTime birthday,
-      File avatarFile}) async {
+      {required String fullName,
+        required String phoneNumber,
+        required String address,
+        required Gender gender,
+        Location? location,
+        DateTime? birthday,
+        File? avatarFile}) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) {
       throw const NotLoggedInException();

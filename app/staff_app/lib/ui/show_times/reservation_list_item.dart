@@ -6,26 +6,26 @@ import '../../domain/model/reservation.dart';
 import '../../domain/model/ticket.dart';
 
 class ReservationListItem extends StatelessWidget {
-  final Reservation item;
-  final NumberFormat currencyFormat;
+  final Reservation? item;
+  final NumberFormat? currencyFormat;
   static final startTimeFormat = DateFormat('dd/MM/yy, EE, hh:mm a');
 
-  const ReservationListItem({Key key, this.item, this.currencyFormat})
+  const ReservationListItem({Key? key, this.item, this.currencyFormat})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final promotion = item.promotion;
-    final tickets = item.tickets ?? BuiltList.of(<Ticket>[]);
+    final promotion = item!.promotion;
+    final tickets = item!.tickets ?? BuiltList.of(<Ticket>[]);
 
     final textTheme = Theme.of(context).textTheme;
-    final textStyle = textTheme.subtitle1.copyWith(
+    final textStyle = textTheme.subtitle1!.copyWith(
       fontSize: 14,
       fontWeight: FontWeight.w500,
       color: const Color(0xff98A8BA),
     );
 
-    final textStyle2 = textTheme.subtitle1.copyWith(
+    final textStyle2 = textTheme.subtitle1!.copyWith(
       fontSize: 14,
       color: const Color(0xff687189),
       fontWeight: FontWeight.w600,
@@ -33,11 +33,11 @@ class ReservationListItem extends StatelessWidget {
 
     final accentColor = Theme.of(context).accentColor;
 
-    final seatStyle = Theme.of(context).textTheme.caption.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        );
+    final seatStyle = Theme.of(context).textTheme.caption!.copyWith(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+    );
 
     final seatSize = (MediaQuery.of(context).size.width - 16 - 9 * 8) / 8;
 
@@ -61,9 +61,9 @@ class ReservationListItem extends StatelessWidget {
         children: [
           RichText(
             text:
-                TextSpan(text: 'User full name: ', style: textStyle, children: [
+            TextSpan(text: 'User full name: ', style: textStyle, children: [
               TextSpan(
-                text: item.user?.fullName ?? 'N/A',
+                text: item!.user?.fullName ?? 'N/A',
                 style: textStyle2,
               ),
             ]),
@@ -72,7 +72,7 @@ class ReservationListItem extends StatelessWidget {
           RichText(
             text: TextSpan(text: 'User email: ', style: textStyle, children: [
               TextSpan(
-                text: item.user?.email ?? 'N/A',
+                text: item!.user?.email ?? 'N/A',
                 style: textStyle2,
               ),
             ]),
@@ -83,7 +83,7 @@ class ReservationListItem extends StatelessWidget {
           RichText(
             text: TextSpan(text: 'Email: ', style: textStyle, children: [
               TextSpan(
-                text: item.email,
+                text: item!.email,
                 style: textStyle2,
               ),
             ]),
@@ -92,7 +92,7 @@ class ReservationListItem extends StatelessWidget {
           RichText(
             text: TextSpan(text: 'Phone number: ', style: textStyle, children: [
               TextSpan(
-                text: item.phoneNumber,
+                text: item!.phoneNumber,
                 style: textStyle2,
               ),
             ]),
@@ -101,7 +101,7 @@ class ReservationListItem extends StatelessWidget {
           RichText(
             text: TextSpan(text: 'Booked when: ', style: textStyle, children: [
               TextSpan(
-                text: startTimeFormat.format(item.createdAt),
+                text: startTimeFormat.format(item!.createdAt),
                 style: textStyle2,
               ),
             ]),
@@ -172,7 +172,7 @@ class ReservationListItem extends StatelessWidget {
               style: textStyle,
               children: [
                 TextSpan(
-                  text: currencyFormat.format(item.originalPrice) + ' VND',
+                  text: currencyFormat!.format(item!.originalPrice) + ' VND',
                   style: textStyle2,
                 ),
               ],
@@ -186,7 +186,7 @@ class ReservationListItem extends StatelessWidget {
               style: textStyle,
               children: [
                 TextSpan(
-                  text: currencyFormat.format(item.totalPrice) + ' VND',
+                  text: currencyFormat!.format(item!.totalPrice) + ' VND',
                   style: textStyle2,
                 ),
               ],

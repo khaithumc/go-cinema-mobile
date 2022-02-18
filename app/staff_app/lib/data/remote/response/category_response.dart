@@ -30,10 +30,10 @@ class CategoryResponse {
       );
 
   Map<String, dynamic> toJson() => {
-        '_id': id,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'id': categoryId,
-      };
+    '_id': id,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'id': categoryId,
+  };
 }

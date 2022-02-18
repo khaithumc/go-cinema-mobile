@@ -12,6 +12,7 @@ part 'full_reservation_response.g.dart';
 
 abstract class FullReservationResponse
     implements Built<FullReservationResponse, FullReservationResponseBuilder> {
+
   @BuiltValueField(wireName: '_id')
   String get id;
 
@@ -19,8 +20,7 @@ abstract class FullReservationResponse
 
   String get email;
 
-  @nullable
-  bool get is_active;
+  bool? get is_active;
 
   int get original_price;
 
@@ -40,22 +40,23 @@ abstract class FullReservationResponse
 
   BuiltList<TicketResponse> get tickets;
 
-  @nullable
-  PromotionResponse get promotion_id;
+  PromotionResponse? get promotion_id;
 
   FullReservationResponse._();
 
   factory FullReservationResponse(
-          [void Function(FullReservationResponseBuilder) updates]) =
-      _$FullReservationResponse;
+      [void Function(FullReservationResponseBuilder) updates]) =
+  _$FullReservationResponse;
 
   static Serializer<FullReservationResponse> get serializer =>
       _$fullReservationResponseSerializer;
 
   factory FullReservationResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<FullReservationResponse>(serializer, json);
+      serializers.deserializeWith<FullReservationResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }
 
 abstract class ProductAndQuantityResponse
@@ -69,16 +70,18 @@ abstract class ProductAndQuantityResponse
   ProductAndQuantityResponse._();
 
   factory ProductAndQuantityResponse(
-          [void Function(ProductAndQuantityResponseBuilder) updates]) =
-      _$ProductAndQuantityResponse;
+      [void Function(ProductAndQuantityResponseBuilder) updates]) =
+  _$ProductAndQuantityResponse;
 
   static Serializer<ProductAndQuantityResponse> get serializer =>
       _$productAndQuantityResponseSerializer;
 
   factory ProductAndQuantityResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<ProductAndQuantityResponse>(serializer, json);
+      serializers.deserializeWith<ProductAndQuantityResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }
 
 abstract class ShowTimeFullResponse
@@ -86,8 +89,7 @@ abstract class ShowTimeFullResponse
   @BuiltValueField(wireName: '_id')
   String get id;
 
-  @nullable
-  bool get is_active;
+  bool? get is_active;
 
   Res_MovieResponse get movie;
 
@@ -106,16 +108,18 @@ abstract class ShowTimeFullResponse
   ShowTimeFullResponse._();
 
   factory ShowTimeFullResponse(
-          [void Function(ShowTimeFullResponseBuilder) updates]) =
-      _$ShowTimeFullResponse;
+      [void Function(ShowTimeFullResponseBuilder) updates]) =
+  _$ShowTimeFullResponse;
 
   static Serializer<ShowTimeFullResponse> get serializer =>
       _$showTimeFullResponseSerializer;
 
   factory ShowTimeFullResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<ShowTimeFullResponse>(serializer, json);
+      serializers.deserializeWith<ShowTimeFullResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }
 
 abstract class Res_MovieResponse
@@ -123,8 +127,7 @@ abstract class Res_MovieResponse
   @BuiltValueField(wireName: '_id')
   String get id;
 
-  @nullable
-  bool get is_active;
+  bool? get is_active;
 
   BuiltList<String> get actors;
 
@@ -132,14 +135,11 @@ abstract class Res_MovieResponse
 
   String get title;
 
-  @nullable
-  String get trailer_video_url;
+  String? get trailer_video_url;
 
-  @nullable
-  String get poster_url;
+  String? get poster_url;
 
-  @nullable
-  String get overview;
+  String? get overview;
 
   DateTime get released_date;
 
@@ -162,15 +162,17 @@ abstract class Res_MovieResponse
   Res_MovieResponse._();
 
   factory Res_MovieResponse([void Function(Res_MovieResponseBuilder) updates]) =
-      _$Res_MovieResponse;
+  _$Res_MovieResponse;
 
   static Serializer<Res_MovieResponse> get serializer =>
       _$resMovieResponseSerializer;
 
   factory Res_MovieResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<Res_MovieResponse>(serializer, json);
+      serializers.deserializeWith<Res_MovieResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }
 
 abstract class Res_TheatreResponse
@@ -180,8 +182,7 @@ abstract class Res_TheatreResponse
 
   Res_LocationResponse get location;
 
-  @nullable
-  bool get is_active;
+  bool? get is_active;
 
   BuiltList<String> get rooms;
 
@@ -193,8 +194,7 @@ abstract class Res_TheatreResponse
 
   String get description;
 
-  @nullable
-  String get email;
+  String? get email;
 
   String get opening_hours;
 
@@ -204,57 +204,57 @@ abstract class Res_TheatreResponse
 
   DateTime get updatedAt;
 
-  @nullable
-  double get distance;
+  double? get distance;
 
-  @nullable
-  String get thumbnail;
+  String? get thumbnail;
 
-  @nullable
-  String get cover;
+  String? get cover;
 
   Res_TheatreResponse._();
 
   factory Res_TheatreResponse(
-          [void Function(Res_TheatreResponseBuilder) updates]) =
-      _$Res_TheatreResponse;
+      [void Function(Res_TheatreResponseBuilder) updates]) =
+  _$Res_TheatreResponse;
 
   static Serializer<Res_TheatreResponse> get serializer =>
       _$resTheatreResponseSerializer;
 
   factory Res_TheatreResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<Res_TheatreResponse>(serializer, json);
+      serializers.deserializeWith<Res_TheatreResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }
 
 abstract class Res_LocationResponse
     implements Built<Res_LocationResponse, Res_LocationResponseBuilder> {
-  @nullable
   @BuiltValueField(wireName: 'coordinates')
-  BuiltList<double> get coordinates;
+  BuiltList<double>? get coordinates;
 
-  double get longitude => coordinates.isNullOrEmpty ? null : coordinates[0];
+  double? get longitude => coordinates!.isNullOrEmpty ? null : coordinates![0];
 
-  double get latitude => coordinates.isNullOrEmpty ? null : coordinates[1];
+  double? get latitude => coordinates!.isNullOrEmpty ? null : coordinates![1];
 
   Res_LocationResponse._();
 
   factory Res_LocationResponse(
-          [void Function(Res_LocationResponseBuilder) updates]) =
-      _$Res_LocationResponse;
+      [void Function(Res_LocationResponseBuilder) updates]) =
+  _$Res_LocationResponse;
 
   static Serializer<Res_LocationResponse> get serializer =>
       _$resLocationResponseSerializer;
 
   factory Res_LocationResponse.fromJson(Map<String, dynamic> json) =>
-      serializers.deserializeWith<Res_LocationResponse>(serializer, json);
+      serializers.deserializeWith<Res_LocationResponse>(serializer, json)!;
 
-  Map<String, dynamic> toJson() => serializers.serializeWith(serializer, this);
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }
 
 extension IsNullOrEmptyIterableExtension<T> on Iterable<T> {
-  bool get isNullOrEmpty => this == null || isEmpty;
+  bool get isNullOrEmpty => isEmpty;
 }
 
 class UserResponseSerializer implements PrimitiveSerializer<UserResponse> {
@@ -271,7 +271,7 @@ class UserResponseSerializer implements PrimitiveSerializer<UserResponse> {
 
   @override
   Object serialize(Serializers serializers, UserResponse object,
-          {FullType specifiedType = FullType.unspecified}) =>
+      {FullType specifiedType = FullType.unspecified}) =>
       throw UnimplementedError('UserResponseSerializer.serialize');
 
   @override

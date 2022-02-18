@@ -21,7 +21,7 @@ import './domain/repository/ticket_repo.dart';
 import 'data/local/user_local_source_impl.dart';
 import 'data/mappers.dart' as mappers;
 import 'data/remote/auth_client.dart';
-import 'data/repository/mannager_repository_impl.dart';
+import 'data/repository/manager_repository_impl.dart';
 import 'data/repository/movie_repository_impl.dart';
 import 'data/repository/theatres_repository_impl.dart';
 import 'data/repository/user_repository_impl.dart';
@@ -54,7 +54,7 @@ void main() async {
   // Local and remote
   //
   RxSharedPreferencesConfigs.logger =
-      kReleaseMode ? null : const RxSharedPreferencesDefaultLogger();
+  kReleaseMode ? null : const RxSharedPreferencesDefaultLogger();
   final preferences = RxSharedPreferences.getInstance();
   final userLocalSource = UserLocalSourceImpl(preferences);
 
@@ -64,18 +64,20 @@ void main() async {
   final normalClient = NormalClient(client, httpTimeout);
   print(normalClient);
 
-  Function0<Future<void>> _onSignOut;
+  late UserRepository userRepository;
+
+  //Function0<Future<void>> _onSignOut;
   final authClient = AuthClient(
     client,
     httpTimeout,
-    () => _onSignOut(),
-    () => userLocalSource.token$.first,
+        () => userRepository.logout(),
+        () => userLocalSource.token$.first,
   );
 
   //
   // Repositories
   //
-  final userRepository = UserRepositoryImpl(
+  userRepository = UserRepositoryImpl(
     auth,
     userLocalSource,
     authClient,
@@ -88,7 +90,7 @@ void main() async {
   final movieRepository = MovieRepositoryImpl(authClient);
   final theatresRepository = TheatresRepositoryImpl(authClient);
 
-  _onSignOut = userRepository.logout;
+  //_onSignOut = userRepository.logout;
 
   runApp(
     Providers(
@@ -106,6 +108,3 @@ void main() async {
     ),
   );
 }
-
-// BASE_URL=cinema-081098.herokuapp.com
-// WS_URL=cinema-081098.herokuapp.com

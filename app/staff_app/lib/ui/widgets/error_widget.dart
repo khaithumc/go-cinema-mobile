@@ -5,9 +5,9 @@ class MyErrorWidget extends StatelessWidget {
   final void Function() onPressed;
 
   const MyErrorWidget({
-    Key key,
-    @required this.errorText,
-    @required this.onPressed,
+    Key? key,
+    required this.errorText,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class MyErrorWidget extends StatelessWidget {
       children: <Widget>[
         Text(
           errorText,
-          style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 15),
+          style: Theme.of(context).textTheme.subtitle2!.copyWith(fontSize: 15),
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

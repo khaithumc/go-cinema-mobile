@@ -5,7 +5,7 @@ enum EnvKey { BASE_URL, PLACES_API_KEY }
 class EnvManager {
   final _envKeyNames = Map.fromEntries(
     EnvKey.values.map(
-      (e) => MapEntry(
+          (e) => MapEntry(
         e,
         e.toString().split('.')[1],
       ),
@@ -16,7 +16,7 @@ class EnvManager {
 
   Future<void> config() => _dotEnv.load();
 
-  String get(EnvKey key) => _dotEnv.env[_envKeyNames[key]];
+  String? get(EnvKey key) => _dotEnv.env[_envKeyNames[key]];
 
   //
   //

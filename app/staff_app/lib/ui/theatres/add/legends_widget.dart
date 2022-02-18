@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class LegendsWidget extends StatelessWidget {
-  const LegendsWidget({Key key}) : super(key: key);
+  const LegendsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final widthPerSeat = MediaQuery.of(context).size.width / 12;
     final accentColor = Theme.of(context).accentColor;
-    final textStyle = Theme.of(context).textTheme.subtitle2.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        );
+    final textStyle = Theme.of(context).textTheme.subtitle2!.copyWith(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    );
 
     return SliverToBoxAdapter(
       child: Padding(

@@ -8,9 +8,9 @@ enum DestroyUserType { REMOVE, BLOCK, UNBLOCK, CHANGE_ROLE }
 class LoadUserSuccess extends ManageUserState {
   final List<User> users;
 
-  LoadUserSuccess._({@required this.users});
+  LoadUserSuccess._({required this.users});
 
-  factory LoadUserSuccess({@required List<User> users}) {
+  factory LoadUserSuccess({required List<User> users}) {
     return LoadUserSuccess._(users: users);
   }
 }
@@ -22,7 +22,7 @@ class DeleteUserSuccess extends ManageUserState {
 
   DeleteUserSuccess._(this.idUserDelete);
 
-  factory DeleteUserSuccess({@required String idUserDelete}) {
+  factory DeleteUserSuccess({required String idUserDelete}) {
     return DeleteUserSuccess._(idUserDelete);
   }
 }
@@ -32,7 +32,7 @@ class BlockUserSuccess extends ManageUserState {
 
   BlockUserSuccess._(this.user);
 
-  factory BlockUserSuccess({@required User user}) {
+  factory BlockUserSuccess({required User user}) {
     return BlockUserSuccess._(user);
   }
 }
@@ -42,7 +42,7 @@ class UnblockUserSuccess extends ManageUserState {
 
   UnblockUserSuccess._(this.user);
 
-  factory UnblockUserSuccess({@required User user}) {
+  factory UnblockUserSuccess({required User user}) {
     return UnblockUserSuccess._(user);
   }
 }
@@ -52,7 +52,7 @@ class ChangeRoleSuccess extends ManageUserState {
 
   ChangeRoleSuccess._(this.user);
 
-  factory ChangeRoleSuccess({@required User user}) {
+  factory ChangeRoleSuccess({required User user}) {
     return ChangeRoleSuccess._(user);
   }
 }

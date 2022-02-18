@@ -32,15 +32,15 @@ class TheatresRepositoryImpl implements TheatresRepository {
 
   @override
   Future<Theatre> addTheatre({
-    @required String name,
-    @required String address,
-    @required String phone_number,
-    @required String email,
-    @required String description,
-    @required Location location,
-    @required File cover,
-    @required File thumbnail,
-    @required BuiltList<Seat> seats,
+    required String name,
+    required String address,
+    required String phone_number,
+    required String email,
+    required String description,
+    required Location location,
+    required File cover,
+    required File thumbnail,
+    required BuiltList<Seat> seats,
   }) async {
     final urls = await Future.wait(
       [

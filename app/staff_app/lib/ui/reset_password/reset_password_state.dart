@@ -10,7 +10,7 @@ class SuccessMessage implements Message {
 }
 
 class ErrorMessage implements Message {
-  final Object error;
+  final Object? error;
   final String message;
 
   const ErrorMessage(this.message, [this.error]);

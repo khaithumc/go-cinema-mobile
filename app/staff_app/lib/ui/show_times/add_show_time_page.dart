@@ -35,7 +35,7 @@ class AppShowTimePage extends StatefulWidget {
   final Theatre theatre;
   final Movie movie;
 
-  const AppShowTimePage({Key key, @required this.theatre, @required this.movie})
+  const AppShowTimePage({Key? key, required this.theatre, required this.movie})
       : super(key: key);
 
   @override
@@ -46,10 +46,10 @@ class _AppShowTimePageState extends State<AppShowTimePage>
     with DisposeBagMixin {
   final startTimeFormat = DateFormat('dd/MM/yyyy, EE, hh:mm a');
 
-  LoaderBloc<BuiltList<Seat>> bloc;
-  DateTime startTime;
+  late LoaderBloc<BuiltList<Seat>> bloc;
+  late DateTime startTime;
   final buttonStateS = BehaviorSubject.seeded(ButtonState.idle);
-  final prices = ValueSubject<List<Tuple2<Seat, int>>>(null);
+  final prices = ValueSubject<List<Tuple2<Seat, int>>?>(null);
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    bloc ??= () {
+    bloc = () {
       final b = LoaderBloc(
         loaderFunction: () => Provider.of<TicketRepository>(context)
             .getSeatsByTheatreId(widget.theatre.id),
@@ -72,7 +72,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
       b.state$.listen((event) {
         final tuples = event.content
             ?.map((s) => Tuple2(s, 50000 * (s.count ?? 1)))
-            ?.toList(growable: false);
+            .toList(growable: false);
         prices.add(tuples);
       }).disposedBy(bag);
 
@@ -98,7 +98,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                 width: 56,
                 height: 56,
                 child: LoadingIndicator(
-                  color: Theme.of(context).accentColor,
+                  colors: [Theme.of(context).accentColor],
                   indicatorType: Indicator.ballClipRotatePulse,
                 ),
               ),
@@ -116,7 +116,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
 
           final builtMap = BuiltMap.of(
             Map.fromEntries(
-              state.content.map((t) => MapEntry(t.id, t)),
+              state.content!.map((t) => MapEntry(t.id, t)),
             ),
           );
 
@@ -142,7 +142,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                       ),
                     ),
                     SeatsGridWidget(
-                      tickets: state.content,
+                      tickets: state.content!,
                       tapTicket: (ticket) {
                         if (ticket == null) {
                           throw Exception('Something was wrong');
@@ -203,7 +203,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () => AppScaffold.of(context).maybePop(),
+                      onTap: () => AppScaffold.of(context)!.maybePop(),
                       customBorder: CircleBorder(),
                       splashColor: Colors.white30,
                       child: Padding(
@@ -288,13 +288,13 @@ class _AppShowTimePageState extends State<AppShowTimePage>
 
                       final movies = state.content;
 
-                      if (movies.isEmpty) {
+                      if (movies!.isEmpty) {
                         return Container(
                           color: Color(0xFFFCFCFC),
                           constraints: BoxConstraints.expand(height: 250),
                           child: Center(
                             child:
-                                EmptyWidget(message: 'Empty available period'),
+                            EmptyWidget(message: 'Empty available period'),
                           ),
                         );
                       }
@@ -312,7 +312,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
                                           'From ${startTimeFormat.format(i.item1)}',
@@ -361,7 +361,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
   }
 
   Widget _buildChangeAllPrices() {
-    return RxStreamBuilder<List<Tuple2<Seat, int>>>(
+    return RxStreamBuilder<List<Tuple2<Seat, int>>?>(
         stream: prices,
         builder: (context, data) {
           if (data == null) {
@@ -383,7 +383,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                   }
 
                   prices.add([
-                    for (final t in prices.value) Tuple2(t.item1, price),
+                    for (final t in prices.value!) Tuple2(t.item1, price),
                   ]);
                 },
                 child: Padding(
@@ -420,7 +420,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                   context: context,
                   firstDate: DateTime(1900),
                   initialDate:
-                      currentValue ?? now.add(const Duration(minutes: 5)),
+                  currentValue ?? now.add(const Duration(minutes: 5)),
                   lastDate: DateTime(2100),
                   selectableDayPredicate: (date) => date.isAfter(
                       startOfDay(now).subtract(const Duration(days: 1))),
@@ -456,7 +456,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                 }
                 return 'Invalid start time';
               },
-              onChanged: (v) => startTime = v,
+              onChanged: (v) => startTime = v!,
               resetIcon: Icon(Icons.delete, color: Colors.deepPurpleAccent),
               decoration: InputDecoration(
                   prefixIcon: Padding(
@@ -490,7 +490,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
       return;
     }
     final tickets = prices.value;
-    if (!tickets.every((element) => element.item2 > 0)) {
+    if (!tickets!.every((element) => element.item2 > 0)) {
       context.showSnackBar('Invalid price');
       return;
     }
@@ -500,7 +500,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
 
     try {
       await repo.addShowTime(
-        movieId: widget.movie.id,
+        movieId: widget.movie.id!,
         theatreId: widget.theatre.id,
         startTime: startTime,
         tickets: [for (final t in tickets) Tuple2(t.item1.id, t.item2)],
@@ -510,7 +510,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
       }
       context.showSnackBar('Added successfully!');
       await delay(500);
-      await AppScaffold.of(context)
+       AppScaffold.of(context)!
           .popUntil(ModalRoute.withName(ShowTimesPage.routeName));
     } catch (e, s) {
       print(e);
@@ -527,7 +527,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
   }
 
   Widget _buildLoadingButton() {
-    return RxStreamBuilder(
+    return RxStreamBuilder<ButtonState>(
       stream: buttonStateS,
       builder: (ctx, snap) {
         return Container(
@@ -574,7 +574,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                       )
                     },
                     onPressed: submit,
-                    state: snap.data,
+                    state: snap,
                   ),
                 ),
                 SizedBox(
@@ -591,7 +591,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
   final currencyFormat = NumberFormat.currency(locale: 'vi_VN', symbol: '');
 
   Widget _buildListTickets() {
-    return RxStreamBuilder<List<Tuple2<Seat, int>>>(
+    return RxStreamBuilder<List<Tuple2<Seat, int>>?>(
       stream: prices,
       builder: (context, data) {
         if (data == null) {
@@ -599,7 +599,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
         }
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-            (context, index) {
+                (context, index) {
               final item = data[index];
               return ListTile(
                 title: Text.rich(
@@ -612,9 +612,9 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
                             color: Colors.primaries[
-                                (item.item1.row.codeUnitAt(0) -
-                                        'A'.codeUnitAt(0)) %
-                                    Colors.primaries.length],
+                            (item.item1.row.codeUnitAt(0) -
+                                'A'.codeUnitAt(0)) %
+                                Colors.primaries.length],
                           )),
                       TextSpan(
                           text: item.item1.column.toString(),
@@ -622,13 +622,13 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             color: Colors.primaries[
-                                item.item1.column % Colors.primaries.length],
+                            item.item1.column % Colors.primaries.length],
                           )),
                     ],
                   ),
                 ),
                 subtitle:
-                    Text('Price: ${currencyFormat.format(item.item2)} VND'),
+                Text('Price: ${currencyFormat.format(item.item2)} VND'),
                 isThreeLine: false,
                 trailing: IconButton(
                   icon: Icon(Icons.edit),
@@ -640,7 +640,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                     }
 
                     prices.add([
-                      for (final t in prices.value)
+                      for (final t in prices.value!)
                         if (t.item1.id == item.item1.id)
                           t
                         else
@@ -657,12 +657,12 @@ class _AppShowTimePageState extends State<AppShowTimePage>
     );
   }
 
-  Future<int> pickPrice(int initPrice) {
+  Future<int?> pickPrice(int? initPrice) {
     return showDialog<int>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
-        int price;
+        int? price;
 
         return AlertDialog(
           title: Text('Edit price'),
@@ -672,9 +672,9 @@ class _AppShowTimePageState extends State<AppShowTimePage>
             autocorrect: true,
             keyboardType: TextInputType.number,
             maxLines: 1,
-            onChanged: (v) => price = int.tryParse(v),
+            onChanged: (v) => price = int.tryParse(v)!,
             validator: (v) {
-              final p = int.tryParse(v);
+              final p = int.tryParse(v!);
               if (p == null || p <= 0) {
                 return 'Invalid price';
               }
@@ -700,7 +700,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
             TextButton(
               child: Text('OK'),
               onPressed: () {
-                if (price == null || price <= 0) {
+                if (price == null || price! <= 0) {
                   Navigator.of(dialogContext).pop();
                   return;
                 }
@@ -720,9 +720,9 @@ class SeatsGridWidget extends StatefulWidget {
   final Function1<Seat, void> tapTicket;
 
   const SeatsGridWidget({
-    Key key,
-    @required this.tickets,
-    @required this.tapTicket,
+    Key? key,
+    required this.tickets,
+    required this.tapTicket,
   }) : super(key: key);
 
   @override
@@ -730,9 +730,9 @@ class SeatsGridWidget extends StatefulWidget {
 }
 
 class _SeatsGridWidgetState extends State<SeatsGridWidget> {
-  int maxX;
-  int maxY;
-  Map<SeatCoordinates, Seat> ticketByCoordinates;
+  late int maxX;
+  late int maxY;
+  late Map<SeatCoordinates, Seat> ticketByCoordinates;
 
   @override
   void initState() {
@@ -809,11 +809,11 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
   }
 
   Widget buildItem(
-    BuildContext context,
-    int y,
-    int x,
-    double widthPerSeat,
-  ) {
+      BuildContext context,
+      int y,
+      int x,
+      double widthPerSeat,
+      ) {
     final row = String.fromCharCode('A'.codeUnitAt(0) + y);
 
     if (x == 0) {
@@ -828,11 +828,11 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
         child: Center(
           child: Text(
             row,
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff687189),
-                ),
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff687189),
+            ),
           ),
         ),
       );
@@ -842,12 +842,12 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
     final coordinates = SeatCoordinates.from(x: x, y: y);
     final ticket = ticketByCoordinates[coordinates];
     if (ticket == null) {
-      int prevCount;
-      SeatCoordinates prevCoords;
+      int? prevCount;
+      SeatCoordinates? prevCoords;
       var prevX = x - 1;
       while (prevX >= 0) {
         prevCoords = SeatCoordinates.from(x: prevX, y: y);
-        prevCount = ticketByCoordinates[prevCoords]?.count;
+        prevCount = ticketByCoordinates[prevCoords]!.count;
         if (prevCount != null) {
           break;
         }
@@ -855,14 +855,14 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       }
 
       return prevCount != null &&
-              prevCount > 1 &&
-              (coordinates.x - prevCoords.x + 1) <= prevCount
+          prevCount > 1 &&
+          (coordinates.x - prevCoords!.x + 1) <= prevCount
           ? const SizedBox(width: 0, height: 0)
           : Container(
-              margin: const EdgeInsets.all(0.5),
-              width: widthPerSeat,
-              height: widthPerSeat,
-            );
+        margin: const EdgeInsets.all(0.5),
+        width: widthPerSeat,
+        height: widthPerSeat,
+      );
     } else {
       return SeatWidget(
         seat: ticket,
@@ -874,12 +874,12 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
 }
 
 class SeatWidget extends StatelessWidget {
-  final Seat seat;
-  final Function1<Seat, void> tapTicket;
-  final double widthPerSeat;
+  final Seat? seat;
+  final Function1<Seat, void>? tapTicket;
+  final double? widthPerSeat;
 
   const SeatWidget({
-    Key key,
+    Key? key,
     this.seat,
     this.tapTicket,
     this.widthPerSeat,
@@ -887,10 +887,10 @@ class SeatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = widthPerSeat * seat.count + (seat.count - 1) * 1;
+    final width = widthPerSeat! * seat!.count + (seat!.count - 1) * 1;
 
     return InkWell(
-      onTap: () => tapTicket(seat),
+      onTap: () => tapTicket!(seat!),
       child: Container(
         margin: const EdgeInsets.all(0.5),
         width: width,
@@ -905,12 +905,12 @@ class SeatWidget extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            '${seat.row}${seat.column}',
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff687189),
-                ),
+            '${seat!.row}${seat!.column}',
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff687189),
+            ),
           ),
         ),
       ),
@@ -919,15 +919,15 @@ class SeatWidget extends StatelessWidget {
 }
 
 class LegendsWidget extends StatelessWidget {
-  const LegendsWidget({Key key}) : super(key: key);
+  const LegendsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final widthPerSeat = MediaQuery.of(context).size.width / 12;
-    final textStyle = Theme.of(context).textTheme.subtitle2.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        );
+    final textStyle = Theme.of(context).textTheme.subtitle2!.copyWith(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    );
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -999,23 +999,23 @@ class BottomWidget extends StatelessWidget {
   final BuiltMap<String, Seat> tickets;
 
   BottomWidget({
-    Key key,
-    @required this.theatre,
-    @required this.movie,
-    @required this.tickets,
+    Key? key,
+    required this.theatre,
+    required this.movie,
+    required this.tickets,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final textStyle = textTheme.subtitle1.copyWith(
+    final textStyle = textTheme.subtitle1!.copyWith(
       fontSize: 15,
       fontWeight: FontWeight.w400,
       color: const Color(0xff98A8BA),
     );
 
-    final textStyle2 = textTheme.subtitle1.copyWith(
+    final textStyle2 = textTheme.subtitle1!.copyWith(
       fontSize: 16,
       color: const Color(0xff687189),
       fontWeight: FontWeight.w600,
@@ -1024,7 +1024,7 @@ class BottomWidget extends StatelessWidget {
     const h = 128.0;
     const w = h / 1.3;
 
-    final movieTitleStyle = textTheme.headline4.copyWith(
+    final movieTitleStyle = textTheme.headline4!.copyWith(
       fontSize: 24,
       fontWeight: FontWeight.w500,
       color: const Color(0xff687189),
@@ -1043,7 +1043,7 @@ class BottomWidget extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        movie.title,
+                        movie.title ?? '',
                         style: movieTitleStyle,
                       ),
                       const SizedBox(height: 6),
@@ -1082,7 +1082,7 @@ class BottomWidget extends StatelessWidget {
                             SizedBox(height: 4),
                             Text(
                               'Load image error',
-                              style: textTheme.subtitle2.copyWith(fontSize: 12),
+                              style: textTheme.subtitle2!.copyWith(fontSize: 12),
                             ),
                           ],
                         ),

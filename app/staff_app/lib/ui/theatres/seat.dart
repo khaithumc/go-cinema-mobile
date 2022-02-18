@@ -7,10 +7,10 @@ class Coordinates {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Coordinates &&
-          runtimeType == other.runtimeType &&
-          x == other.x &&
-          y == other.y;
+          other is Coordinates &&
+              runtimeType == other.runtimeType &&
+              x == other.x &&
+              y == other.y;
 
   @override
   int get hashCode => x.hashCode ^ y.hashCode;
@@ -29,11 +29,11 @@ class Seat {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Seat &&
-          runtimeType == other.runtimeType &&
-          row == other.row &&
-          count == other.count &&
-          coordinates == other.coordinates;
+          other is Seat &&
+              runtimeType == other.runtimeType &&
+              row == other.row &&
+              count == other.count &&
+              coordinates == other.coordinates;
 
   @override
   int get hashCode => row.hashCode ^ count.hashCode ^ coordinates.hashCode;

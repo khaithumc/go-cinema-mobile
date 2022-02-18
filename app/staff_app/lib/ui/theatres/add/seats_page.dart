@@ -34,21 +34,21 @@ BuiltList<Seat> fullSeats() {
 }
 
 class SeatsPage extends StatefulWidget {
-  final BuiltList<Seat> seats;
+  final BuiltList<Seat>? seats;
 
   static const routeName = '/home/theatres/add/seats';
 
-  const SeatsPage({Key key, this.seats}) : super(key: key);
+  const SeatsPage({Key? key, this.seats}) : super(key: key);
 
   @override
   _SeatsPageState createState() => _SeatsPageState();
 }
 
 class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
-  BehaviorSubject<BuiltList<Seat>> changeSeatS;
+  late BehaviorSubject<BuiltList<Seat>> changeSeatS;
   final longSelectedS = BehaviorSubject.seeded(<Seat>{}.build());
 
-  DistinctValueStream<Tuple2<BuiltList<Seat>, BuiltSet<Seat>>> seats$;
+  late DistinctValueStream<Tuple2<BuiltList<Seat>, BuiltSet<Seat>>> seats$;
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
     seats$ = Rx.combineLatest2(
       changeSeatS,
       longSelectedS,
-      (a, b) => Tuple2<BuiltList<Seat>, BuiltSet<Seat>>(a, b),
+          (BuiltList<Seat> a,BuiltSet<Seat> b) => Tuple2<BuiltList<Seat>, BuiltSet<Seat>>(a, b),
     ).shareValueDistinct(
       Tuple2(seedValue, longSelectedS.value),
       sync: true,
@@ -116,7 +116,7 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
             ),
             IconButton(
               icon: Icon(Icons.done),
-              onPressed: () => AppScaffold.of(context).pop(seats$.value.item1),
+              onPressed: () => AppScaffold.of(context)!.pop(seats$.value.item1),
             ),
           ],
         ),
@@ -135,36 +135,36 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
                 height: 16,
               ),
             ),
-            RxStreamBuilder(
+            RxStreamBuilder<Tuple2<BuiltList<Seat>, BuiltSet<Seat>>>(
               stream: seats$,
               builder: (context, snapshot) => SeatsGridWidget(
-                tuple: snapshot.data,
+                tuple: snapshot,
                 changeSeat: (value) {
                   final acc = changeSeatS.value;
                   final newSeats = acc.firstWhere(
-                              (e) => e.coordinates == value.coordinates,
-                              orElse: () => null) !=
-                          null
+                          (e) => e.coordinates == value.coordinates,
+                     /* orElse: () => null*/) !=
+                      null
                       ? () {
-                          final longSelected = longSelectedS.value;
-                          if (longSelected.firstWhere(
-                                  (e) => e.coordinates == value.coordinates,
-                                  orElse: () => null) !=
-                              null) {
-                            longSelectedS.add(
-                                longSelected.rebuild((b) => b.remove(value)));
-                          }
-                          return acc.rebuild((b) => b.remove(value));
-                        }()
+                    final longSelected = longSelectedS.value;
+                    if (longSelected.firstWhere(
+                            (e) => e.coordinates == value.coordinates,
+                        /*orElse: () => null*/) !=
+                        null) {
+                      longSelectedS.add(
+                          longSelected.rebuild((b) => b.remove(value)));
+                    }
+                    return acc.rebuild((b) => b.remove(value));
+                  }()
                       : acc.rebuild((b) => b.add(value));
                   changeSeatS.add(newSeats);
                 },
                 onLongPressed: (seat) {
                   final longSelected = longSelectedS.value;
                   final newLongSelected = longSelected.firstWhere(
-                              (e) => e.coordinates == seat.coordinates,
-                              orElse: () => null) !=
-                          null
+                          (e) => e.coordinates == seat.coordinates,
+                      /*orElse: () => null*/) !=
+                      null
                       ? longSelected.rebuild((b) => b.remove(seat))
                       : longSelected.rebuild((b) => b.add(seat));
                   longSelectedS.add(newLongSelected);
@@ -231,10 +231,10 @@ class SeatsGridWidget extends StatefulWidget {
   final Function1<Seat, void> onLongPressed;
 
   const SeatsGridWidget({
-    Key key,
-    @required this.changeSeat,
-    @required this.tuple,
-    @required this.onLongPressed,
+    Key? key,
+    required this.changeSeat,
+    required this.tuple,
+    required this.onLongPressed,
   }) : super(key: key);
 
   @override
@@ -242,10 +242,10 @@ class SeatsGridWidget extends StatefulWidget {
 }
 
 class _SeatsGridWidgetState extends State<SeatsGridWidget> {
-  int maxX;
-  int maxY;
-  Map<Coordinates, Seat> seatByCoordinates;
-  Map<Coordinates, int> columnByCoordinates;
+  late int maxX;
+  late int maxY;
+  late Map<Coordinates, Seat> seatByCoordinates;
+  late Map<Coordinates, int> columnByCoordinates;
 
   @override
   void initState() {
@@ -266,13 +266,13 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
         .groupBy(
           (s) => s.coordinates.y,
           (s) => s,
-        )
+    )
         .entries
         .expand(
           (e) => e.value
-              .sortedBy<num>((e) => e.coordinates.x)
-              .mapIndexed((i, c) => MapEntry(c.coordinates, i + 1)),
-        )
+          .sortedBy<num>((e) => e.coordinates.x)
+          .mapIndexed((i, c) => MapEntry(c.coordinates, i + 1)),
+    )
         .toMap();
   }
 
@@ -335,11 +335,11 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
   }
 
   Widget buildItem(
-    BuildContext context,
-    int y,
-    int x,
-    double widthPerSeat,
-  ) {
+      BuildContext context,
+      int y,
+      int x,
+      double widthPerSeat,
+      ) {
     final row = String.fromCharCode('A'.codeUnitAt(0) + y);
 
     if (x == 0) {
@@ -354,11 +354,11 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
         child: Center(
           child: Text(
             row,
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff687189),
-                ),
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff687189),
+            ),
           ),
         ),
       );
@@ -368,12 +368,12 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
     final coordinates = Coordinates(x, y);
     final seat = seatByCoordinates[coordinates];
     if (seat == null) {
-      int prevCount;
-      Coordinates cc;
+      int? prevCount;
+      Coordinates? cc;
       var jj = x - 1;
       while (jj >= 0) {
         cc = Coordinates(jj, y);
-        prevCount = seatByCoordinates[cc]?.count;
+        prevCount = seatByCoordinates[cc]!.count;
         if (prevCount != null) {
           break;
         }
@@ -381,32 +381,32 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       }
 
       return prevCount != null &&
-              prevCount > 1 &&
-              (coordinates.x - cc.x + 1) <= prevCount
+          prevCount > 1 &&
+          (coordinates.x - cc!.x + 1) <= prevCount
           ? const SizedBox(width: 0, height: 0)
           : InkWell(
-              onTap: () => widget.changeSeat(Seat(row, 1, coordinates)),
-              child: Container(
-                margin: const EdgeInsets.all(0.5),
-                width: widthPerSeat,
-                height: widthPerSeat,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: const Color(0xffCBD7E9),
-                    width: 1,
-                  ),
-                ),
-              ),
-            );
+        onTap: () => widget.changeSeat(Seat(row, 1, coordinates)),
+        child: Container(
+          margin: const EdgeInsets.all(0.5),
+          width: widthPerSeat,
+          height: widthPerSeat,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
+              color: const Color(0xffCBD7E9),
+              width: 1,
+            ),
+          ),
+        ),
+      );
     } else {
       return SeatWidget(
         seat: seat,
         widthPerSeat: widthPerSeat,
         isSelected: !widget.tuple.item2.contains(seat),
         onTap: () => widget.changeSeat(seat),
-        column: columnByCoordinates[coordinates],
+        column: columnByCoordinates[coordinates]!,
         onLongPress: () => widget.onLongPressed(seat),
       );
     }
@@ -422,13 +422,13 @@ class SeatWidget extends StatelessWidget {
   final GestureLongPressCallback onLongPress;
 
   const SeatWidget({
-    Key key,
-    this.widthPerSeat,
-    this.seat,
-    this.isSelected,
-    this.onTap,
-    this.column,
-    this.onLongPress,
+    Key? key,
+    required this.widthPerSeat,
+    required this.seat,
+    required this.isSelected,
+    required this.onTap,
+    required this.column,
+    required this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -456,11 +456,11 @@ class SeatWidget extends StatelessWidget {
         child: Center(
           child: Text(
             '${seat.row}${column}',
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

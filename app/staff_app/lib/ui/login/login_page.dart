@@ -26,15 +26,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin<LoginPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  DisposeBag disposeBag;
+  late DisposeBag disposeBag;
 
-  AnimationController loginButtonController;
-  Animation<double> buttonSqueezeAnimation;
+  late AnimationController loginButtonController;
+  late Animation<double> buttonSqueezeAnimation;
 
-  FocusNode passwordFocusNode;
-  TextEditingController emailController;
+  late FocusNode passwordFocusNode;
+  late TextEditingController emailController;
 
-  GoogleSignInBloc googleSignInBloc;
+  late GoogleSignInBloc googleSignInBloc;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage>
     ).animate(
       CurvedAnimation(
         parent: loginButtonController,
-        curve: Interval(
+        curve: const Interval(
           0.0,
           0.250,
         ),
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    disposeBag ??= () {
+    disposeBag = () {
       final userRepository = Provider.of<UserRepository>(context);
 
       final loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -110,10 +110,10 @@ class _LoginPageState extends State<LoginPage>
         children: [
           Positioned.fill(
             child: Container(
-              constraints: BoxConstraints.expand(),
+              constraints: const BoxConstraints.expand(),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/login_bg.png'),
+                  image: const AssetImage('assets/images/login_bg.png'),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.6),
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage>
           ),
           Positioned.fill(
             child: Container(
-              constraints: BoxConstraints.expand(),
+              constraints: const BoxConstraints.expand(),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: <Color>[
@@ -149,10 +149,10 @@ class _LoginPageState extends State<LoginPage>
                     const SizedBox(height: 24),
                     Text(
                       'Login to your Account',
-                      style: Theme.of(context).textTheme.headline6.copyWith(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
@@ -175,7 +175,7 @@ class _LoginPageState extends State<LoginPage>
                         Expanded(
                           child: Center(
                             child: RaisedButton(
-                              color: Color(0xFFde5246),
+                              color: const Color(0xFFde5246),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage>
                                 stream: googleSignInBloc.isLoading$,
                                 builder: (context, data) {
                                   if (data) {
-                                    return CircularProgressIndicator(
+                                    return const CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation(
                                         Colors.white,
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage>
                                   return Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      FaIcon(
+                                      const FaIcon(
                                         FontAwesomeIcons.google,
                                         color: Colors.white,
                                       ),
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage>
                                         'Google',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .button
+                                            .button!
                                             .copyWith(color: Colors.white),
                                       ),
                                     ],
@@ -260,15 +260,15 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget emailTextField(LoginBloc loginBloc) {
-    return StreamBuilder<String>(
+    return StreamBuilder<String?>(
       stream: loginBloc.emailError$,
       builder: (context, snapshot) {
         return TextField(
           controller: emailController,
           autocorrect: true,
           decoration: InputDecoration(
-            prefixIcon: Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8.0),
+            prefixIcon: const Padding(
+              padding: EdgeInsetsDirectional.only(end: 8.0),
               child: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -276,15 +276,15 @@ class _LoginPageState extends State<LoginPage>
             ),
             labelText: 'Email',
             errorText: snapshot.data,
-            labelStyle: TextStyle(color: Colors.white),
+            labelStyle: const TextStyle(color: Colors.white),
             fillColor: Colors.white,
-            enabledBorder: UnderlineInputBorder(
+            enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
             ),
           ),
           keyboardType: TextInputType.emailAddress,
           maxLines: 1,
-          style: TextStyle(fontSize: 16.0, color: Colors.white),
+          style: const TextStyle(fontSize: 16.0, color: Colors.white),
           onChanged: loginBloc.emailChanged,
           textInputAction: TextInputAction.next,
           autofocus: true,
@@ -297,11 +297,11 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget passwordTextField(LoginBloc loginBloc) {
-    return StreamBuilder<String>(
+    return StreamBuilder<String?>(
       stream: loginBloc.passwordError$,
       builder: (context, snapshot) {
         return PasswordTextField(
-          errorText: snapshot.data,
+          errorText: snapshot.data ?? '',
           onChanged: loginBloc.passwordChanged,
           labelText: 'Password',
           textInputAction: TextInputAction.done,
@@ -323,7 +323,7 @@ class _LoginPageState extends State<LoginPage>
           loginBloc.submitLogin();
         },
         color: Theme.of(context).backgroundColor,
-        child: Text(
+        child: const Text(
           'LOGIN',
           style: TextStyle(
             color: Colors.white,
@@ -335,7 +335,7 @@ class _LoginPageState extends State<LoginPage>
       builder: (context, child) {
         final value = buttonSqueezeAnimation.value;
 
-        return Container(
+        return SizedBox(
           width: value,
           height: 60.0,
           child: Material(
@@ -345,9 +345,9 @@ class _LoginPageState extends State<LoginPage>
             borderRadius: BorderRadius.circular(30.0),
             child: value > 75.0
                 ? child
-                : Center(
-                    child: CircularProgressIndicator(strokeWidth: 2.0),
-                  ),
+                : const Center(
+              child: CircularProgressIndicator(strokeWidth: 2.0),
+            ),
           ),
         );
       },
@@ -368,7 +368,7 @@ class _LoginPageState extends State<LoginPage>
           FocusScope.of(context).requestFocus(passwordFocusNode);
         }
       },
-      child: Text(
+      child: const Text(
         'Forgot password?',
         style: TextStyle(
           color: Colors.white70,

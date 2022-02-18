@@ -18,8 +18,8 @@ class ManagerRepositoryImpl implements ManagerRepository {
   Future<List<User>> loadUser(int page) async {
     try {
       final usersRes = await _authClient.getBody(
-              buildUrl('admin_users/', {'page': '$page', 'per_page': '10'}))
-          as List;
+          buildUrl('admin_users/', {'page': '$page', 'per_page': '10'}))
+      as List;
       return usersRes
           .map((json) => userResponseToUserDomain(UserResponse.fromJson(json)))
           .toList();

@@ -20,10 +20,10 @@ class UserLocalSourceImpl implements UserLocalSource {
 
   @override
   Future<void> saveUser(UserLocal? user) => _preferences.write<UserLocal>(
-        _userKey,
-        user,
+    _userKey,
+    user,
         (u) => u == null ? null : jsonEncode(u),
-      );
+  );
 
   @override
   Stream<String?> get token$ =>

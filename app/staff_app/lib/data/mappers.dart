@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:khaithu/utils/iterable.dart';
+
 import '../data/remote/response/full_reservation_response.dart';
 import '../data/remote/response/product_response.dart';
 import '../data/remote/response/promotion_response.dart';
@@ -40,14 +42,14 @@ UserLocal userResponseToUserLocal(UserResponse response) {
     location: response.location == null
         ? null
         : LocationLocal(
-            latitude: response.location.latitude,
-            longitude: response.location.longitude,
-          ),
+      latitude: response.location?.latitude ?? 0,
+      longitude: response.location?.longitude ?? 0,
+    ),
     is_completed: response.is_completed,
     is_active: response.is_active ?? true,
     role: response.role,
-    theatreResponseString:
-        response.theatre == null ? null : jsonEncode(response.theatre),
+    theatreResponseString: jsonEncode(response.theatre),
+    //response.theatre == null ? null : jsonEncode(response.theatre),
   );
 }
 
@@ -60,20 +62,16 @@ User userLocalToUserDomain(UserLocal local) {
     gender: stringToGender(local.gender),
     avatar: local.avatar,
     address: local.address,
-    birthday: local.birthday,
-    location: local.location == null
-        ? null
-        : Location(
-            latitude: local.location.latitude,
-            longitude: local.location.longitude,
-          ),
+    birthday: local.birthday ?? DateTime.now(),
+    location: Location(
+      latitude: local.location!.latitude,
+      longitude: local.location!.longitude,
+    ),
     isCompleted: local.is_completed,
-    isActive: local.is_active ?? true,
+    isActive: local.is_active,
     role: local.role.parseToRole(),
-    theatre: local.theatreResponseString == null
-        ? null
-        : theatreResponseToTheatre(
-            TheatreResponse.fromRawJson(local.theatreResponseString)),
+    theatre: theatreResponseToTheatre(
+        TheatreResponse.fromRawJson(local.theatreResponseString)),
   );
 }
 
@@ -92,33 +90,29 @@ extension RoleResponse on String {
     return this == 'ADMIN'
         ? Role.ADMIN
         : this == 'STAFF'
-            ? Role.STAFF
-            : Role.USER;
+        ? Role.STAFF
+        : Role.USER;
   }
 }
 
 User userResponseToUserDomain(UserResponse response) {
-  return User(
-    uid: response.uid,
-    email: response.email,
-    phoneNumber: response.phone_number,
-    fullName: response.full_name,
-    gender: stringToGender(response.gender),
-    avatar: response.avatar,
-    address: response.address,
-    birthday: response.birthday,
-    location: response.location == null
-        ? null
-        : Location(
-            latitude: response.location.latitude,
-            longitude: response.location.longitude,
-          ),
+  return User((b) =>b..
+    uid = response.uid..
+    email = response.email..
+    phoneNumber = response.phone_number..
+    fullName = response.full_name..
+    gender = stringToGender(response.gender)..
+    avatar = response.avatar..
+    address = response.address..
+    birthday = response.birthday ?? DateTime.now()..
+    location = Location((b) => b..
+      latitude = response.location?.latitude ?? 0..
+      longitude = response.location?.longitude ?? 0,
+    ),
     isCompleted: response.is_completed,
     isActive: response.is_active ?? true,
     role: response.role.parseToRole(),
-    theatre: response.theatre == null
-        ? null
-        : theatreResponseToTheatre(response.theatre),
+    theatre: theatreResponseToTheatre(response.theatre!)
   );
 }
 
@@ -138,9 +132,9 @@ Movie movieRemoteToDomain(MovieResponse response) {
     ageType: response.ageType.ageType(),
     actors: response.actors.map((e) => personResponseToPerson(e)).toList(),
     directors:
-        response.directors.map((e) => personResponseToPerson(e)).toList(),
+    response.directors.map((e) => personResponseToPerson(e)).toList(),
     categories:
-        response.categories.map((e) => categoryResponseToCategory(e)).toList(),
+    response.categories.map((e) => categoryResponseToCategory(e)).toList(),
     rateStar: response.rateStar,
     totalFavorite: response.totalFavorite,
     totalRate: response.totalRate,
@@ -149,17 +143,17 @@ Movie movieRemoteToDomain(MovieResponse response) {
 
 MovieRequest movieDomainToRemote(Movie movie) {
   return MovieRequest(
-    title: movie.title,
+    title: movie.title ?? '',
     trailerVideoUrl: movie.trailerVideoUrl,
     posterUrl: movie.posterUrl,
     overview: movie.overview,
     releasedDate: movie.releasedDate.toIso8601String(),
     duration: movie.duration,
-    directorIds: movie.directors.map((e) => e.id).toList(),
-    actorIds: movie.actors.map((e) => e.id).toList(),
+    directorIds: movie.directors!.map((e) => e.id).toList(),
+    actorIds: movie.actors!.map((e) => e.id).toList(),
     originalLanguage: movie.originalLanguage,
     ageType: movie.ageType.toString().split('.')[1],
-    categoryIds: movie.categories.map((e) => e.id).toList(),
+    categoryIds: movie.categories!.map((e) => e.id).toList(),
   );
 }
 
@@ -185,19 +179,20 @@ Person personResponseToPerson(PersonResponse response) {
 }
 
 extension AgeTypeExtension on String {
-  AgeType ageType() => this == 'P'
-      ? AgeType.P
-      : this == 'C13'
+  AgeType ageType() =>
+      this == 'P'
+          ? AgeType.P
+          : this == 'C13'
           ? AgeType.C13
           : this == 'C16'
-              ? AgeType.C16
-              : AgeType.C18;
+          ? AgeType.C16
+          : AgeType.C18;
 }
 
 Location locationResponseToLocation(LocationResponse response) {
   return Location(
-    latitude: response.latitude,
-    longitude: response.longitude,
+    latitude: response.latitude ?? 0,
+    longitude: response.longitude ?? 0,
   );
 }
 
@@ -263,7 +258,7 @@ Ticket ticketResponseToTicket(TicketResponse response) {
     id: response.id,
     is_active: response.is_active ?? true,
     price: response.price,
-    reservationId: response.reservation,
+    reservationId: response.reservation!,
     seat: Seat.from(
       is_active: seat.is_active ?? true,
       coordinates: SeatCoordinates.from(
@@ -323,8 +318,8 @@ Theatre res_theatreResponseToTheatre(Res_TheatreResponse r) {
 
   return Theatre(
     location: Location(
-      latitude: r.location.latitude,
-      longitude: r.location.longitude,
+      latitude: r.location.latitude ?? 0,
+      longitude: r.location.longitude ?? 0,
     ),
     isActive: r.is_active ?? true,
     rooms: r.rooms.asList(),
@@ -333,13 +328,13 @@ Theatre res_theatreResponseToTheatre(Res_TheatreResponse r) {
     address: r.address,
     phoneNumber: r.phone_number,
     description: r.description,
-    email: r.email,
+    email: r.email!,
     openingHours: r.opening_hours,
     roomSummary: r.room_summary,
     createdAt: r.createdAt,
     updatedAt: r.updatedAt,
-    cover: r.cover,
-    thumbnail: r.thumbnail,
+    cover: r.cover!,
+    thumbnail: r.thumbnail!,
   );
 }
 
@@ -348,9 +343,9 @@ Movie res_movieResponseToMovie(Res_MovieResponse r) {
     id: r.id,
     isActive: r.is_active ?? true,
     title: r.title,
-    trailerVideoUrl: r.trailer_video_url,
-    posterUrl: r.poster_url,
-    overview: r.overview,
+    trailerVideoUrl: r.trailer_video_url ?? 'null',
+    posterUrl: r.poster_url!,
+    overview: r.overview ?? 'null',
     releasedDate: r.released_date,
     duration: r.duration,
     originalLanguage: r.original_language,
@@ -368,7 +363,8 @@ Movie res_movieResponseToMovie(Res_MovieResponse r) {
 
 Promotion promotionResponseToPromotion(PromotionResponse response) {
   return Promotion(
-    (b) => b
+        (b) =>
+    b
       ..id = response.id
       ..code = response.code
       ..discount = response.discount
@@ -385,40 +381,35 @@ Promotion promotionResponseToPromotion(PromotionResponse response) {
 
 Reservation fullReservationResponseToReservation(
     FullReservationResponse response) {
-  return Reservation((b) {
-    final productIds = response.products.map(
-      (p) => ProductAndQuantity.from(
-        id: p.product.id,
-        quantity: p.quantity,
-        product: productResponseToProduct(p.product),
-      ),
-    );
-    final productIdWithCountsBuilder = b.productIdWithCounts
-      ..safeReplace(productIds);
-    final ticketsBuilder = b.tickets
-      ..safeReplace(response.tickets.map((t) => ticketResponseToTicket(t)));
-
-    final promotion = response.promotion_id;
-    final promotionBuilder = promotion == null
-        ? null
-        : (b.promotion..replace(promotionResponseToPromotion(promotion)));
-
-    return b
-      ..id = response.id
-      ..createdAt = response.createdAt
-      ..email = response.email
-      ..isActive = response.is_active ?? true
-      ..originalPrice = response.original_price
-      ..paymentIntentId = response.payment_intent_id
-      ..phoneNumber = response.phone_number
-      ..productIdWithCounts = productIdWithCountsBuilder
-      ..showTimeId = response.show_time.id
-      ..showTime = showTimeFullResponseToShowTime(response.show_time)
-      ..totalPrice = response.total_price
-      ..updatedAt = response.updatedAt
-      ..tickets = ticketsBuilder
-      ..promotionId = promotion?.id
-      ..promotion = promotionBuilder
-      ..user = userResponseToUserDomain(response.user);
-  });
+  return Reservation((b) =>
+  b
+    ..id = response.id
+    ..createdAt = response.createdAt
+    ..email = response.email
+    ..isActive = response.is_active
+    ..originalPrice = response.original_price
+    ..paymentIntentId = response.payment_intent_id
+    ..phoneNumber = response.phone_number
+    ..productIdWithCounts = (b.productIdWithCounts
+      ..safeReplace(response.products.map(
+            (p) =>
+            ProductAndQuantity.from(
+              id: p.product.id,
+              quantity: p.quantity,
+              product: productResponseToProduct(p.product),
+            ),
+      )))
+    ..showTimeId = response.show_time.id
+    ..showTime = showTimeFullResponseToShowTime(response.show_time)
+    ..totalPrice = response.total_price
+    ..updatedAt = response.updatedAt
+    ..tickets = (b.tickets
+      ..safeReplace(response.tickets.map((t) => ticketResponseToTicket(t))))
+    ..promotionId = response.promotion_id?.id
+    ..promotion = (b.promotion
+      ..replace(promotionResponseToPromotion(response.promotion_id!)))
+    ..user = userResponseToUserDomain(response.user)
+  );
 }
+
+

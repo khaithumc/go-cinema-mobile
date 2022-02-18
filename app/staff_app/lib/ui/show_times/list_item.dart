@@ -8,11 +8,11 @@ import '../app_scaffold.dart';
 import 'ticket_page.dart';
 
 class ShowTimeItem extends StatelessWidget {
-  final ShowTime item;
-  final Theatre theatre;
+  final ShowTime? item;
+  final Theatre? theatre;
   static final showTimeDateFormat = DateFormat('dd/MM/yyyy, hh:mm a');
 
-  ShowTimeItem({Key key, this.item, this.theatre}) : super(key: key);
+  ShowTimeItem({Key? key, this.item, this.theatre}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ShowTimeItem extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          AppScaffold.of(context).pushNamed(
+          AppScaffold.of(context)!.pushNamed(
             TicketsPage.routeName,
             arguments: {
               'showTime': item,
@@ -34,7 +34,7 @@ class ShowTimeItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: OctoImage(
-                image: NetworkImage(item.movie.posterUrl ?? ''),
+                image: NetworkImage(item!.movie.posterUrl ?? ''),
                 width: 128,
                 height: 86,
                 fit: BoxFit.cover,
@@ -60,11 +60,11 @@ class ShowTimeItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(item.movie.title),
+                  Text(item?.movie.title ?? ''),
                   const SizedBox(height: 4),
                   Text(
-                    '${item.movie.duration} mins',
-                    style: textTheme.caption.copyWith(fontSize: 14),
+                    '${item?.movie.duration} mins',
+                    style: textTheme.caption!.copyWith(fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -82,9 +82,9 @@ class ShowTimeItem extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            showTimeDateFormat.format(item.startTime),
+                            showTimeDateFormat.format(item!.startTime),
                             textAlign: TextAlign.center,
-                            style: textTheme.subtitle1.copyWith(
+                            style: textTheme.subtitle1!.copyWith(
                               fontSize: 18,
                               color: const Color(0xff687189),
                             ),

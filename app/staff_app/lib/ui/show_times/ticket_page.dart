@@ -32,9 +32,9 @@ class TicketsPage extends StatefulWidget {
   final Theatre theatre;
 
   const TicketsPage({
-    Key key,
-    @required this.showTime,
-    @required this.theatre,
+    Key? key,
+    required this.showTime,
+    required this.theatre,
   }) : super(key: key);
 
   @override
@@ -42,8 +42,8 @@ class TicketsPage extends StatefulWidget {
 }
 
 class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
-  LoaderBloc<BuiltList<Ticket>> bloc;
-  LoaderBloc<BuiltList<Reservation>> resBloc;
+  late LoaderBloc<BuiltList<Ticket>> bloc;
+  late LoaderBloc<BuiltList<Reservation>> resBloc;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
 
     final ticketRepository = Provider.of<TicketRepository>(context);
 
-    bloc ??= () {
+    bloc = () {
       return LoaderBloc(
         loaderFunction: () =>
             ticketRepository.getTicketsByShowTimeId(widget.showTime.id),
@@ -64,7 +64,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
       )..fetch();
     }();
 
-    resBloc ??= LoaderBloc(
+    resBloc = LoaderBloc(
       loaderFunction: () =>
           ticketRepository.getReservationsByShowTimeId(widget.showTime.id),
       logger: print,
@@ -83,7 +83,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
                 width: 56,
                 height: 56,
                 child: LoadingIndicator(
-                  color: Theme.of(context).accentColor,
+                  colors: [Theme.of(context).accentColor],
                   indicatorType: Indicator.ballScaleMultiple,
                 ),
               ),
@@ -101,7 +101,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
 
           final builtMap = BuiltMap.of(
             Map.fromEntries(
-              state.content.map((t) => MapEntry(t.id, t)),
+              state.content!.map((t) => MapEntry(t.id, t)),
             ),
           );
 
@@ -127,7 +127,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
                       ),
                     ),
                     SeatsGridWidget(
-                      tickets: state.content,
+                      tickets: state.content!,
                       tapTicket: (ticket) {
                         if (ticket == null) {
                           throw Exception('Something was wrong');
@@ -135,7 +135,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
                         print('Tapped $ticket');
                       },
                     ),
-                    LegendsWidget(tickets: state.content),
+                    LegendsWidget(tickets: state.content!),
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -166,7 +166,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () => AppScaffold.of(context).maybePop(),
+                      onTap: () => AppScaffold.of(context)!.maybePop(),
                       customBorder: CircleBorder(),
                       splashColor: Colors.white30,
                       child: Padding(
@@ -196,7 +196,7 @@ class _TicketsPageState extends State<TicketsPage> with DisposeBagMixin {
 }
 
 class ScreenWidget extends StatelessWidget {
-  const ScreenWidget({Key key}) : super(key: key);
+  const ScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -271,9 +271,9 @@ class SeatsGridWidget extends StatefulWidget {
   final Function1<Ticket, void> tapTicket;
 
   const SeatsGridWidget({
-    Key key,
-    @required this.tickets,
-    @required this.tapTicket,
+    Key? key,
+    required this.tickets,
+    required this.tapTicket,
   }) : super(key: key);
 
   @override
@@ -281,9 +281,9 @@ class SeatsGridWidget extends StatefulWidget {
 }
 
 class _SeatsGridWidgetState extends State<SeatsGridWidget> {
-  int maxX;
-  int maxY;
-  Map<SeatCoordinates, Ticket> ticketByCoordinates;
+  late int maxX;
+  late int maxY;
+  late Map<SeatCoordinates, Ticket> ticketByCoordinates;
 
   @override
   void initState() {
@@ -360,11 +360,11 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
   }
 
   Widget buildItem(
-    BuildContext context,
-    int y,
-    int x,
-    double widthPerSeat,
-  ) {
+      BuildContext context,
+      int y,
+      int x,
+      double widthPerSeat,
+      ) {
     final row = String.fromCharCode('A'.codeUnitAt(0) + y);
 
     if (x == 0) {
@@ -379,11 +379,11 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
         child: Center(
           child: Text(
             row,
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff687189),
-                ),
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff687189),
+            ),
           ),
         ),
       );
@@ -393,12 +393,12 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
     final coordinates = SeatCoordinates.from(x: x, y: y);
     final ticket = ticketByCoordinates[coordinates];
     if (ticket == null) {
-      int prevCount;
-      SeatCoordinates prevCoords;
+      int? prevCount;
+      SeatCoordinates? prevCoords;
       var prevX = x - 1;
       while (prevX >= 0) {
         prevCoords = SeatCoordinates.from(x: prevX, y: y);
-        prevCount = ticketByCoordinates[prevCoords]?.seat?.count;
+        prevCount = ticketByCoordinates[prevCoords]!.seat.count;
         if (prevCount != null) {
           break;
         }
@@ -406,14 +406,14 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       }
 
       return prevCount != null &&
-              prevCount > 1 &&
-              (coordinates.x - prevCoords.x + 1) <= prevCount
+          prevCount > 1 &&
+          (coordinates.x - prevCoords!.x + 1) <= prevCount
           ? const SizedBox(width: 0, height: 0)
           : Container(
-              margin: const EdgeInsets.all(0.5),
-              width: widthPerSeat,
-              height: widthPerSeat,
-            );
+        margin: const EdgeInsets.all(0.5),
+        width: widthPerSeat,
+        height: widthPerSeat,
+      );
     } else {
       return SeatWidget(
         ticket: ticket,
@@ -425,12 +425,12 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
 }
 
 class SeatWidget extends StatelessWidget {
-  final Ticket ticket;
-  final Function1<Ticket, void> tapTicket;
-  final double widthPerSeat;
+  final Ticket? ticket;
+  final Function1<Ticket, void>? tapTicket;
+  final double? widthPerSeat;
 
   const SeatWidget({
-    Key key,
+    Key? key,
     this.ticket,
     this.tapTicket,
     this.widthPerSeat,
@@ -438,10 +438,10 @@ class SeatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final seat = ticket.seat;
-    final width = widthPerSeat * seat.count + (seat.count - 1) * 1;
+    final seat = ticket!.seat;
+    final width = widthPerSeat! * seat.count + (seat.count - 1) * 1;
 
-    if (ticket.reservationId != null) {
+    if (ticket!.reservationId != null) {
       final accentColor = Theme.of(context).accentColor;
 
       return Container(
@@ -459,17 +459,17 @@ class SeatWidget extends StatelessWidget {
         child: Center(
           child: Text(
             '${seat.row}${seat.column}',
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 10,
-                  color: const Color(0x98A8BA),
-                ),
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 10,
+              color: const Color(0x98A8BA),
+            ),
           ),
         ),
       );
     }
 
     return InkWell(
-      onTap: () => tapTicket(ticket),
+      onTap: () => tapTicket!(ticket!),
       child: Container(
         margin: const EdgeInsets.all(0.5),
         width: width,
@@ -485,11 +485,11 @@ class SeatWidget extends StatelessWidget {
         child: Center(
           child: Text(
             '${seat.row}${seat.column}',
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff687189),
-                ),
+            style: Theme.of(context).textTheme.caption!.copyWith(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff687189),
+            ),
           ),
         ),
       ),
@@ -498,21 +498,21 @@ class SeatWidget extends StatelessWidget {
 }
 
 class LegendsWidget extends StatelessWidget {
-  final BuiltList<Ticket> tickets;
+  final BuiltList<Ticket>? tickets;
 
-  const LegendsWidget({Key key, this.tickets}) : super(key: key);
+  const LegendsWidget({Key? key, this.tickets}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final avai = tickets.count((e) => e.reservationId == null);
-    final taken = tickets.length - avai;
+    final avai = tickets!.count((e) => e.reservationId == null);
+    final taken = tickets!.length - avai;
 
     final widthPerSeat = MediaQuery.of(context).size.width / 12;
     final accentColor = Theme.of(context).accentColor;
-    final textStyle = Theme.of(context).textTheme.subtitle2.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        );
+    final textStyle = Theme.of(context).textTheme.subtitle2!.copyWith(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    );
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -604,24 +604,24 @@ class BottomWidget extends StatelessWidget {
   final BuiltMap<String, Ticket> tickets;
 
   BottomWidget({
-    Key key,
-    @required this.showTime,
-    @required this.theatre,
-    @required this.movie,
-    @required this.tickets,
+    Key? key,
+    required this.showTime,
+    required this.theatre,
+    required this.movie,
+    required this.tickets,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final textStyle = textTheme.subtitle1.copyWith(
+    final textStyle = textTheme.subtitle1!.copyWith(
       fontSize: 15,
       fontWeight: FontWeight.w400,
       color: const Color(0xff98A8BA),
     );
 
-    final textStyle2 = textTheme.subtitle1.copyWith(
+    final textStyle2 = textTheme.subtitle1!.copyWith(
       fontSize: 16,
       color: const Color(0xff687189),
       fontWeight: FontWeight.w600,
@@ -634,8 +634,8 @@ class BottomWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              movie.title,
-              style: textTheme.headline4.copyWith(
+              movie.title ?? '',
+              style: textTheme.headline4!.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xff687189),
@@ -685,9 +685,9 @@ class BottomWidget extends StatelessWidget {
               ]),
             ),
             const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: const Divider(
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Divider(
                 height: 1,
                 color: Color(0xffD1DBE2),
               ),
@@ -711,10 +711,10 @@ extension _CountExt<T> on Iterable<T> {
 
 class ResList extends StatelessWidget {
   static final currencyFormat =
-      NumberFormat.currency(locale: 'vi_VN', symbol: '');
+  NumberFormat.currency(locale: 'vi_VN', symbol: '');
   final LoaderBloc<BuiltList<Reservation>> bloc;
 
-  ResList({Key key, @required this.bloc}) : super(key: key);
+  ResList({Key? key, required this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -754,7 +754,7 @@ class ResList extends StatelessWidget {
 
         final movies = state.content;
 
-        if (movies.isEmpty) {
+        if (movies!.isEmpty) {
           return SliverToBoxAdapter(
             child: Container(
               color: Color(0xFFFCFCFC),
@@ -766,20 +766,20 @@ class ResList extends StatelessWidget {
           );
         }
 
-        final total = movies.fold(0, (acc, e) => acc + e.totalPrice);
+        final total = movies.fold(0, (int acc, e) => acc + e.totalPrice);
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-            (context, index) {
+                (context, index) {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
                     'TOTAL: ${currencyFormat.format(total)} VND',
-                    style: Theme.of(context).textTheme.headline4.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xff687189),
-                        ),
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xff687189),
+                    ),
                   ),
                 );
               }

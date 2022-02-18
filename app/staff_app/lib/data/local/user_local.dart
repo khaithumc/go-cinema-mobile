@@ -1,108 +1,66 @@
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:meta/meta.dart';
 
-class LocationLocal {
-  final double latitude;
+import '../serializers.dart';
 
-  final double longitude;
+part 'user_local.g.dart';
 
-  LocationLocal({
-    required this.latitude,
-    required this.longitude,
-  });
+abstract class LocationLocal implements Built<LocationLocal, LocationLocalBuilder> {
+  double get latitude;
 
-  factory LocationLocal.fromJson(Map map) {
-    return LocationLocal(
-        latitude: map['latitude'], longitude: map['longitude']);
-  }
+  double get longitude;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'latitude': latitude,
-      'longitude': longitude,
-    };
-  }
+  LocationLocal._();
+
+  factory LocationLocal([void Function(LocationLocalBuilder) updates]) =
+      _$LocationLocal;
+
+  static Serializer<LocationLocal> get serializer => _$locationLocalSerializer;
+
+  factory LocationLocal.fromJson(Map<String, Object?> json) =>
+      serializers.deserializeWith<LocationLocal>(serializer, json)!;
+
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this) as Map<String, Object?>;
 }
 
-class UserLocal {
-  final String uid;
+abstract class UserLocal implements Built<UserLocal, UserLocalBuilder> {
+  String get uid;
 
-  final String email;
+  String get email;
 
-  final String phone_number;
+  String get phone_number;
 
-  final String full_name;
+  String get full_name;
 
-  final String gender;
+  String get gender;
 
-  final String avatar;
+  String? get avatar;
 
-  final String address;
+  String get address;
 
-  final DateTime? birthday;
+  DateTime? get birthday;
 
-  final LocationLocal? location;
+  LocationLocal? get location;
 
-  final bool is_completed;
+  bool get is_completed;
 
-  final bool is_active;
+  bool get is_active;
 
-  final String role;
+  String get role;
 
-  final String theatreResponseString;
+  String get theatreResponseString;
 
-  UserLocal({
-    required this.uid,
-    required this.email,
-    required this.phone_number,
-    required this.full_name,
-    required this.gender,
-    required this.avatar,
-    required this.address,
-    required this.birthday,
-    required this.location,
-    required this.is_completed,
-    required this.is_active,
-    required this.role,
-    required this.theatreResponseString,
-  });
+  UserLocal._();
 
-  factory UserLocal.fromJson(Map<String, dynamic> map) {
-    return UserLocal(
-      uid: map['uid'],
-      email: map['email'],
-      phone_number: map['phone_number'],
-      full_name: map['full_name'],
-      gender: map['gender'],
-      avatar: map['avatar'],
-      address: map['address'],
-      birthday: map['birthday'] == null
-          ? null
-          : DateTime.parse(map['birthday']).toLocal(),
-      location: map['location'] == null
-          ? null
-          : LocationLocal.fromJson(map['location']),
-      is_completed: map['is_completed'],
-      is_active: map['is_active'],
-      role: map['role'],
-      theatreResponseString: map['theatreResponseString'],
-    );
-  }
+  factory UserLocal([void Function(UserLocalBuilder) updates]) = _$UserLocal;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'uid': uid,
-      'email': email,
-      'phone_number': phone_number,
-      'full_name': full_name,
-      'gender': gender,
-      'avatar': avatar,
-      'address': address,
-      'birthday': birthday?.toIso8601String(),
-      'location': location?.toJson(),
-      'is_completed': is_completed,
-      'is_active': is_active,
-      'role': role,
-      'theatreResponseString': theatreResponseString,
-    };
-  }
+  static Serializer<UserLocal> get serializer => _$userLocalSerializer;
+
+  factory UserLocal.fromJson(Map<String, Object?> json) =>
+      serializers.deserializeWith<UserLocal>(serializer, json)!;
+
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this) as Map<String, Object?>;
 }

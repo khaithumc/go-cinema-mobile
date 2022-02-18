@@ -1,93 +1,77 @@
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:meta/meta.dart';
+import '../../../utils/iterable.dart';
 
+import '../../serializers.dart';
 import 'theatre_response.dart';
 
-class LocationResponse {
-  final List<double> coordinates;
+part 'user_response.g.dart';
 
-  LocationResponse._(this.coordinates);
+abstract class LocationResponse implements Built<LocationResponse, LocationResponseBuilder> {
+   @BuiltValueField(wireName: 'coordinates')
+  BuiltList<double>? get coordinates;
 
-  factory LocationResponse.fromJson(Map map) {
-    final list = map['coordinates'] as List;
-    if (list.isEmpty) {
-      return LocationResponse._([]);
-    }
+  double? get longitude => coordinates.isNullOrEmpty ? null : coordinates![0];
 
-    final nums = list.cast<num>();
-    return LocationResponse._([
-      nums[0].toDouble(),
-      nums[1].toDouble(),
-    ]);
-  }
+  double? get latitude => coordinates.isNullOrEmpty ? null : coordinates![1];
 
-  double? get longitude => coordinates.isEmpty ? null : coordinates[0];
+  LocationResponse._();
 
-  double? get latitude => coordinates.isEmpty ? null : coordinates[1];
+  factory LocationResponse([void Function(LocationResponseBuilder) updates]) =
+      _$LocationResponse;
+
+  static Serializer<LocationResponse> get serializer =>
+      _$locationResponseSerializer;
+
+  factory LocationResponse.fromJson(Map<String, Object?> json) =>
+      serializers.deserializeWith<LocationResponse>(serializer, json)!;
+
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this) as Map<String, Object?>;
 }
 
-class UserResponse {
-  final String uid;
 
-  final String email;
 
-  final String phone_number;
+abstract class UserResponse implements Built<UserResponse, UserResponseBuilder> {
+  
+  String get uid;
 
-  final String full_name;
+  String get email;
 
-  final String gender;
+  String get phone_number;
 
-  final String avatar;
+  String get full_name;
 
-  final String address;
+  String get gender;
 
-  final DateTime? birthday;
+  String? get avatar;
 
-  final LocationResponse? location;
+  String get address;
 
-  final bool is_completed;
+  DateTime? get birthday;
 
-  final bool is_active;
+  LocationResponse? get location;
 
-  final String role;
+  bool get is_completed;
 
-  final TheatreResponse? theatre;
+  bool get is_active;
 
-  UserResponse({
-    required this.uid,
-    required this.email,
-    required this.phone_number,
-    required this.full_name,
-    required this.gender,
-    required this.avatar,
-    required this.address,
-    required this.birthday,
-    required this.location,
-    required this.is_completed,
-    required this.is_active,
-    required this.role,
-    required this.theatre,
-  });
+  String get role;
 
-  factory UserResponse.fromJson(Map map) {
-    final theatre = map['theatre'];
-    return UserResponse(
-      uid: map['uid'],
-      email: map['email'],
-      phone_number: map['phone_number'],
-      full_name: map['full_name'],
-      gender: map['gender'],
-      avatar: map['avatar'],
-      address: map['address'],
-      birthday: map['birthday'] != null
-          ? DateTime.parse(map['birthday']).toLocal()
-          : null,
-      location: map['location'] != null
-          ? LocationResponse.fromJson(map['location'])
-          : null,
-      is_completed: map['is_completed'],
-      is_active: map['is_active'],
-      role: map['role'],
-      theatre: theatre == null ? null : TheatreResponse.fromJson(theatre),
-    );
-  }
+  TheatreResponse? get theatre;
+
+   UserResponse._();
+
+  factory UserResponse([void Function(UserResponseBuilder) updates]) =
+      _$UserResponse;
+
+  static Serializer<UserResponse> get serializer => _$userResponseSerializer;
+
+  factory UserResponse.fromJson(Map<String, Object?> json) =>
+      serializers.deserializeWith<UserResponse>(serializer, json)!;
+
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this) as Map<String, Object?>;
 }

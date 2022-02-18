@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                   'Manager users',
                   '${Random().nextInt(10) + 1} notifications',
                   Colors.red,
-                  () => Navigator.of(context)
+                      () => Navigator.of(context)
                       .pushNamed(ManagerUsersPage.routeName),
                 ),
                 card(
@@ -78,14 +78,14 @@ class _HomePageState extends State<HomePage> {
                   "Manager movie",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(MoviePage.routeName),
+                      () => Navigator.of(context).pushNamed(MoviePage.routeName),
                 ),
                 card(
                   Icons.add_box_rounded,
                   "Upload movie",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context)
+                      () => Navigator.of(context)
                       .pushNamed(UploadMoviePage.routeName),
                 ),
                 card(
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                   "Manager theatre",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(
+                      () => Navigator.of(context).pushNamed(
                     TheatresPage.routeName,
                     arguments: TheatresMode.theatreInfo,
                   ),
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   "Manager show time",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(
+                      () => Navigator.of(context).pushNamed(
                     TheatresPage.routeName,
                     arguments: TheatresMode.showTimes,
                   ),
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                   "Report",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(
+                      () => Navigator.of(context).pushNamed(
                     TheatresPage.routeName,
                     arguments: TheatresMode.report,
                   ),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   "Scan QR code",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(
+                      () => Navigator.of(context).pushNamed(
                     QRCodePage.routeName,
                   ),
                 )
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                   "Manager show time",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => AppScaffold.of(context).pushNamed(
+                      () => AppScaffold.of(context)!.pushNamed(
                     ShowTimesPage.routeName,
                     arguments: user.theatre,
                   ),
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                   "Report",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(
+                      () => Navigator.of(context).pushNamed(
                     ReportPage.routeName,
                     arguments: user.theatre,
                   ),
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                   "Scan QR code",
                   "${Random().nextInt(10) + 1} notifications",
                   Colors.red,
-                  () => Navigator.of(context).pushNamed(
+                      () => Navigator.of(context).pushNamed(
                     QRCodePage.routeName,
                   ),
                 )

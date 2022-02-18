@@ -17,7 +17,7 @@ class ShowTimesPage extends StatefulWidget {
 
   final Theatre theatre;
 
-  const ShowTimesPage({Key key, @required this.theatre}) : super(key: key);
+  const ShowTimesPage({Key? key, required this.theatre}) : super(key: key);
 
   @override
   _ShowTimesPageState createState() => _ShowTimesPageState();
@@ -27,8 +27,8 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
   var isLoading = true;
   var page = 0;
   var loadedAll = false;
-  List<ShowTime> list;
-  Object error;
+  late List<ShowTime> list;
+  late Object? error;
 
   final controller = ScrollController();
 
@@ -118,7 +118,7 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
       body: buildBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          AppScaffold.of(context).pushNamed(
+          AppScaffold.of(context)!.pushNamed(
             SelectMoviePage.routeName,
             arguments: widget.theatre,
           );
@@ -135,7 +135,7 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
           width: 56,
           height: 56,
           child: LoadingIndicator(
-            color: Theme.of(context).accentColor,
+            colors: [Theme.of(context).accentColor],
             indicatorType: Indicator.ballScaleMultiple,
           ),
         ),
