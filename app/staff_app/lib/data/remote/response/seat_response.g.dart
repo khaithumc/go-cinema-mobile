@@ -23,25 +23,6 @@ class _$SeatResponseSerializer implements StructuredSerializer<SeatResponse> {
       serializers.serialize(object.coordinates,
           specifiedType:
               const FullType(BuiltList, const [const FullType(int)])),
-      '_id',
-      serializers.serialize(object.id, specifiedType: const FullType(String)),
-      'room',
-      serializers.serialize(object.room, specifiedType: const FullType(String)),
-      'theatre',
-      serializers.serialize(object.theatre,
-          specifiedType: const FullType(String)),
-      'column',
-      serializers.serialize(object.column, specifiedType: const FullType(int)),
-      'row',
-      serializers.serialize(object.row, specifiedType: const FullType(String)),
-      'count',
-      serializers.serialize(object.count, specifiedType: const FullType(int)),
-      'createdAt',
-      serializers.serialize(object.createdAt,
-          specifiedType: const FullType(DateTime)),
-      'updatedAt',
-      serializers.serialize(object.updatedAt,
-          specifiedType: const FullType(DateTime)),
     ];
     Object? value;
     value = object.is_active;
@@ -50,6 +31,60 @@ class _$SeatResponseSerializer implements StructuredSerializer<SeatResponse> {
         ..add('is_active')
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.id;
+    if (value != null) {
+      result
+        ..add('_id')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.room;
+    if (value != null) {
+      result
+        ..add('room')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.theatre;
+    if (value != null) {
+      result
+        ..add('theatre')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.column;
+    if (value != null) {
+      result
+        ..add('column')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.row;
+    if (value != null) {
+      result
+        ..add('row')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.count;
+    if (value != null) {
+      result
+        ..add('count')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.createdAt;
+    if (value != null) {
+      result
+        ..add('createdAt')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
+    }
+    value = object.updatedAt;
+    if (value != null) {
+      result
+        ..add('updatedAt')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
     }
     return result;
   }
@@ -78,35 +113,35 @@ class _$SeatResponseSerializer implements StructuredSerializer<SeatResponse> {
           break;
         case '_id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'room':
           result.room = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'theatre':
           result.theatre = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'column':
           result.column = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'row':
           result.row = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'count':
           result.count = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'createdAt':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'updatedAt':
           result.updatedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -121,21 +156,21 @@ class _$SeatResponse extends SeatResponse {
   @override
   final BuiltList<int> coordinates;
   @override
-  final String id;
+  final String? id;
   @override
-  final String room;
+  final String? room;
   @override
-  final String theatre;
+  final String? theatre;
   @override
-  final int column;
+  final int? column;
   @override
-  final String row;
+  final String? row;
   @override
-  final int count;
+  final int? count;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   factory _$SeatResponse([void Function(SeatResponseBuilder)? updates]) =>
       (new SeatResponseBuilder()..update(updates)).build();
@@ -143,27 +178,17 @@ class _$SeatResponse extends SeatResponse {
   _$SeatResponse._(
       {this.is_active,
       required this.coordinates,
-      required this.id,
-      required this.room,
-      required this.theatre,
-      required this.column,
-      required this.row,
-      required this.count,
-      required this.createdAt,
-      required this.updatedAt})
+      this.id,
+      this.room,
+      this.theatre,
+      this.column,
+      this.row,
+      this.count,
+      this.createdAt,
+      this.updatedAt})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         coordinates, 'SeatResponse', 'coordinates');
-    BuiltValueNullFieldError.checkNotNull(id, 'SeatResponse', 'id');
-    BuiltValueNullFieldError.checkNotNull(room, 'SeatResponse', 'room');
-    BuiltValueNullFieldError.checkNotNull(theatre, 'SeatResponse', 'theatre');
-    BuiltValueNullFieldError.checkNotNull(column, 'SeatResponse', 'column');
-    BuiltValueNullFieldError.checkNotNull(row, 'SeatResponse', 'row');
-    BuiltValueNullFieldError.checkNotNull(count, 'SeatResponse', 'count');
-    BuiltValueNullFieldError.checkNotNull(
-        createdAt, 'SeatResponse', 'createdAt');
-    BuiltValueNullFieldError.checkNotNull(
-        updatedAt, 'SeatResponse', 'updatedAt');
   }
 
   @override
@@ -313,22 +338,14 @@ class SeatResponseBuilder
           new _$SeatResponse._(
               is_active: is_active,
               coordinates: coordinates.build(),
-              id: BuiltValueNullFieldError.checkNotNull(
-                  id, 'SeatResponse', 'id'),
-              room: BuiltValueNullFieldError.checkNotNull(
-                  room, 'SeatResponse', 'room'),
-              theatre: BuiltValueNullFieldError.checkNotNull(
-                  theatre, 'SeatResponse', 'theatre'),
-              column: BuiltValueNullFieldError.checkNotNull(
-                  column, 'SeatResponse', 'column'),
-              row: BuiltValueNullFieldError.checkNotNull(
-                  row, 'SeatResponse', 'row'),
-              count: BuiltValueNullFieldError.checkNotNull(
-                  count, 'SeatResponse', 'count'),
-              createdAt: BuiltValueNullFieldError.checkNotNull(
-                  createdAt, 'SeatResponse', 'createdAt'),
-              updatedAt: BuiltValueNullFieldError.checkNotNull(
-                  updatedAt, 'SeatResponse', 'updatedAt'));
+              id: id,
+              room: room,
+              theatre: theatre,
+              column: column,
+              row: row,
+              count: count,
+              createdAt: createdAt,
+              updatedAt: updatedAt);
     } catch (_) {
       late String _$failedField;
       try {

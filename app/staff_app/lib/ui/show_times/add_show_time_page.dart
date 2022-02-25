@@ -54,6 +54,8 @@ class _AppShowTimePageState extends State<AppShowTimePage>
   @override
   void initState() {
     super.initState();
+    startTime = DateTime.now();
+
     buttonStateS.disposedBy(bag);
     prices.disposedBy(bag);
   }
@@ -545,7 +547,10 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                   width: 32,
                 ),
                 Expanded(
-                  child: ProgressButton.icon(
+                  child: TextButton(
+                    onPressed: submit,
+                    child: Text('ADD'),
+                  ),/*ProgressButton.icon(
                     iconedButtons: {
                       ButtonState.idle: IconedButton(
                         text: 'ADD',
@@ -575,7 +580,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                     },
                     onPressed: submit,
                     state: snap,
-                  ),
+                  ),*/
                 ),
                 SizedBox(
                   width: 32,
@@ -612,7 +617,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
                             color: Colors.primaries[
-                            (item.item1.row.codeUnitAt(0) -
+                            (item.item1.row!.codeUnitAt(0) -
                                 'A'.codeUnitAt(0)) %
                                 Colors.primaries.length],
                           )),
@@ -622,7 +627,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             color: Colors.primaries[
-                            item.item1.column % Colors.primaries.length],
+                            item.item1.column! % Colors.primaries.length],
                           )),
                     ],
                   ),
@@ -631,7 +636,7 @@ class _AppShowTimePageState extends State<AppShowTimePage>
                 Text('Price: ${currencyFormat.format(item.item2)} VND'),
                 isThreeLine: false,
                 trailing: IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   onPressed: () async {
                     final price = await pickPrice(item.item2);
 
@@ -743,7 +748,7 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
 
   void init() {
     final seats = widget.tickets;
-    maxX = seats.map((s) => s.coordinates.x + s.count - 1).reduce(math.max);
+    maxX = seats.map((s) => s.coordinates.x + s.count! - 1).reduce(math.max);
     maxY = seats.map((s) => s.coordinates.y).reduce(math.max);
 
     ticketByCoordinates =
@@ -847,7 +852,7 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       var prevX = x - 1;
       while (prevX >= 0) {
         prevCoords = SeatCoordinates.from(x: prevX, y: y);
-        prevCount = ticketByCoordinates[prevCoords]!.count;
+        prevCount = ticketByCoordinates[prevCoords]?.count;
         if (prevCount != null) {
           break;
         }
@@ -887,7 +892,7 @@ class SeatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = widthPerSeat! * seat!.count + (seat!.count - 1) * 1;
+    final width = widthPerSeat! * seat!.count! + (seat!.count! - 1) * 1;
 
     return InkWell(
       onTap: () => tapTicket!(seat!),
@@ -996,7 +1001,7 @@ class BottomWidget extends StatelessWidget {
 
   final Theatre theatre;
   final Movie movie;
-  final BuiltMap<String, Seat> tickets;
+  final BuiltMap<String?, Seat> tickets;
 
   BottomWidget({
     Key? key,

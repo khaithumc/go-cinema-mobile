@@ -28,7 +28,7 @@ import 'ticket_page.dart';
 class ComboPage extends StatefulWidget {
   static const routeName = 'home/detail/tickets/combo';
 
-  final BuiltList<Ticket> tickets;
+  final BuiltList<Ticket?> tickets;
   final ShowTime showTime;
   final Theatre theatre;
   final Movie movie;
@@ -51,15 +51,15 @@ class _ComboPageState extends State<ComboPage> with DisposeBagMixin {
   final startTimeFormat = DateFormat('dd/MM/yy, EEE, hh:mm a');
 
   late int ticketsPrice;
-  late BuiltList<MapEntry<int, List<Ticket>>> ticketsByCount;
+  late BuiltList<MapEntry<int, List<Ticket?>>> ticketsByCount;
 
   @override
   void initState() {
     super.initState();
-    ticketsPrice = widget.tickets.fold(0, (acc, e) => acc + e.price);
+    ticketsPrice = widget.tickets.fold(0, (acc, e) => acc + e!.price);
 
     ticketsByCount =
-        widget.tickets.groupListsBy((t) => t.seat.count).entries.toBuiltList();
+        widget.tickets.groupListsBy((t) => t!.seat.count).entries.toBuiltList();
   }
 
   @override
@@ -525,7 +525,7 @@ class _ComboPageState extends State<ComboPage> with DisposeBagMixin {
                     style: titleStyle,
                   ),
                   subtitle: Text(
-                    currencyFormat.format(item.value[0].price) + ' VND',
+                    currencyFormat.format(item.value[0]!.price) + ' VND',
                     style: style,
                   ),
                   trailing: Text(
@@ -539,7 +539,7 @@ class _ComboPageState extends State<ComboPage> with DisposeBagMixin {
                     style: titleStyle,
                   ),
                   subtitle: Text(
-                    currencyFormat.format(item.value[0].price) + ' VND',
+                    currencyFormat.format(item.value[0]!.price) + ' VND',
                     style: style,
                   ),
                   trailing: Text(

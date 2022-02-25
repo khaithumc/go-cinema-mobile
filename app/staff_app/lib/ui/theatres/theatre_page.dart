@@ -39,7 +39,6 @@ class _TheatresPageState extends State<TheatresPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (bloc == null) {
       final loaderFunction = () =>
           Rx.fromCallable(Provider.of<TheatresRepository>(context).getTheatres);
       bloc = LoaderBloc(
@@ -47,7 +46,6 @@ class _TheatresPageState extends State<TheatresPage> {
         refresherFunction: loaderFunction,
         logger: print,
       )..fetch();
-    }
   }
 
   @override

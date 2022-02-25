@@ -1,24 +1,22 @@
+import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 
-class Person {
-  final bool is_active;
+part 'person.g.dart';
 
-  final String id;
+abstract class Person implements Built<Person, PersonBuilder> {
+   bool? get is_active;
 
-  final String avatar;
+   String get id;
 
-  final String full_name;
+   String get avatar;
 
-  final DateTime createdAt;
+   String get full_name;
 
-  final DateTime updatedAt;
+   DateTime get createdAt;
 
-  Person({
-    required this.is_active,
-    required this.id,
-    required this.avatar,
-    required this.full_name,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+   DateTime get updatedAt;
+
+   Person._();
+
+   factory Person([void Function(PersonBuilder) updates]) = _$Person;
 }

@@ -106,7 +106,7 @@ class CheckoutBloc implements BaseBloc {
 
   CheckoutBloc({
     required final ShowTime showTime,
-    required final BuiltList<Ticket> tickets,
+    required final BuiltList<Ticket?> tickets,
     required final BuiltList<Tuple2<Product, int>> products,
     required ReservationRepository reservationRepository,
   }) {
@@ -136,14 +136,14 @@ class CheckoutBloc implements BaseBloc {
     final form$ = _submitS
         .debug(identifier: 'SUBMIT', log: streamDebugPrint)
         .withLatestFrom4(
-          email$.cast<Tuple2<String?, String>?>().startWith(null),
-          phone$.cast<Tuple2<String?, String>?>().startWith(null),
+          email$/*.cast<Tuple2<String?, String>?>().startWith(null)*/,
+          phone$/*.cast<Tuple2<String?, String>?>().startWith(null)*/,
           _cardS,
           _promotionS,
           (
             _,
-            Tuple2<String?, String>? email,
-            Tuple2<String?, String>? phone,
+            Tuple2<String?, String?> email,
+            Tuple2<String?, String?> phone,
             domain.Card? card,
             Promotion? promotion,
           ) =>
@@ -162,11 +162,11 @@ class CheckoutBloc implements BaseBloc {
             (emailPhoneCardPromotion) => reservationRepository
                 .createReservation(
                   showTimeId: showTime.id,
-                  phoneNumber: emailPhoneCardPromotion.item2,
-                  email: emailPhoneCardPromotion.item1,
+                  phoneNumber: emailPhoneCardPromotion.item2 ?? '',
+                  email: emailPhoneCardPromotion.item1 ?? '',
                   products: products,
                   payCardId: emailPhoneCardPromotion.item3.id,
-                  ticketIds: [for (final t in tickets) t.id].build(),
+                  ticketIds: [for (final t in tickets) t!.id].build(),
                   promotion: emailPhoneCardPromotion.item4,
                 )
                 .debug(identifier: 'POST REQUEST', log: streamDebugPrint)
@@ -204,7 +204,7 @@ class CheckoutPage extends StatefulWidget {
   final ShowTime showTime;
   final Theatre theatre;
   final Movie movie;
-  final BuiltList<Ticket> tickets;
+  final BuiltList<Ticket?> tickets;
   final BuiltList<Tuple2<Product, int>> products;
 
   const CheckoutPage({

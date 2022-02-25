@@ -23,21 +23,21 @@ abstract class Seat implements Built<Seat, SeatBuilder> {
 
   SeatCoordinates get coordinates;
 
-  String get id;
+  String? get id;
 
-  String get room;
+  String? get room;
 
-  String get theatre;
+  String? get theatre;
 
-  int get column;
+  int? get column;
 
-  String get row;
+  String? get row;
 
-  int get count;
+  int? get count;
 
-  DateTime get createdAt;
+  DateTime? get createdAt;
 
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
 
   Seat._();
 
@@ -46,13 +46,13 @@ abstract class Seat implements Built<Seat, SeatBuilder> {
   factory Seat.from({
     required bool is_active,
     required SeatCoordinates coordinates,
-    required String id,
-    required String room,
-    required String theatre,
-    required int column,
-    required String row,
-    required int count,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required String? id,
+    required String? room,
+    required String? theatre,
+    required int? column,
+    required String? row,
+    required int? count,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
   }) = _$Seat._;
 }

@@ -101,21 +101,21 @@ class _$Seat extends Seat {
   @override
   final SeatCoordinates coordinates;
   @override
-  final String id;
+  final String? id;
   @override
-  final String room;
+  final String? room;
   @override
-  final String theatre;
+  final String? theatre;
   @override
-  final int column;
+  final int? column;
   @override
-  final String row;
+  final String? row;
   @override
-  final int count;
+  final int? count;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   factory _$Seat([void Function(SeatBuilder)? updates]) =>
       (new SeatBuilder()..update(updates)).build();
@@ -123,25 +123,17 @@ class _$Seat extends Seat {
   _$Seat._(
       {required this.is_active,
       required this.coordinates,
-      required this.id,
-      required this.room,
-      required this.theatre,
-      required this.column,
-      required this.row,
-      required this.count,
-      required this.createdAt,
-      required this.updatedAt})
+      this.id,
+      this.room,
+      this.theatre,
+      this.column,
+      this.row,
+      this.count,
+      this.createdAt,
+      this.updatedAt})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(is_active, 'Seat', 'is_active');
     BuiltValueNullFieldError.checkNotNull(coordinates, 'Seat', 'coordinates');
-    BuiltValueNullFieldError.checkNotNull(id, 'Seat', 'id');
-    BuiltValueNullFieldError.checkNotNull(room, 'Seat', 'room');
-    BuiltValueNullFieldError.checkNotNull(theatre, 'Seat', 'theatre');
-    BuiltValueNullFieldError.checkNotNull(column, 'Seat', 'column');
-    BuiltValueNullFieldError.checkNotNull(row, 'Seat', 'row');
-    BuiltValueNullFieldError.checkNotNull(count, 'Seat', 'count');
-    BuiltValueNullFieldError.checkNotNull(createdAt, 'Seat', 'createdAt');
-    BuiltValueNullFieldError.checkNotNull(updatedAt, 'Seat', 'updatedAt');
   }
 
   @override
@@ -291,19 +283,14 @@ class SeatBuilder implements Builder<Seat, SeatBuilder> {
               is_active: BuiltValueNullFieldError.checkNotNull(
                   is_active, 'Seat', 'is_active'),
               coordinates: coordinates.build(),
-              id: BuiltValueNullFieldError.checkNotNull(id, 'Seat', 'id'),
-              room: BuiltValueNullFieldError.checkNotNull(room, 'Seat', 'room'),
-              theatre: BuiltValueNullFieldError.checkNotNull(
-                  theatre, 'Seat', 'theatre'),
-              column: BuiltValueNullFieldError.checkNotNull(
-                  column, 'Seat', 'column'),
-              row: BuiltValueNullFieldError.checkNotNull(row, 'Seat', 'row'),
-              count:
-                  BuiltValueNullFieldError.checkNotNull(count, 'Seat', 'count'),
-              createdAt: BuiltValueNullFieldError.checkNotNull(
-                  createdAt, 'Seat', 'createdAt'),
-              updatedAt: BuiltValueNullFieldError.checkNotNull(
-                  updatedAt, 'Seat', 'updatedAt'));
+              id: id,
+              room: room,
+              theatre: theatre,
+              column: column,
+              row: row,
+              count: count,
+              createdAt: createdAt,
+              updatedAt: updatedAt);
     } catch (_) {
       late String _$failedField;
       try {

@@ -70,7 +70,7 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
       final mode = args['mode'] as CardPageMode;
       final key = ValueKey(mode);
 
-      final card = args['card'] as Card;
+      final card = args['card'] as Card?;
 
       return BlocProvider<CardsBloc>(
         key: key,

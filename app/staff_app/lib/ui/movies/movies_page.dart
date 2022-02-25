@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
@@ -46,7 +47,7 @@ class _MoviePageState extends State<MoviePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: StreamBuilder<Tuple2<List<Movie>, bool>>(
+            child: StreamBuilder<Tuple2<BuiltList<Movie>, bool>>(
               stream: _bloc.loadMovies$,
               builder: (context, snapshot) {
                 final data = snapshot.data;

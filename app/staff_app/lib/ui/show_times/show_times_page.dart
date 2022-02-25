@@ -27,7 +27,7 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
   var isLoading = true;
   var page = 0;
   var loadedAll = false;
-  late List<ShowTime> list;
+  late List<ShowTime> list = [];
   late Object? error;
 
   final controller = ScrollController();
@@ -41,7 +41,7 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (list == null) {
+    if (list.isEmpty) {
       final showTimesRepository = Provider.of<ShowTimesRepository>(context);
 
       showTimesRepository
@@ -49,7 +49,8 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
           .then((value) {
         if (mounted) {
           setState(() {
-            list = value;
+            print('1231231231 $value');
+            list = value.toList();
             isLoading = false;
             error = null;
             page = 1;
@@ -101,6 +102,7 @@ class _ShowTimesPageState extends State<ShowTimesPage> {
         }
       });
     }
+
   }
 
   @override

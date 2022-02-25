@@ -6,11 +6,11 @@ import '../model/person.dart';
 import '../model/movie.dart';
 
 abstract class MovieRepository {
-  Future<List<Movie>> getListMovie(int page, int perPage);
+  Future<BuiltList<Movie>> getListMovie(int page, int perPage);
 
-  Future<List<Category>> getListCategory();
+  Future<BuiltList<Category>> getListCategory();
 
-  Future<List<Person>> getListSearchPerson(String name);
+  Future<BuiltList<Person>> getListSearchPerson(String name);
 
   Future<void> uploadMovie(Movie movie);
 

@@ -93,9 +93,6 @@ class _$UserLocalSerializer implements StructuredSerializer<UserLocal> {
           specifiedType: const FullType(bool)),
       'role',
       serializers.serialize(object.role, specifiedType: const FullType(String)),
-      'theatreResponseString',
-      serializers.serialize(object.theatreResponseString,
-          specifiedType: const FullType(String)),
     ];
     Object? value;
     value = object.avatar;
@@ -118,6 +115,13 @@ class _$UserLocalSerializer implements StructuredSerializer<UserLocal> {
         ..add('location')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(LocationLocal)));
+    }
+    value = object.theatreResponseString;
+    if (value != null) {
+      result
+        ..add('theatreResponseString')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
     }
     return result;
   }
@@ -183,7 +187,7 @@ class _$UserLocalSerializer implements StructuredSerializer<UserLocal> {
           break;
         case 'theatreResponseString':
           result.theatreResponseString = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -312,7 +316,7 @@ class _$UserLocal extends UserLocal {
   @override
   final String role;
   @override
-  final String theatreResponseString;
+  final String? theatreResponseString;
 
   factory _$UserLocal([void Function(UserLocalBuilder)? updates]) =>
       (new UserLocalBuilder()..update(updates)).build();
@@ -330,7 +334,7 @@ class _$UserLocal extends UserLocal {
       required this.is_completed,
       required this.is_active,
       required this.role,
-      required this.theatreResponseString})
+      this.theatreResponseString})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(uid, 'UserLocal', 'uid');
     BuiltValueNullFieldError.checkNotNull(email, 'UserLocal', 'email');
@@ -343,8 +347,6 @@ class _$UserLocal extends UserLocal {
         is_completed, 'UserLocal', 'is_completed');
     BuiltValueNullFieldError.checkNotNull(is_active, 'UserLocal', 'is_active');
     BuiltValueNullFieldError.checkNotNull(role, 'UserLocal', 'role');
-    BuiltValueNullFieldError.checkNotNull(
-        theatreResponseString, 'UserLocal', 'theatreResponseString');
   }
 
   @override
@@ -539,8 +541,7 @@ class UserLocalBuilder implements Builder<UserLocal, UserLocalBuilder> {
                   is_active, 'UserLocal', 'is_active'),
               role: BuiltValueNullFieldError.checkNotNull(
                   role, 'UserLocal', 'role'),
-              theatreResponseString: BuiltValueNullFieldError.checkNotNull(
-                  theatreResponseString, 'UserLocal', 'theatreResponseString'));
+              theatreResponseString: theatreResponseString);
     } catch (_) {
       late String _$failedField;
       try {

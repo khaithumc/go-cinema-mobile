@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:disposebag/disposebag.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:meta/meta.dart';
@@ -14,7 +15,7 @@ class MovieBloc extends DisposeCallbackBaseBloc {
   final Function1<Movie, void> removeMovie;
   final Function1<Movie, void> addMovie;
 
-  final Stream<Tuple2<List<Movie>, bool>> loadMovies$;
+  final Stream<Tuple2<BuiltList<Movie>, bool>> loadMovies$;
   final Stream<Movie> removeMovies$;
   final Stream<Movie> addMovies$;
   final Stream<bool> loading$;
@@ -50,7 +51,7 @@ class MovieBloc extends DisposeCallbackBaseBloc {
             .doOnData((list) => currentLengthList = list.length)
             .debug(identifier: '??????'),
         loadingSubject.stream,
-            (List<Movie> v1, bool v2) => Tuple2(v1, v2)).share();
+            (BuiltList<Movie> v1, bool v2) => Tuple2(v1, v2)).share();
 
     final controllers = [loadMovieSubject, removeMovieSubject, addMovieSubject];
     final streams = [loadMovieStream];

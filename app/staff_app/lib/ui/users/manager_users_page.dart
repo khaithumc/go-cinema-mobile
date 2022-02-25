@@ -56,13 +56,12 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_bloc == null) {
       _bloc = BlocProvider.of<ManagerUsersBloc>(context);
       _bloc.loadUsers(_listUsers.length);
       _bloc.showSnackBar$
           .listen((text) => context.showSnackBar(text))
           .disposedBy(bag);
-    }
+
   }
 
   @override
@@ -72,7 +71,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
   }
 
   Widget _buildSearchUser() {
-    return SizedBox(width: 10, height: 10);
+    return const SizedBox(width: 10, height: 10);
   }
 
   @override
@@ -114,7 +113,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
               itemBuilder: (context, index) => index == _listUsers.length
                   ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [CircularProgressIndicator()],
+                children: const [CircularProgressIndicator()],
               )
                   : _buildItemUserByIndex(_listUsers[index]),
               itemCount: snapShort.data is LoadingUsersState
@@ -263,8 +262,9 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
   void _listenStateChange(
       BuildContext context, AsyncSnapshot<ManageUserState> snapshot) {
     final state = snapshot.data;
-    print('##### $state');
+    print('#####13123123 $state');
     if (state is LoadUserSuccess) {
+      print('tywfeyqtwd ${state.users}');
       _listUsers.addAll(
         state.users.where(
               (user) => !_isHasUserInList(user, _listUsers),
@@ -371,7 +371,7 @@ class UserItemWidget extends StatelessWidget {
           ),
         )
             : CachedNetworkImage(
-          imageUrl: user.avatar,
+          imageUrl: user.avatar ?? '',
           fit: BoxFit.cover,
           width: imageSize,
           height: imageSize,
@@ -428,7 +428,7 @@ class UserItemWidget extends StatelessWidget {
         ),
         SizedBox(width: 3),
         Container(
-          padding: EdgeInsets.all(3),
+          padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
               color: user.role == Role.ADMIN
                   ? Colors.lightBlueAccent
@@ -438,7 +438,7 @@ class UserItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(2)),
           child: Text(
             user.role.string().toLowerCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 8,
               fontWeight: FontWeight.w800,
             ),

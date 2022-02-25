@@ -35,31 +35,43 @@ abstract class LocationResponse implements Built<LocationResponse, LocationRespo
 
 
 abstract class UserResponse implements Built<UserResponse, UserResponseBuilder> {
-  
+  @BuiltValueField(wireName: 'uid')
   String get uid;
 
+  @BuiltValueField(wireName: 'email')
   String get email;
 
+  @BuiltValueField(wireName: 'phone_number')
   String get phone_number;
 
+  @BuiltValueField(wireName: 'full_name')
   String get full_name;
 
+  @BuiltValue(wireName: 'gender')
   String get gender;
 
+  @BuiltValueField(wireName: 'avatar')
   String? get avatar;
 
+  @BuiltValueField(wireName: 'address')
   String get address;
 
+  @BuiltValueField(wireName: 'birthday')
   DateTime? get birthday;
 
+  @BuiltValueField(wireName: 'location')
   LocationResponse? get location;
 
+  @BuiltValueField(wireName: 'is_completed')
   bool get is_completed;
 
+  @BuiltValueField(wireName: 'is_active')
   bool get is_active;
 
+  @BuiltValueField(wireName: 'role')
   String get role;
 
+  @BuiltValueField(wireName: 'theatre')
   TheatreResponse? get theatre;
 
    UserResponse._();

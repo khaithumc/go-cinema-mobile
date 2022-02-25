@@ -1,48 +1,48 @@
 import 'dart:convert';
 
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+
+import '../../serializers.dart';
+
 // ignore_for_file: prefer_single_quotes
+part 'person_response.g.dart';
 
-class PersonResponse {
-  PersonResponse({
-    required this.isActive,
-    required this.id,
-    required this.avatar,
-    required this.fullName,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
-  });
+abstract class PersonResponse implements Built<PersonResponse, PersonResponseBuilder> {
+  @BuiltValueField(wireName: 'is_active')
+   bool? get isActive;
 
-  final bool isActive;
-  final String id;
-  final String avatar;
-  final String fullName;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int v;
+  @BuiltValueField(wireName: '_id')
+   String get id;
+
+   String get avatar;
+
+   @BuiltValueField(wireName: 'full_name')
+   String get fullName;
+
+   DateTime get createdAt;
+
+   DateTime get updatedAt;
+
+   int? get v;
 
   factory PersonResponse.fromRawJson(String str) =>
       PersonResponse.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory PersonResponse.fromJson(Map<String, dynamic> json) => PersonResponse(
-    isActive: json["is_active"],
-    id: json["_id"],
-    avatar: json["avatar"],
-    fullName: json["full_name"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
-    v: json["__v"],
-  );
+   PersonResponse._();
 
-  Map<String, dynamic> toJson() => {
-    "is_active": isActive,
-    "_id": id,
-    "avatar": avatar,
-    "full_name": fullName,
-    "createdAt": createdAt.toIso8601String(),
-    "updatedAt": updatedAt.toIso8601String(),
-    "__v": v,
-  };
+   factory PersonResponse([void Function(PersonResponseBuilder) updates]) =
+   _$PersonResponse;
+
+   static Serializer<PersonResponse> get serializer =>
+       _$personResponseSerializer;
+
+   factory PersonResponse.fromJson(Map<String, dynamic> json) =>
+       serializers.deserializeWith<PersonResponse>(serializer, json)!;
+
+   Map<String, Object?> toJson() =>
+       serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }

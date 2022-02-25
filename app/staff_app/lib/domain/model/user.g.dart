@@ -18,7 +18,7 @@ class _$User extends User {
   @override
   final Gender gender;
   @override
-  final String avatar;
+  final String? avatar;
   @override
   final String address;
   @override
@@ -32,7 +32,7 @@ class _$User extends User {
   @override
   final Role role;
   @override
-  final Theatre theatre;
+  final Theatre? theatre;
 
   factory _$User([void Function(UserBuilder)? updates]) =>
       (new UserBuilder()..update(updates)).build();
@@ -43,28 +43,26 @@ class _$User extends User {
       required this.phoneNumber,
       required this.fullName,
       required this.gender,
-      required this.avatar,
+      this.avatar,
       required this.address,
       required this.birthday,
       required this.location,
       required this.isCompleted,
       required this.isActive,
       required this.role,
-      required this.theatre})
+      this.theatre})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(uid, 'User', 'uid');
     BuiltValueNullFieldError.checkNotNull(email, 'User', 'email');
     BuiltValueNullFieldError.checkNotNull(phoneNumber, 'User', 'phoneNumber');
     BuiltValueNullFieldError.checkNotNull(fullName, 'User', 'fullName');
     BuiltValueNullFieldError.checkNotNull(gender, 'User', 'gender');
-    BuiltValueNullFieldError.checkNotNull(avatar, 'User', 'avatar');
     BuiltValueNullFieldError.checkNotNull(address, 'User', 'address');
     BuiltValueNullFieldError.checkNotNull(birthday, 'User', 'birthday');
     BuiltValueNullFieldError.checkNotNull(location, 'User', 'location');
     BuiltValueNullFieldError.checkNotNull(isCompleted, 'User', 'isCompleted');
     BuiltValueNullFieldError.checkNotNull(isActive, 'User', 'isActive');
     BuiltValueNullFieldError.checkNotNull(role, 'User', 'role');
-    BuiltValueNullFieldError.checkNotNull(theatre, 'User', 'theatre');
   }
 
   @override
@@ -192,9 +190,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
   Role? get role => _$this._role;
   set role(Role? role) => _$this._role = role;
 
-  Theatre? _theatre;
-  Theatre? get theatre => _$this._theatre;
-  set theatre(Theatre? theatre) => _$this._theatre = theatre;
+  TheatreBuilder? _theatre;
+  TheatreBuilder get theatre => _$this._theatre ??= new TheatreBuilder();
+  set theatre(TheatreBuilder? theatre) => _$this._theatre = theatre;
 
   UserBuilder();
 
@@ -213,7 +211,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _isCompleted = $v.isCompleted;
       _isActive = $v.isActive;
       _role = $v.role;
-      _theatre = $v.theatre;
+      _theatre = $v.theatre?.toBuilder();
       _$v = null;
     }
     return this;
@@ -245,8 +243,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
                   fullName, 'User', 'fullName'),
               gender: BuiltValueNullFieldError.checkNotNull(
                   gender, 'User', 'gender'),
-              avatar: BuiltValueNullFieldError.checkNotNull(
-                  avatar, 'User', 'avatar'),
+              avatar: avatar,
               address: BuiltValueNullFieldError.checkNotNull(
                   address, 'User', 'address'),
               birthday: BuiltValueNullFieldError.checkNotNull(
@@ -257,13 +254,15 @@ class UserBuilder implements Builder<User, UserBuilder> {
               isActive: BuiltValueNullFieldError.checkNotNull(
                   isActive, 'User', 'isActive'),
               role: BuiltValueNullFieldError.checkNotNull(role, 'User', 'role'),
-              theatre: BuiltValueNullFieldError.checkNotNull(
-                  theatre, 'User', 'theatre'));
+              theatre: _theatre?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'location';
         location.build();
+
+        _$failedField = 'theatre';
+        _theatre?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'User', _$failedField, e.toString());

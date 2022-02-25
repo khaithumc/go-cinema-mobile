@@ -1,64 +1,50 @@
+import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 
 import 'age_type.dart';
 import 'category.dart';
 import 'person.dart';
 
-class Movie {
-  final String? id;
+part 'movie.g.dart';
 
-  final bool? isActive;
+abstract class Movie implements Built<Movie, MovieBuilder> {
+   String get id;
 
-  final String? title;
+   bool? get isActive;
 
-  final String trailerVideoUrl;
+   String? get title;
 
-  final String posterUrl;
+   String? get trailerVideoUrl;
 
-  final String overview;
+   String? get posterUrl;
 
-  final DateTime releasedDate;
+   String? get overview;
 
-  final int duration;
+   DateTime? get releasedDate;
 
-  final String originalLanguage;
+   int get duration;
 
-  final DateTime? createdAt;
+   String get originalLanguage;
 
-  final DateTime? updatedAt;
+   DateTime get createdAt;
 
-  final AgeType ageType;
+   DateTime? get updatedAt;
 
-  final List<Person>? actors;
+   AgeType get ageType;
 
-  final List<Person>? directors;
+   List<Person>? get actors;
 
-  final List<Category>? categories;
+   List<Person>? get directors;
 
-  final double? rateStar;
+   List<Category>? get categories;
 
-  final int? totalFavorite;
+   double? get rateStar;
 
-  final int? totalRate;
+   int? get totalFavorite;
 
-  Movie({
-    required this.id,
-    required this.isActive,
-    required this.title,
-    required this.trailerVideoUrl,
-    required this.posterUrl,
-    required this.overview,
-    required this.releasedDate,
-    required this.duration,
-    required this.originalLanguage,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.ageType,
-    required this.actors,
-    required this.directors,
-    required this.categories,
-    required this.rateStar,
-    required this.totalFavorite,
-    required this.totalRate,
-  });
+   int? get totalRate;
+
+   Movie._();
+
+   factory Movie([void Function(MovieBuilder) updates]) = _$Movie;
 }

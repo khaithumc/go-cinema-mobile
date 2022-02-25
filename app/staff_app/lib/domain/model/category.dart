@@ -1,21 +1,20 @@
+import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 
-class Category {
-  final String id;
+part 'category.g.dart';
 
-  final String name;
+abstract class Category implements Built<Category, CategoryBuilder> {
+   String get id;
 
-  final DateTime createdAt;
+   String get name;
 
-  final DateTime updatedAt;
+   DateTime get createdAt;
 
-  final bool is_active;
+   DateTime get updatedAt;
 
-  Category({
-    required this.id,
-    required this.name,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.is_active,
-  });
+   bool get is_active;
+
+   Category._();
+
+   factory Category([void Function(CategoryBuilder) updates]) = _$Category;
 }

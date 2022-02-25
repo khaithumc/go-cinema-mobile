@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,9 +87,9 @@ class _MultiPickPersonState extends State<MultiPickPersonWidget> {
   }
 
   Widget _buildListView() {
-    return StreamBuilder<List<Person>?>(
+    return StreamBuilder<BuiltList<Person>?>(
         stream: widget.bloc.showSearch$,
-        initialData: <Person>[],
+        initialData: BuiltList<Person>([]),
         builder: (context, snapshot) {
           final listData = snapshot.data;
           return listData == null

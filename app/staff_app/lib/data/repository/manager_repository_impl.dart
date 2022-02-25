@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:logger/logger.dart';
+
 import '../../domain/model/exception.dart';
 import '../../domain/model/user.dart';
 import '../../domain/repository/manager_repository.dart';
@@ -11,6 +13,7 @@ import '../remote/response/user_response.dart';
 
 class ManagerRepositoryImpl implements ManagerRepository {
   final AuthClient _authClient;
+  final Logger logger = Logger();
 
   ManagerRepositoryImpl(this._authClient);
 
@@ -20,11 +23,15 @@ class ManagerRepositoryImpl implements ManagerRepository {
       final usersRes = await _authClient.getBody(
           buildUrl('admin_users/', {'page': '$page', 'per_page': '10'}))
       as List;
+
+      //logger.d(usersRes);
+
       return usersRes
           .map((json) => userResponseToUserDomain(UserResponse.fromJson(json)))
           .toList();
     } on ErrorResponse catch (e) {
       if (e.statusCode == HttpStatus.notFound) {
+        logger.e(e.error);
         throw const NotCompletedManagerUserException();
       }
       rethrow;

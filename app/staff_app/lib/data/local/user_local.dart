@@ -50,7 +50,7 @@ abstract class UserLocal implements Built<UserLocal, UserLocalBuilder> {
 
   String get role;
 
-  String get theatreResponseString;
+  String? get theatreResponseString;
 
   UserLocal._();
 

@@ -12,7 +12,7 @@ class ShowTimeItem extends StatelessWidget {
   final Theatre? theatre;
   static final showTimeDateFormat = DateFormat('dd/MM/yyyy, hh:mm a');
 
-  ShowTimeItem({Key? key, this.item, this.theatre}) : super(key: key);
+  const ShowTimeItem({Key? key, this.item, this.theatre}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

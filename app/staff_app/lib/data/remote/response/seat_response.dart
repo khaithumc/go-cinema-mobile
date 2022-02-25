@@ -13,21 +13,21 @@ abstract class SeatResponse
   BuiltList<int> get coordinates;
 
   @BuiltValueField(wireName: '_id')
-  String get id;
+  String? get id;
 
-  String get room;
+  String? get room;
 
-  String get theatre;
+  String? get theatre;
 
-  int get column;
+  int? get column;
 
-  String get row;
+  String? get row;
 
-  int get count;
+  int? get count;
 
-  DateTime get createdAt;
+  DateTime? get createdAt;
 
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
 
   SeatResponse._();
 

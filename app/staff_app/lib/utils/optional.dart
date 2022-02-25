@@ -1,51 +1,29 @@
-// 📦 Package imports:
 import 'package:meta/meta.dart';
 
-/// Models the absence of values.
-///
-/// Option<A> is a container for an optional value of type A.
-/// If the value of type A is present, the Option<A> is an instance of Some<A>,
-/// containing the present value of type A.
-/// If the value is absent, the Option<A> is the object None.
 @sealed
-abstract class Optional<T> {
+abstract class Optional<T extends Object> {
   const Optional._();
 
-  /// Create [None].
   factory Optional.none() = None;
 
-  /// Create a [Some] with [value].
   const factory Optional.some(T value) = Some;
 
-  /// Return [None] if [value] is null.
-  /// Otherwise, return [Some] containing [value].
-  factory Optional.fromNullable(T? value) =>
-      value == null ? Optional.none() : Optional.some(value);
+  factory Optional.of(T? value) =>
+      value == null ? None() as Optional<T> : Some<T>(value);
 
-  /// Applies `none` if this is a [None] or `some` if this is a [Some].
-  /// Return the results of applying the function.
   R fold<R>(R Function() none, R Function(T) some) {
     final self = this;
-    return self is Some<T> ? some(self.value) : none();
-  }
-
-  /// Returns a [Some<R>] containing the result of applying [mapper] to this option's
-  /// value if this option is nonempty. Otherwise return [None].
-  ///
-  /// Params [mapper] is the function to apply.
-  Optional<R> map<R>(R Function(T) mapper) {
-    final self = this;
     if (self is Some<T>) {
-      return Optional.some(mapper(self.value));
+      return some(self.value);
     }
     if (self is None) {
-      return Optional.none();
+      return none();
     }
     throw 'Something was wrong $this';
   }
 }
 
-class Some<T> extends Optional<T> {
+class Some<T extends Object> extends Optional<T> {
   final T value;
 
   const Some(this.value) : super._();
@@ -53,7 +31,7 @@ class Some<T> extends Optional<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is Some && runtimeType == other.runtimeType && value == other.value;
+      other is Some && runtimeType == other.runtimeType && value == other.value;
 
   @override
   int get hashCode => value.hashCode;
@@ -70,11 +48,11 @@ class None extends Optional<Never> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is None && runtimeType == other.runtimeType;
+      other is None && runtimeType == other.runtimeType;
 
   @override
   int get hashCode => 0;
 
   @override
-  String toString() => 'None';
+  String toString() => 'None{}';
 }

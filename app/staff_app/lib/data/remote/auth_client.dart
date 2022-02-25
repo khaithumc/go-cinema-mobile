@@ -116,6 +116,8 @@ class AuthClient extends AppClient {
   Future<StreamedResponse> send(BaseRequest request) async {
     final token = await _getToken();
 
+    print('ajsdbjasd $token');
+
     request.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
 
     print('--> ${request}');

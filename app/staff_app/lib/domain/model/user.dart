@@ -28,7 +28,7 @@ abstract class User implements Built<User, UserBuilder> {
 
   Gender get gender;
 
-  String get avatar;
+  String? get avatar;
 
   String get address;
 
@@ -42,7 +42,7 @@ abstract class User implements Built<User, UserBuilder> {
 
   Role get role;
 
-  Theatre get theatre;
+  Theatre? get theatre;
 
   User._();
 

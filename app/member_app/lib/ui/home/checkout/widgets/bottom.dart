@@ -17,7 +17,7 @@ class BottomRow extends StatelessWidget {
   final currencyFormat = NumberFormat.currency(locale: 'vi_VN', symbol: '');
 
   final BuiltList<Tuple2<Product, int>> comboItems;
-  final BuiltList<Ticket> tickets;
+  final BuiltList<Ticket?> tickets;
   final VoidAction onSubmit;
 
   final int totalCount;
@@ -30,7 +30,7 @@ class BottomRow extends StatelessWidget {
     required this.onSubmit,
   })   : totalCount =
             comboItems.fold<int>(0, (acc, e) => acc + e.item2) + tickets.length,
-        originalTotalPrice = tickets.fold<int>(0, (acc, e) => acc + e.price) +
+        originalTotalPrice = tickets.fold<int>(0, (acc, e) => acc + e!.price) +
             comboItems.fold<int>(0, (acc, e) => acc + e.item1.price * e.item2),
         super(key: key);
 
@@ -148,7 +148,7 @@ class BottomRow extends StatelessWidget {
     final titleStyle =
         Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 13);
 
-    final ticketsByCount = tickets.groupListsBy((i) => i.seat.count).entries;
+    final ticketsByCount = tickets.groupListsBy((i) => i!.seat.count).entries;
 
     final children = [
       ...[
@@ -160,7 +160,7 @@ class BottomRow extends StatelessWidget {
                     style: titleStyle,
                   ),
                   subtitle: Text(
-                    currencyFormat.format(item.value[0].price) + ' VND',
+                    currencyFormat.format(item.value[0]!.price) + ' VND',
                     style: style,
                   ),
                   trailing: Text(
@@ -174,7 +174,7 @@ class BottomRow extends StatelessWidget {
                     style: titleStyle,
                   ),
                   subtitle: Text(
-                    currencyFormat.format(item.value[0].price) + ' VND',
+                    currencyFormat.format(item.value[0]!.price) + ' VND',
                     style: style,
                   ),
                   trailing: Text(

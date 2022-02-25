@@ -39,8 +39,10 @@ class TheatreResponse {
   final String cover;
   final String thumbnail;
 
-  factory TheatreResponse.fromRawJson(String str) =>
-      TheatreResponse.fromJson(json.decode(str));
+  factory TheatreResponse.fromRawJson(String? str) {
+    return TheatreResponse.fromJson(jsonDecode(str ?? '{}'));
+  }
+
 
   factory TheatreResponse.fromJson(Map<String, dynamic> json) =>
       TheatreResponse(
@@ -52,7 +54,7 @@ class TheatreResponse {
         address: json["address"],
         phoneNumber: json["phone_number"],
         description: json["description"],
-        email: json["email"],
+        email: json["email"] ?? '',
         openingHours: json["opening_hours"],
         roomSummary: json["room_summary"],
         createdAt: DateTime.parse(json["createdAt"]).toLocal(),

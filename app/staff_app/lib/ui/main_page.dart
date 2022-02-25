@@ -4,6 +4,7 @@ import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:khaithu/domain/model/movie.dart';
+import 'package:khaithu/domain/repository/manager_repository.dart';
 import 'package:khaithu/ui/theatres/seat.dart';
 
 import '../domain/model/theatre.dart';
@@ -48,7 +49,10 @@ class _MainPageState extends State<MainPage> with DisposeBagMixin {
     ManagerUsersPage.routeName: (context, setting) {
       return BlocProvider<ManagerUsersBloc>(
         child: ManagerUsersPage(),
-        initBloc: (context) => ManagerUsersBloc(context.get()),
+        initBloc: (context) {
+          final managerRepository = Provider.of<ManagerRepository>(context);
+          return ManagerUsersBloc(managerRepository);
+        }
       );
     },
     MoviePage.routeName: (context, setting) {

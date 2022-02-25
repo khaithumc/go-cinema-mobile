@@ -52,7 +52,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
   late String address;
   late DateTime birthday;
   final gender$ = BehaviorSubject<Gender?>.seeded(Gender.MALE);
-  late Location location;
+  late Location location = Location((b) => b..latitude = 0..longitude = 0);
   final avatarFile$ = BehaviorSubject<File?>.seeded(null);
   final avatar$ = BehaviorSubject<String?>.seeded(null);
   var isLoading = false;
@@ -614,16 +614,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage>
     if (isLoading) {
       return;
     }
-
-    print('>>> Submit');
-    print('fullName=$fullName');
-    print('phoneNumber=$phoneNumber');
-    print('address=$address');
-    print('birthday=$birthday');
-    print('gender=${gender$.value}');
-    print('location=$location');
-    print('avatar=${avatarFile$.value}');
-    print('<<< Submit');
 
     final isValid = formKey.currentState?.validate() == true;
 

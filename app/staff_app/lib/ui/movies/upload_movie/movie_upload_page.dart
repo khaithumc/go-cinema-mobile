@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
@@ -27,7 +28,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
     with DisposeBagMixin {
   final releasedDateFormat = DateFormat.yMMMd();
   final key = GlobalKey<ScaffoldState>();
-  late _RowTextType? showSearch;
+  late _RowTextType? showSearch = null;
   final controllers = {
     _RowTextType.TITLE: TextEditingController(),
     _RowTextType.ORIGIN_LANG: TextEditingController(),
@@ -441,7 +442,17 @@ class _UploadMoviePageState extends State<UploadMoviePage>
           width: 32,
         ),
         Expanded(
-          child: ProgressButton.icon(
+          child: TextButton(
+            child: Text('ADD'),
+            onPressed: () {
+              print('cliced');
+              updateDataForInput();
+              print('cliced2');
+
+              print('############' + movieUploadInput.toString());
+              bloc.uploadMovie(movieUploadInput);
+            },
+          ),/*ProgressButton.icon(
             iconedButtons: {
               ButtonState.idle: IconedButton(
                   text: 'ADD',
@@ -470,7 +481,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
               bloc.uploadMovie(movieUploadInput);
             },
             state: state,
-          ),
+          ),*/
         ),
         SizedBox(
           width: 32,
@@ -634,10 +645,10 @@ class _PickCategoryState extends State<_PickCategoryWidget> {
     return Container(
       height: 400.0, // Change as per your requirement
       width: 300.0, // Change as per your requirement
-      child: StreamBuilder<List<Category>>(
+      child: StreamBuilder<BuiltList<Category>>(
         stream: widget.bloc.fetchCategory$,
         builder: (context, snapshot) {
-          final listData = snapshot.data ?? List.empty();
+          final BuiltList<Category> listData = snapshot.data ?? BuiltList([]);
           return Column(
             children: <Widget>[
               buildListView(listData),
@@ -650,7 +661,7 @@ class _PickCategoryState extends State<_PickCategoryWidget> {
     );
   }
 
-  Widget buildListView(List<Category> listData) {
+  Widget buildListView(BuiltList<Category> listData) {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,

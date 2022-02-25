@@ -86,7 +86,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                         const SizedBox(width: 8),
                         AgeTypeWidget(ageType: movie.ageType),
                         const SizedBox(width: 8),
-                        Text(releaseDateFormat.format(movie.releasedDate)),
+                        Text(releaseDateFormat.format(movie.releasedDate!)),
                       ],
                     ),
                     const SizedBox(height: 6),
@@ -134,13 +134,13 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                         ],
                       ),
                       collapsed: Text(
-                        movie.overview,
+                        movie.overview ?? '',
                         softWrap: true,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                       ),
                       expanded: Text(
-                        movie.overview,
+                        movie.overview ?? '',
                         softWrap: true,
                       ),
                     ),
@@ -291,8 +291,8 @@ class DetailAppBar extends StatelessWidget {
                 child: InkWell(
                   onTap: () async {
                     print(movie.trailerVideoUrl);
-                    if (await canLaunch(movie.trailerVideoUrl)) {
-                      await launch(movie.trailerVideoUrl);
+                    if (await canLaunch(movie.trailerVideoUrl!)) {
+                      await launch(movie.trailerVideoUrl!);
                     } else {
                       context.showSnackBar('Cannot open trailer video');
                     }

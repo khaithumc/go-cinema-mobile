@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:disposebag/disposebag.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:meta/meta.dart';
@@ -18,8 +19,8 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
   final Function1<String, void> loadPerson;
   final Function1<MovieUploadInput, void> uploadMovie;
 
-  final Stream<List<Category>> fetchCategory$;
-  final Stream<List<Person>?> showSearch$;
+  final Stream<BuiltList<Category>> fetchCategory$;
+  final Stream<BuiltList<Person>?> showSearch$;
   final Stream<ButtonState> stateStream$;
   final Stream<Object> error$;
 
@@ -51,7 +52,7 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
         .distinct((p, e) => p == e)
         .exhaustMap((value) => Rx.defer(() async* {
       if (value.isEmpty) {
-        yield <Person>[];
+        yield BuiltList<Person>([]);
       } else {
         yield null;
         final result = await repository.getListSearchPerson(value);
@@ -85,25 +86,25 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
           trailer = input.trailerVideoUrl;
         }
         await repository.uploadMovie(
-          Movie(
-            posterUrl: poster,
-            trailerVideoUrl: trailer,
-            id: null,
-            isActive: null,
-            title: input.title,
-            overview: input.overview,
-            releasedDate: input.releasedDate!.toUtc(),
-            duration: input.duration,
-            originalLanguage: input.originalLanguage,
-            createdAt: null,
-            updatedAt: null,
-            ageType: input.ageType,
-            actors: input.actors,
-            directors: input.directors,
-            categories: input.categorys,
-            rateStar: null,
-            totalFavorite: null,
-            totalRate: null,
+          Movie((b) => b..
+            posterUrl = poster..
+            trailerVideoUrl = trailer..
+            id = null..
+            isActive = null..
+            title = input.title..
+            overview = input.overview..
+            releasedDate = input.releasedDate!.toUtc()..
+            duration = input.duration..
+            originalLanguage = input.originalLanguage..
+            createdAt = null..
+            updatedAt = null..
+            ageType = input.ageType..
+            actors = input.actors..
+            directors = input.directors..
+            categories = input.categorys..
+            rateStar = null..
+            totalFavorite = null..
+            totalRate = null,
           ),
         );
         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>RES');

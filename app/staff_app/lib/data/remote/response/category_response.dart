@@ -1,39 +1,34 @@
 import 'dart:convert';
 
-class CategoryResponse {
-  CategoryResponse({
-    required this.id,
-    required this.name,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.categoryId,
-  });
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-  final String id;
-  final String name;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String categoryId;
+import '../../serializers.dart';
+
+part 'category_response.g.dart';
+
+abstract class CategoryResponse implements Built<CategoryResponse, CategoryResponseBuilder> {
+   String get id;
+   String get name;
+   DateTime get createdAt;
+   DateTime get updatedAt;
+   String get categoryId;
 
   factory CategoryResponse.fromRawJson(String str) =>
       CategoryResponse.fromJson(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+   CategoryResponse._();
 
-  factory CategoryResponse.fromJson(Map<String, dynamic> json) =>
-      CategoryResponse(
-        id: json['_id'],
-        name: json['name'],
-        createdAt: DateTime.parse(json['createdAt']),
-        updatedAt: DateTime.parse(json['updatedAt']),
-        categoryId: json['id'],
-      );
+   factory CategoryResponse([void Function(CategoryResponseBuilder) updates]) =
+   _$CategoryResponse;
 
-  Map<String, dynamic> toJson() => {
-    '_id': id,
-    'name': name,
-    'createdAt': createdAt.toIso8601String(),
-    'updatedAt': updatedAt.toIso8601String(),
-    'id': categoryId,
-  };
+   static Serializer<CategoryResponse> get serializer =>
+       _$categoryResponseSerializer;
+
+   factory CategoryResponse.fromJson(Map<String, dynamic> json) =>
+       serializers.deserializeWith<CategoryResponse>(serializer, json)!;
+
+   Map<String, Object?> toJson() =>
+       serializers.serializeWith(serializer, this)! as Map<String, Object?>;
+
 }

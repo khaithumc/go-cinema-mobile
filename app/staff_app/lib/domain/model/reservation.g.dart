@@ -338,9 +338,9 @@ class ReservationBuilder implements Builder<Reservation, ReservationBuilder> {
   String? get showTimeId => _$this._showTimeId;
   set showTimeId(String? showTimeId) => _$this._showTimeId = showTimeId;
 
-  ShowTime? _showTime;
-  ShowTime? get showTime => _$this._showTime;
-  set showTime(ShowTime? showTime) => _$this._showTime = showTime;
+  ShowTimeBuilder? _showTime;
+  ShowTimeBuilder get showTime => _$this._showTime ??= new ShowTimeBuilder();
+  set showTime(ShowTimeBuilder? showTime) => _$this._showTime = showTime;
 
   int? _totalPrice;
   int? get totalPrice => _$this._totalPrice;
@@ -382,7 +382,7 @@ class ReservationBuilder implements Builder<Reservation, ReservationBuilder> {
       _phoneNumber = $v.phoneNumber;
       _productIdWithCounts = $v.productIdWithCounts.toBuilder();
       _showTimeId = $v.showTimeId;
-      _showTime = $v.showTime;
+      _showTime = $v.showTime?.toBuilder();
       _totalPrice = $v.totalPrice;
       _updatedAt = $v.updatedAt;
       _user = $v.user?.toBuilder();
@@ -428,7 +428,7 @@ class ReservationBuilder implements Builder<Reservation, ReservationBuilder> {
               productIdWithCounts: productIdWithCounts.build(),
               showTimeId: BuiltValueNullFieldError.checkNotNull(
                   showTimeId, 'Reservation', 'showTimeId'),
-              showTime: showTime,
+              showTime: _showTime?.build(),
               totalPrice: BuiltValueNullFieldError.checkNotNull(
                   totalPrice, 'Reservation', 'totalPrice'),
               updatedAt:
@@ -442,6 +442,9 @@ class ReservationBuilder implements Builder<Reservation, ReservationBuilder> {
       try {
         _$failedField = 'productIdWithCounts';
         productIdWithCounts.build();
+
+        _$failedField = 'showTime';
+        _showTime?.build();
 
         _$failedField = 'user';
         _user?.build();

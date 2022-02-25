@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
           print(user.theatre);
 
           return TheatreInfoPage(
-            theatre: user.theatre,
+            theatre: user.theatre!,
             automaticallyImplyLeading: true,
             child: GridView.count(
               crossAxisCount: 2,

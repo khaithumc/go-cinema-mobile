@@ -294,7 +294,7 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
 
   void init() {
     final seats = widget.tickets.map((t) => t.seat);
-    maxX = seats.map((s) => s.coordinates.x + s.count - 1).reduce(math.max);
+    maxX = seats.map((s) => s.coordinates.x + s.count! - 1).reduce(math.max);
     maxY = seats.map((s) => s.coordinates.y).reduce(math.max);
 
     ticketByCoordinates = Map.fromEntries(
@@ -398,7 +398,7 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       var prevX = x - 1;
       while (prevX >= 0) {
         prevCoords = SeatCoordinates.from(x: prevX, y: y);
-        prevCount = ticketByCoordinates[prevCoords]!.seat.count;
+        prevCount = ticketByCoordinates[prevCoords]?.seat.count;
         if (prevCount != null) {
           break;
         }
@@ -439,7 +439,7 @@ class SeatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final seat = ticket!.seat;
-    final width = widthPerSeat! * seat.count + (seat.count - 1) * 1;
+    final width = widthPerSeat! * seat.count! + (seat.count! - 1) * 1;
 
     if (ticket!.reservationId != null) {
       final accentColor = Theme.of(context).accentColor;

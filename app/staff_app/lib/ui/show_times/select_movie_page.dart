@@ -7,7 +7,6 @@ import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import '../app_scaffold.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 
@@ -15,6 +14,7 @@ import '../../domain/model/movie.dart';
 import '../../domain/model/theatre.dart';
 import '../../domain/repository/movie_repository.dart';
 import '../../utils/utils.dart';
+import '../app_scaffold.dart';
 import '../movies/movies_page.dart';
 import '../widgets/empty_widget.dart';
 import '../widgets/error_widget.dart';
@@ -38,7 +38,6 @@ class _SelectMoviePageState extends State<SelectMoviePage>
   final retryS = StreamController<String>(sync: true);
 
   late DistinctValueStream<SearchState> state$;
-
   @override
   void initState() {
     super.initState();
@@ -48,7 +47,7 @@ class _SelectMoviePageState extends State<SelectMoviePage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    state$ ??= () {
+    state$ = () {
       final repo = Provider.of<MovieRepository>(context);
 
       return termS.stream

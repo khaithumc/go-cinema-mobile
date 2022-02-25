@@ -1,5 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_collection/src/map.dart';
+import 'package:khaithu/data/remote/response/error_response.dart';
+import 'package:logger/logger.dart' as log;
+import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../domain/model/show_time.dart';
@@ -8,31 +11,37 @@ import '../mappers.dart' as mappers;
 import '../remote/auth_client.dart';
 import '../remote/base_url.dart';
 import '../remote/response/show_time_response.dart';
+import '../serializers.dart';
 
 class ShowTimesRepositoryImpl implements ShowTimesRepository {
   final AuthClient _authClient;
+  final logger = log.Logger();
 
   ShowTimesRepositoryImpl(this._authClient);
 
   @override
-  Future<List<ShowTime>> getShowTimesByTheatreId(
-      String id, int page, int perPage) {
-    return _authClient
-        .getBody(
-      buildUrl(
-        '/admin-show-times/theatres/$id',
-        {
-          'page': page.toString(),
-          'per_page': perPage.toString(),
-        },
-      ),
-    )
-        .then(
-          (value) => [
-        for (final r in value as List)
-          mappers.showTimeResponseToShowTime(ShowTimeResponse.fromJson(r)),
-      ],
-    );
+  Future<BuiltList<ShowTime>> getShowTimesByTheatreId(
+      String id, int page, int perPage) async {
+    try {
+      return await _authClient
+          .getBody(
+        buildUrl(
+          '/admin-show-times/theatres/$id',
+          {
+            'page': page.toString(),
+            'per_page': perPage.toString(),
+          },
+        ),
+      ).then(( value) {
+        logger.d('ahsbdjasd $value');
+        return deserializeBuiltList<ShowTimeResponse>(value).map(mappers.showTimeResponseToShowTime).toBuiltList();
+      }
+      );
+    } on ErrorResponse catch (e) {
+      logger.e(e);
+      rethrow;
+    }
+
   }
 
   @override
@@ -40,7 +49,7 @@ class ShowTimesRepositoryImpl implements ShowTimesRepository {
       {required String movieId,
         required String theatreId,
         required DateTime startTime,
-        required List<Tuple2<String, int>> tickets}) async {
+        required List<Tuple2<String?, int>> tickets}) async {
     final res = await _authClient.postBody(
       buildUrl('/admin-show-times'),
       body: {

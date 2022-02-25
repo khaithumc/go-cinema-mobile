@@ -23,10 +23,7 @@ class TicketRepositoryImpl implements TicketRepository {
     final json =
     await _authClient.getBody(buildUrl('/seats/tickets/show-times/$id'));
 
-    final tickets = serializers.deserialize(
-      json,
-      specifiedType: builtListTicketResponse,
-    ) as BuiltList<TicketResponse>;
+    final tickets = deserializeBuiltList<TicketResponse>(json);
 
     yield tickets.map(ticketResponseToTicket).toBuiltList();
   }
@@ -34,10 +31,7 @@ class TicketRepositoryImpl implements TicketRepository {
   @override
   Stream<BuiltList<Reservation>> getReservationsByShowTimeId(String id) {
     final mapResult = (dynamic json) {
-      final responses = serializers.deserialize(
-        json,
-        specifiedType: builtListFullReservationResponse,
-      ) as BuiltList<FullReservationResponse>;
+      final responses = deserializeBuiltList<FullReservationResponse>(json);
 
       return [
         for (final r in responses) fullReservationResponseToReservation(r)
@@ -56,10 +50,7 @@ class TicketRepositoryImpl implements TicketRepository {
   @override
   Stream<BuiltList<Seat>> getSeatsByTheatreId(String id) {
     final mapResult = (dynamic json) {
-      final responses = serializers.deserialize(
-        json,
-        specifiedType: builtListSeatResponse,
-      ) as BuiltList<SeatResponse>;
+      final responses = deserializeBuiltList<SeatResponse>(json);
 
       return [
         for (final seat in responses)

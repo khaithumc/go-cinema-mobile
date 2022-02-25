@@ -34,10 +34,10 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
   late String email;
   late String description;
   late String address;
-  late File cover;
-  late File thumbnail;
-  late BuiltList<Seat> seats;
-  late Location location;
+  File? cover = null;
+  File? thumbnail = null;
+  late BuiltList<Seat>? seats = null;
+  late Location? location = Location((b) => b..latitude = 0..longitude = 0);
   final addressTextController = TextEditingController();
 
   var isLoading = false;
@@ -279,7 +279,7 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.file(
-            thumbnail,
+            thumbnail!,
             width: 128,
             height: 128,
             fit: BoxFit.cover,
@@ -334,7 +334,7 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.file(
-            cover,
+            cover!,
             width: 256,
             height: 256,
             fit: BoxFit.cover,
@@ -421,10 +421,10 @@ class _AddTheatrePageState extends State<AddTheatrePage> {
         phone_number: phone,
         email: email,
         description: description,
-        location: location,
-        cover: cover,
-        thumbnail: thumbnail,
-        seats: seats,
+        location: location!,
+        cover: cover!,
+        thumbnail: thumbnail!,
+        seats: seats!,
       );
 
       await delayUtil(500);

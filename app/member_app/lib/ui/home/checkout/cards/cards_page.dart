@@ -68,7 +68,7 @@ class CardsBloc extends DisposeCallbackBaseBloc {
 
   factory CardsBloc(
     CardRepository cardRepository,
-    domain.Card initialSelected,
+    domain.Card? initialSelected,
   ) {
     late DistinctValueConnectableStream<
         Tuple2<LoaderState<BuiltList<domain.Card>>, domain.Card?>> state$;

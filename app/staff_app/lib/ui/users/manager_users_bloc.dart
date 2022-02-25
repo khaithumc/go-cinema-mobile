@@ -31,7 +31,8 @@ class ManagerUsersBloc extends DisposeCallbackBaseBloc {
   }) : super(dispose);
 
   factory ManagerUsersBloc(final ManagerRepository managerRepository) {
-    assert(managerRepository != null);
+    //assert(managerRepository != null);
+    print('tysavahsdahsdbad');
     final getUsersController = BehaviorSubject<int>();
     final removeUserController =
     PublishSubject<Tuple3<User, DestroyUserType, String?>>();
@@ -127,6 +128,8 @@ class ManagerUsersBloc extends DisposeCallbackBaseBloc {
       isLoadingController.stream
           .where((event) => event)
           .map((_) => LoadingUsersState()),
+
+
       removeUserStream.map((entry) {
         print('Entry =$entry');
         switch (entry.value) {

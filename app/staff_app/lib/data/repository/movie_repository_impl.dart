@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:built_collection/src/list.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
+import 'package:khaithu/data/remote/response/search_movie_response.dart';
 import 'package:uuid/uuid.dart' as uuid;
 
 import '../../domain/model/category.dart';
@@ -17,6 +18,7 @@ import '../remote/response/category_response.dart';
 import '../remote/response/error_response.dart';
 import '../remote/response/movie_response.dart';
 import '../remote/response/person_response.dart';
+import '../serializers.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
   final AuthClient _authClient;
@@ -24,13 +26,11 @@ class MovieRepositoryImpl implements MovieRepository {
   MovieRepositoryImpl(this._authClient);
 
   @override
-  Future<List<Movie>> getListMovie(int page, int perPage) async {
+  Future<BuiltList<Movie>> getListMovie(int page, int perPage) async {
     try {
-      final usersRes = await _authClient.getBody(buildUrl(
-          'admin_movies/', {'page': '$page', 'per_page': '$perPage'})) as List;
-      return usersRes
-          .map((json) => movieRemoteToDomain(MovieResponse.fromJson(json)))
-          .toList();
+      return await _authClient.getBody(buildUrl(
+          'admin_movies/', {'page': '$page', 'per_page': '$perPage'}))
+          .then((value) => deserializeBuiltList<MovieResponse>(value).map(movieRemoteToDomain).toBuiltList());
     } on ErrorResponse catch (e) {
       if (e.statusCode == HttpStatus.notFound) {
         throw const NotCompletedManagerUserException();
@@ -56,14 +56,11 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<List<Person>> getListSearchPerson(String name) async {
+  Future<BuiltList<Person>> getListSearchPerson(String name) async {
     try {
-      final res = await _authClient
-          .getBody(buildUrl('people/search/', {'name': name})) as List;
-      return res
-          .map((e) => PersonResponse.fromJson(e))
-          .map((e) => personResponseToPerson(e))
-          .toList();
+      return await _authClient
+          .getBody(buildUrl('people/search/', {'name': name}))
+          .then((value) => deserializeBuiltList<PersonResponse>(value).map(personResponseToPerson).toBuiltList());
     } on ErrorResponse catch (e) {
       if (e.statusCode == HttpStatus.notFound) {
         throw const NotCompletedManagerUserException();
@@ -73,13 +70,10 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<List<Category>> getListCategory() async {
+  Future<BuiltList<Category>> getListCategory() async {
     try {
-      final res = await _authClient.getBody(buildUrl('categories/')) as List;
-      return res
-          .map((e) => CategoryResponse.fromJson(e))
-          .map((e) => categoryResponseToCategory(e))
-          .toList();
+      return await _authClient.getBody(buildUrl('categories/'))
+          .then((value) => deserializeBuiltList<CategoryResponse>(value).map(categoryResponseToCategory).toBuiltList());
     } on ErrorResponse catch (e) {
       if (e.statusCode == HttpStatus.notFound) {
         throw const NotCompletedManagerUserException();
@@ -113,98 +107,14 @@ class MovieRepositoryImpl implements MovieRepository {
 
   @override
   Future<BuiltList<Movie>> search(String title) async {
-    final usersRes = await _authClient.getBody(
+    return await _authClient.getBody(
       buildUrl(
         '/admin_movies/search',
         {'title': title},
       ),
-    ) as List;
-    return usersRes
-        .map((json) => SearchMovieRes.fromJson(json))
-        .map(searchMovieResToDomain)
-        .toBuiltList();
+    ).then((value) => deserializeBuiltList<SearchMovieResponse>(value).map((searchMovieResToDomain)).toBuiltList());
   }
 }
 
-Movie searchMovieResToDomain(SearchMovieRes r) {
-  return Movie(
-    id: r.id,
-    isActive: r.isActive ?? true,
-    title: r.title,
-    trailerVideoUrl: r.trailerVideoUrl,
-    posterUrl: r.posterUrl,
-    overview: r.overview,
-    releasedDate: DateTime.parse(r.releasedDate).toLocal(),
-    duration: r.duration,
-    originalLanguage: r.originalLanguage,
-    createdAt: DateTime.parse(r.createdAt).toLocal(),
-    updatedAt: DateTime.parse(r.updatedAt).toLocal(),
-    ageType: r.ageType.ageType(),
-    actors: null,
-    directors: null,
-    categories: null,
-    rateStar: r.rateStar,
-    totalFavorite: r.totalFavorite,
-    totalRate: r.totalRate,
-  );
-}
-
-class SearchMovieRes {
-  late bool isActive;
-  late String ageType;
-  late List<String> actors;
-  late List<String> directors;
-  late String title;
-  late String trailerVideoUrl;
-  late String posterUrl;
-  late String overview;
-  late String releasedDate;
-  late int duration;
-  late String originalLanguage;
-  late String createdAt;
-  late String updatedAt;
-  late double rateStar;
-  late int totalFavorite;
-  late int totalRate;
-  late String id;
 
 
-  SearchMovieRes(
-      {required this.isActive,
-        required this.ageType,
-        required this.actors,
-        required this.directors,
-        required this.title,
-        required this.trailerVideoUrl,
-        required this.posterUrl,
-        required this.overview,
-        required this.releasedDate,
-        required this.duration,
-        required this.originalLanguage,
-        required this.createdAt,
-        required this.updatedAt,
-        required this.rateStar,
-        required this.totalFavorite,
-        required this.totalRate,
-        required this.id});
-
-  SearchMovieRes.fromJson(Map<String, dynamic> json) {
-    isActive = json['is_active'];
-    ageType = json['age_type'];
-    actors = json['actors'] as List<String>;
-    directors = json['directors'].cast<String>();
-    id = json['_id'];
-    title = json['title'];
-    trailerVideoUrl = json['trailer_video_url'];
-    posterUrl = json['poster_url'];
-    overview = json['overview'];
-    releasedDate = json['released_date'];
-    duration = json['duration'];
-    originalLanguage = json['original_language'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    rateStar = (json['rate_star'] as num).toDouble();
-    totalFavorite = json['total_favorite'];
-    totalRate = json['total_rate'];
-  }
-}

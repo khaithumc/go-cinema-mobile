@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    user$ ??= Provider.of<UserRepository>(context).user$;
+    user$ = Provider.of<UserRepository>(context).user$;
   }
 
   @override
@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
           return data.fold(
                 () => NotLoggedIn(),
-                (user) => LoggedIn(user),
+                (user) => LoggedIn(user: user),
           );
         },
       ),
@@ -57,7 +57,10 @@ class _ProfilePageState extends State<ProfilePage> {
 class LoggedIn extends StatelessWidget {
   final User user;
 
-  LoggedIn(this.user);
+  const LoggedIn({
+    Key? key,
+    required this.user
+}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +301,7 @@ class LoggedIn extends StatelessWidget {
               ),
             )
                 : CachedNetworkImage(
-              imageUrl: user.avatar,
+              imageUrl: user.avatar ?? '',
               fit: BoxFit.cover,
               width: imageSize,
               height: imageSize,

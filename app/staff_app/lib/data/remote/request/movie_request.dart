@@ -18,9 +18,9 @@ class MovieRequest {
   });
 
   final String title;
-  final String trailerVideoUrl;
-  final String posterUrl;
-  final String overview;
+  final String? trailerVideoUrl;
+  final String? posterUrl;
+  final String? overview;
   final String releasedDate;
   final int duration;
   final List<String> directorIds;

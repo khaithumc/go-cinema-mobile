@@ -103,7 +103,7 @@ class ProgressButton extends StatefulWidget {
     'Must be non-null widgets provided in map of stateWidgets. Missing keys => ${ButtonState.values.toSet().difference(iconedButtons.keys.toSet())}',
     );
 
-    textStyle ??= TextStyle(color: Colors.white, fontWeight: FontWeight.w500);
+    textStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500);
 
     final stateWidgets = <ButtonState, Widget>{
       ButtonState.idle: buildChildWithIcon(
@@ -141,7 +141,7 @@ class ProgressButton extends StatefulWidget {
 class _ProgressButtonState extends State<ProgressButton>
     with TickerProviderStateMixin {
   late AnimationController colorAnimationController;
-  late Animation<Color?> colorAnimation;
+  late Animation<Color?>? colorAnimation = null;
   late double width;
   Duration animationDuration = Duration(milliseconds: 500);
   late Widget progressIndicator;
@@ -167,7 +167,7 @@ class _ProgressButtonState extends State<ProgressButton>
 
   Color? get backgroundColor => colorAnimation == null
       ? widget.stateColors[widget.state]
-      : colorAnimation.value ?? widget.stateColors[widget.state];
+      : colorAnimation?.value ?? widget.stateColors[widget.state];
 
   @override
   void initState() {
@@ -236,7 +236,7 @@ class _ProgressButtonState extends State<ProgressButton>
               color: backgroundColor,
               onPressed:() => widget.onPressed,
               child: getButtonChild(
-                  colorAnimation == null ? true : colorAnimation.isCompleted),
+                  colorAnimation == null ? true : colorAnimation!.isCompleted),
             ));
       },
     );

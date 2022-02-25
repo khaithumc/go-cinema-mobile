@@ -16,7 +16,7 @@ class HeaderWidget extends StatelessWidget {
   final Movie movie;
   final ShowTime showTime;
   final Theatre theatre;
-  final BuiltList<Ticket> tickets;
+  final BuiltList<Ticket?> tickets;
   final Widget? child;
 
   HeaderWidget({
@@ -186,7 +186,7 @@ class HeaderWidget extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: tickets.map((t) {
-              final seat = t.seat;
+              final seat = t!.seat;
 
               return Container(
                 width: seatSize,
