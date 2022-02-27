@@ -12,3 +12,4 @@ export 'src/snackbar.dart';
 export 'src/streams.dart';
 export 'src/type_defs.dart';
 export 'src/validators.dart';
+export 'src/logger.dart';

@@ -26,10 +26,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     required int perPage,
   }) {
     final toResult = (dynamic json) {
-      final responses = serializers.deserialize(
-        json,
-        specifiedType: builtListNotificationResponse,
-      ) as BuiltList<NotificationResponse>;
+      final responses = deserializeBuiltList<NotificationResponse>(json).toBuiltList();
       return [
         for (final r in responses) _notificationResponseToNotification(r),
       ].build();

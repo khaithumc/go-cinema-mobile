@@ -7,10 +7,10 @@ import 'theatre.dart';
 part 'show_time.g.dart';
 
 abstract class ShowTime implements Built<ShowTime, ShowTimeBuilder> {
-   bool get isActive;
+   bool? get isActive;
    String get id;
-   Movie get movie;
-   String get movieId;
+   Movie? get movie;
+   String? get movieId;
    String get theatreId;
    String get room;
    DateTime get startTime;

@@ -18,10 +18,7 @@ class ProductRepositoryImpl implements ProductRepository {
   Stream<BuiltList<Product>> getProducts() async* {
     final json = await _authClient.getJson(buildUrl('/products'));
 
-    final productResponses = serializers.deserialize(
-      json,
-      specifiedType: builtListProductResponse,
-    ) as BuiltList<ProductResponse>;
+    final productResponses = deserializeBuiltList<ProductResponse>(json).toBuiltList();
 
     yield productResponses.map(_productResponseToProduct).toBuiltList();
   }

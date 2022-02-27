@@ -20,8 +20,6 @@ class _$CategoryResponseSerializer
   Iterable<Object?> serialize(Serializers serializers, CategoryResponse object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
-      'id',
-      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
       'createdAt',
@@ -30,11 +28,22 @@ class _$CategoryResponseSerializer
       'updatedAt',
       serializers.serialize(object.updatedAt,
           specifiedType: const FullType(DateTime)),
-      'categoryId',
-      serializers.serialize(object.categoryId,
-          specifiedType: const FullType(String)),
     ];
-
+    Object? value;
+    value = object.id;
+    if (value != null) {
+      result
+        ..add('_id')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.categoryId;
+    if (value != null) {
+      result
+        ..add('category_id')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -50,9 +59,9 @@ class _$CategoryResponseSerializer
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
-        case 'id':
+        case '_id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
@@ -66,9 +75,9 @@ class _$CategoryResponseSerializer
           result.updatedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
-        case 'categoryId':
+        case 'category_id':
           result.categoryId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -79,7 +88,7 @@ class _$CategoryResponseSerializer
 
 class _$CategoryResponse extends CategoryResponse {
   @override
-  final String id;
+  final String? id;
   @override
   final String name;
   @override
@@ -87,27 +96,24 @@ class _$CategoryResponse extends CategoryResponse {
   @override
   final DateTime updatedAt;
   @override
-  final String categoryId;
+  final String? categoryId;
 
   factory _$CategoryResponse(
           [void Function(CategoryResponseBuilder)? updates]) =>
       (new CategoryResponseBuilder()..update(updates)).build();
 
   _$CategoryResponse._(
-      {required this.id,
+      {this.id,
       required this.name,
       required this.createdAt,
       required this.updatedAt,
-      required this.categoryId})
+      this.categoryId})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, 'CategoryResponse', 'id');
     BuiltValueNullFieldError.checkNotNull(name, 'CategoryResponse', 'name');
     BuiltValueNullFieldError.checkNotNull(
         createdAt, 'CategoryResponse', 'createdAt');
     BuiltValueNullFieldError.checkNotNull(
         updatedAt, 'CategoryResponse', 'updatedAt');
-    BuiltValueNullFieldError.checkNotNull(
-        categoryId, 'CategoryResponse', 'categoryId');
   }
 
   @override
@@ -203,16 +209,14 @@ class CategoryResponseBuilder
   _$CategoryResponse build() {
     final _$result = _$v ??
         new _$CategoryResponse._(
-            id: BuiltValueNullFieldError.checkNotNull(
-                id, 'CategoryResponse', 'id'),
+            id: id,
             name: BuiltValueNullFieldError.checkNotNull(
                 name, 'CategoryResponse', 'name'),
             createdAt: BuiltValueNullFieldError.checkNotNull(
                 createdAt, 'CategoryResponse', 'createdAt'),
             updatedAt: BuiltValueNullFieldError.checkNotNull(
                 updatedAt, 'CategoryResponse', 'updatedAt'),
-            categoryId: BuiltValueNullFieldError.checkNotNull(
-                categoryId, 'CategoryResponse', 'categoryId'));
+            categoryId: categoryId);
     replace(_$result);
     return _$result;
   }

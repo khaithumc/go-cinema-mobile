@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:khaithu/domain/model/age_type.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../domain/model/movie.dart';
@@ -183,7 +184,7 @@ class MovieCell extends StatelessWidget {
                         bottom: 8,
                         right: 8,
                         child: AgeTypeWidget(
-                          ageType: item.ageType,
+                          ageType: item.ageType ?? AgeType.P,
                         ),
                       ),
                     ],

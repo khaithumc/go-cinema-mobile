@@ -8,11 +8,17 @@ import '../../serializers.dart';
 part 'category_response.g.dart';
 
 abstract class CategoryResponse implements Built<CategoryResponse, CategoryResponseBuilder> {
-   String get id;
+  @BuiltValueField(wireName: '_id')
+   String? get id;
+
    String get name;
+
    DateTime get createdAt;
+
    DateTime get updatedAt;
-   String get categoryId;
+
+   @BuiltValueField(wireName: 'category_id')
+   String? get categoryId;
 
   factory CategoryResponse.fromRawJson(String str) =>
       CategoryResponse.fromJson(json.decode(str));

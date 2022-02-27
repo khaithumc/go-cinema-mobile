@@ -1,4 +1,6 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:data/mappers.dart';
+import 'package:data/remote/response/search_movie_response.dart';
 import 'package:domain/model/category.dart';
 import 'package:domain/model/location.dart';
 import 'package:domain/model/movie.dart';
@@ -72,10 +74,7 @@ class MovieRepositoryImpl implements MovieRepository {
       ),
     );
 
-    final response = serializers.deserialize(
-      json,
-      specifiedType: builtListMovieResponse,
-    ) as BuiltList<MovieResponse>;
+    final response = deserializeBuiltList<MovieResponse>(json).toBuiltList();
 
     yield response.map(_movieResponseToMovie).toBuiltList();
   }
@@ -98,10 +97,7 @@ class MovieRepositoryImpl implements MovieRepository {
       ),
     );
 
-    final response = serializers.deserialize(
-      json,
-      specifiedType: builtListMovieResponse,
-    ) as BuiltList<MovieResponse>;
+    final response = deserializeBuiltList<MovieResponse>(json).toBuiltList();
 
     yield response.map(_movieResponseToMovie).toBuiltList();
   }
@@ -125,10 +121,7 @@ class MovieRepositoryImpl implements MovieRepository {
       ),
     );
 
-    final response = serializers.deserialize(
-      json,
-      specifiedType: builtListShowTimeAndTheatreResponse,
-    ) as BuiltList<ShowTimeAndTheatreResponse>;
+    final response = deserializeBuiltList<ShowTimeAndTheatreResponse>(json).toBuiltList();
 
     yield _showTimeAndTheatreResponsesToTheatreAndShowTimes(response);
   }
@@ -200,10 +193,7 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   BuiltList<Movie> mapResult(dynamic json) {
-    final response = serializers.deserialize(
-      json,
-      specifiedType: builtListMovieResponse,
-    ) as BuiltList<MovieResponse>;
+    final response = deserializeBuiltList<MovieResponse>(json).toBuiltList();
 
     return response.map(_movieResponseToMovie).toBuiltList();
   }
@@ -216,10 +206,7 @@ class MovieRepositoryImpl implements MovieRepository {
     }
 
     final mapResult = (Object? json) {
-      final response = serializers.deserialize(
-        json,
-        specifiedType: builtListMovieAndShowTimeResponse,
-      ) as BuiltList<MovieAndShowTimeResponse>;
+      final response = deserializeBuiltList<MovieAndShowTimeResponse>(json!).toBuiltList();
       return _movieAndShowTimeResponsesToMovieAndShowTimes(response);
     };
 
@@ -228,7 +215,7 @@ class MovieRepositoryImpl implements MovieRepository {
         .then(mapResult));
   }
 
-  @override
+  /*@override
   Stream<BuiltList<Movie>> search({
     required String query,
     required DateTime showtimeStartTime,
@@ -292,7 +279,7 @@ class MovieRepositoryImpl implements MovieRepository {
           ),
         )
         .then(mapResult));
-  }
+  }*/
 
   @override
   Future<void> saveSearchQuery(String query) =>
@@ -304,10 +291,7 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Stream<BuiltList<Category>> getCategories() {
     final mapResult = (dynamic json) {
-      final response = serializers.deserialize(
-        json,
-        specifiedType: builtListCategoryResponse,
-      )! as BuiltList<CategoryResponse>;
+      final response = deserializeBuiltList<CategoryResponse>(json).toBuiltList();
 
       return [for (final r in response) _categoryResponseToCategory(r)].build();
     };
@@ -325,5 +309,15 @@ class MovieRepositoryImpl implements MovieRepository {
           .getJson(buildUrl('/neo4j/related-movies/$movieId'))
           .then(mapResult),
     );
+  }
+
+  @override
+  Future<BuiltList<Movie>> search(String title) async {
+    return await _authClient.getJson(
+      buildUrl(
+        '/admin_movies/search',
+        {'title': title},
+      ),
+    ).then((value) => deserializeBuiltList<SearchMovieResponse>(value).map((searchMovieResponseToDomain)).toBuiltList());
   }
 }

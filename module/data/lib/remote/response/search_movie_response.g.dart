@@ -1,24 +1,43 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'movie_response.dart';
+part of 'search_movie_response.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<MovieResponse> _$movieResponseSerializer =
-    new _$MovieResponseSerializer();
+Serializer<SearchMovieResponse> _$searchMovieResponseSerializer =
+    new _$SearchMovieResponseSerializer();
 
-class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
+class _$SearchMovieResponseSerializer
+    implements StructuredSerializer<SearchMovieResponse> {
   @override
-  final Iterable<Type> types = const [MovieResponse, _$MovieResponse];
+  final Iterable<Type> types = const [
+    SearchMovieResponse,
+    _$SearchMovieResponse
+  ];
   @override
-  final String wireName = 'MovieResponse';
+  final String wireName = 'SearchMovieResponse';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, MovieResponse object,
+  Iterable<Object?> serialize(
+      Serializers serializers, SearchMovieResponse object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
+      'is_active',
+      serializers.serialize(object.isActive,
+          specifiedType: const FullType(bool)),
+      'age_type',
+      serializers.serialize(object.ageType,
+          specifiedType: const FullType(String)),
+      'actors',
+      serializers.serialize(object.actors,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
+      'directors',
+      serializers.serialize(object.directors,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
       '_id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'rate_star',
@@ -30,47 +49,26 @@ class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
       'total_favorite',
       serializers.serialize(object.totalFavorite,
           specifiedType: const FullType(int)),
-      '__v',
-      serializers.serialize(object.v, specifiedType: const FullType(int)),
+      'title',
+      serializers.serialize(object.title,
+          specifiedType: const FullType(String)),
+      'released_date',
+      serializers.serialize(object.releasedDate,
+          specifiedType: const FullType(DateTime)),
+      'duration',
+      serializers.serialize(object.duration,
+          specifiedType: const FullType(int)),
+      'original_language',
+      serializers.serialize(object.originalLanguage,
+          specifiedType: const FullType(String)),
+      'createdAt',
+      serializers.serialize(object.createdAt,
+          specifiedType: const FullType(DateTime)),
+      'updatedAt',
+      serializers.serialize(object.updatedAt,
+          specifiedType: const FullType(DateTime)),
     ];
     Object? value;
-    value = object.isActive;
-    if (value != null) {
-      result
-        ..add('is_active')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
-    value = object.ageType;
-    if (value != null) {
-      result
-        ..add('age_type')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.actors;
-    if (value != null) {
-      result
-        ..add('actors')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(
-                BuiltList, const [const FullType(PersonResponse)])));
-    }
-    value = object.directors;
-    if (value != null) {
-      result
-        ..add('directors')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(
-                BuiltList, const [const FullType(PersonResponse)])));
-    }
-    value = object.title;
-    if (value != null) {
-      result
-        ..add('title')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
     value = object.trailerVideoUrl;
     if (value != null) {
       result
@@ -92,63 +90,14 @@ class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.releasedDate;
-    if (value != null) {
-      result
-        ..add('released_date')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.duration;
-    if (value != null) {
-      result
-        ..add('duration')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
-    value = object.originalLanguage;
-    if (value != null) {
-      result
-        ..add('original_language')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.createdAt;
-    if (value != null) {
-      result
-        ..add('createdAt')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.updatedAt;
-    if (value != null) {
-      result
-        ..add('updatedAt')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(DateTime)));
-    }
-    value = object.categories;
-    if (value != null) {
-      result
-        ..add('categories')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(
-                BuiltList, const [const FullType(CategoryResponse)])));
-    }
-    value = object.movieResponseId;
-    if (value != null) {
-      result
-        ..add('movie_response_id')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
     return result;
   }
 
   @override
-  MovieResponse deserialize(
+  SearchMovieResponse deserialize(
       Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new MovieResponseBuilder();
+    final result = new SearchMovieResponseBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -158,22 +107,22 @@ class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
       switch (key) {
         case 'is_active':
           result.isActive = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool?;
+              specifiedType: const FullType(bool)) as bool;
           break;
         case 'age_type':
           result.ageType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'actors':
           result.actors.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(PersonResponse)]))!
+                      BuiltList, const [const FullType(String)]))!
               as BuiltList<Object?>);
           break;
         case 'directors':
           result.directors.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(PersonResponse)]))!
+                      BuiltList, const [const FullType(String)]))!
               as BuiltList<Object?>);
           break;
         case '_id':
@@ -194,7 +143,7 @@ class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
           break;
         case 'title':
           result.title = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'trailer_video_url':
           result.trailerVideoUrl = serializers.deserialize(value,
@@ -210,37 +159,23 @@ class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
           break;
         case 'released_date':
           result.releasedDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime?;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'duration':
           result.duration = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
+              specifiedType: const FullType(int)) as int;
           break;
         case 'original_language':
           result.originalLanguage = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'createdAt':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime?;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'updatedAt':
           result.updatedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime?;
-          break;
-        case '__v':
-          result.v = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'categories':
-          result.categories.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(CategoryResponse)]))!
-              as BuiltList<Object?>);
-          break;
-        case 'movie_response_id':
-          result.movieResponseId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
       }
     }
@@ -249,15 +184,15 @@ class _$MovieResponseSerializer implements StructuredSerializer<MovieResponse> {
   }
 }
 
-class _$MovieResponse extends MovieResponse {
+class _$SearchMovieResponse extends SearchMovieResponse {
   @override
-  final bool? isActive;
+  final bool isActive;
   @override
-  final String? ageType;
+  final String ageType;
   @override
-  final BuiltList<PersonResponse>? actors;
+  final BuiltList<String> actors;
   @override
-  final BuiltList<PersonResponse>? directors;
+  final BuiltList<String> directors;
   @override
   final String id;
   @override
@@ -267,7 +202,7 @@ class _$MovieResponse extends MovieResponse {
   @override
   final int totalFavorite;
   @override
-  final String? title;
+  final String title;
   @override
   final String? trailerVideoUrl;
   @override
@@ -275,68 +210,81 @@ class _$MovieResponse extends MovieResponse {
   @override
   final String? overview;
   @override
-  final DateTime? releasedDate;
+  final DateTime releasedDate;
   @override
-  final int? duration;
+  final int duration;
   @override
-  final String? originalLanguage;
+  final String originalLanguage;
   @override
-  final DateTime? createdAt;
+  final DateTime createdAt;
   @override
-  final DateTime? updatedAt;
-  @override
-  final int v;
-  @override
-  final BuiltList<CategoryResponse>? categories;
-  @override
-  final String? movieResponseId;
+  final DateTime updatedAt;
 
-  factory _$MovieResponse([void Function(MovieResponseBuilder)? updates]) =>
-      (new MovieResponseBuilder()..update(updates)).build();
+  factory _$SearchMovieResponse(
+          [void Function(SearchMovieResponseBuilder)? updates]) =>
+      (new SearchMovieResponseBuilder()..update(updates)).build();
 
-  _$MovieResponse._(
-      {this.isActive,
-      this.ageType,
-      this.actors,
-      this.directors,
+  _$SearchMovieResponse._(
+      {required this.isActive,
+      required this.ageType,
+      required this.actors,
+      required this.directors,
       required this.id,
       required this.rateStar,
       required this.totalRate,
       required this.totalFavorite,
-      this.title,
+      required this.title,
       this.trailerVideoUrl,
       this.posterUrl,
       this.overview,
-      this.releasedDate,
-      this.duration,
-      this.originalLanguage,
-      this.createdAt,
-      this.updatedAt,
-      required this.v,
-      this.categories,
-      this.movieResponseId})
+      required this.releasedDate,
+      required this.duration,
+      required this.originalLanguage,
+      required this.createdAt,
+      required this.updatedAt})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, 'MovieResponse', 'id');
     BuiltValueNullFieldError.checkNotNull(
-        rateStar, 'MovieResponse', 'rateStar');
+        isActive, 'SearchMovieResponse', 'isActive');
     BuiltValueNullFieldError.checkNotNull(
-        totalRate, 'MovieResponse', 'totalRate');
+        ageType, 'SearchMovieResponse', 'ageType');
     BuiltValueNullFieldError.checkNotNull(
-        totalFavorite, 'MovieResponse', 'totalFavorite');
-    BuiltValueNullFieldError.checkNotNull(v, 'MovieResponse', 'v');
+        actors, 'SearchMovieResponse', 'actors');
+    BuiltValueNullFieldError.checkNotNull(
+        directors, 'SearchMovieResponse', 'directors');
+    BuiltValueNullFieldError.checkNotNull(id, 'SearchMovieResponse', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        rateStar, 'SearchMovieResponse', 'rateStar');
+    BuiltValueNullFieldError.checkNotNull(
+        totalRate, 'SearchMovieResponse', 'totalRate');
+    BuiltValueNullFieldError.checkNotNull(
+        totalFavorite, 'SearchMovieResponse', 'totalFavorite');
+    BuiltValueNullFieldError.checkNotNull(
+        title, 'SearchMovieResponse', 'title');
+    BuiltValueNullFieldError.checkNotNull(
+        releasedDate, 'SearchMovieResponse', 'releasedDate');
+    BuiltValueNullFieldError.checkNotNull(
+        duration, 'SearchMovieResponse', 'duration');
+    BuiltValueNullFieldError.checkNotNull(
+        originalLanguage, 'SearchMovieResponse', 'originalLanguage');
+    BuiltValueNullFieldError.checkNotNull(
+        createdAt, 'SearchMovieResponse', 'createdAt');
+    BuiltValueNullFieldError.checkNotNull(
+        updatedAt, 'SearchMovieResponse', 'updatedAt');
   }
 
   @override
-  MovieResponse rebuild(void Function(MovieResponseBuilder) updates) =>
+  SearchMovieResponse rebuild(
+          void Function(SearchMovieResponseBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  MovieResponseBuilder toBuilder() => new MovieResponseBuilder()..replace(this);
+  SearchMovieResponseBuilder toBuilder() =>
+      new SearchMovieResponseBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is MovieResponse &&
+    return other is SearchMovieResponse &&
         isActive == other.isActive &&
         ageType == other.ageType &&
         actors == other.actors &&
@@ -353,10 +301,7 @@ class _$MovieResponse extends MovieResponse {
         duration == other.duration &&
         originalLanguage == other.originalLanguage &&
         createdAt == other.createdAt &&
-        updatedAt == other.updatedAt &&
-        v == other.v &&
-        categories == other.categories &&
-        movieResponseId == other.movieResponseId;
+        updatedAt == other.updatedAt;
   }
 
   @override
@@ -378,32 +323,32 @@ class _$MovieResponse extends MovieResponse {
                                                             $jc(
                                                                 $jc(
                                                                     $jc(
-                                                                        $jc(
-                                                                            $jc($jc(0, isActive.hashCode),
-                                                                                ageType.hashCode),
-                                                                            actors.hashCode),
-                                                                        directors.hashCode),
-                                                                    id.hashCode),
-                                                                rateStar.hashCode),
-                                                            totalRate.hashCode),
-                                                        totalFavorite.hashCode),
-                                                    title.hashCode),
-                                                trailerVideoUrl.hashCode),
-                                            posterUrl.hashCode),
-                                        overview.hashCode),
-                                    releasedDate.hashCode),
-                                duration.hashCode),
-                            originalLanguage.hashCode),
-                        createdAt.hashCode),
-                    updatedAt.hashCode),
-                v.hashCode),
-            categories.hashCode),
-        movieResponseId.hashCode));
+                                                                        0,
+                                                                        isActive
+                                                                            .hashCode),
+                                                                    ageType
+                                                                        .hashCode),
+                                                                actors
+                                                                    .hashCode),
+                                                            directors.hashCode),
+                                                        id.hashCode),
+                                                    rateStar.hashCode),
+                                                totalRate.hashCode),
+                                            totalFavorite.hashCode),
+                                        title.hashCode),
+                                    trailerVideoUrl.hashCode),
+                                posterUrl.hashCode),
+                            overview.hashCode),
+                        releasedDate.hashCode),
+                    duration.hashCode),
+                originalLanguage.hashCode),
+            createdAt.hashCode),
+        updatedAt.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('MovieResponse')
+    return (newBuiltValueToStringHelper('SearchMovieResponse')
           ..add('isActive', isActive)
           ..add('ageType', ageType)
           ..add('actors', actors)
@@ -420,17 +365,14 @@ class _$MovieResponse extends MovieResponse {
           ..add('duration', duration)
           ..add('originalLanguage', originalLanguage)
           ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt)
-          ..add('v', v)
-          ..add('categories', categories)
-          ..add('movieResponseId', movieResponseId))
+          ..add('updatedAt', updatedAt))
         .toString();
   }
 }
 
-class MovieResponseBuilder
-    implements Builder<MovieResponse, MovieResponseBuilder> {
-  _$MovieResponse? _$v;
+class SearchMovieResponseBuilder
+    implements Builder<SearchMovieResponse, SearchMovieResponseBuilder> {
+  _$SearchMovieResponse? _$v;
 
   bool? _isActive;
   bool? get isActive => _$this._isActive;
@@ -440,15 +382,15 @@ class MovieResponseBuilder
   String? get ageType => _$this._ageType;
   set ageType(String? ageType) => _$this._ageType = ageType;
 
-  ListBuilder<PersonResponse>? _actors;
-  ListBuilder<PersonResponse> get actors =>
-      _$this._actors ??= new ListBuilder<PersonResponse>();
-  set actors(ListBuilder<PersonResponse>? actors) => _$this._actors = actors;
+  ListBuilder<String>? _actors;
+  ListBuilder<String> get actors =>
+      _$this._actors ??= new ListBuilder<String>();
+  set actors(ListBuilder<String>? actors) => _$this._actors = actors;
 
-  ListBuilder<PersonResponse>? _directors;
-  ListBuilder<PersonResponse> get directors =>
-      _$this._directors ??= new ListBuilder<PersonResponse>();
-  set directors(ListBuilder<PersonResponse>? directors) =>
+  ListBuilder<String>? _directors;
+  ListBuilder<String> get directors =>
+      _$this._directors ??= new ListBuilder<String>();
+  set directors(ListBuilder<String>? directors) =>
       _$this._directors = directors;
 
   String? _id;
@@ -507,30 +449,15 @@ class MovieResponseBuilder
   DateTime? get updatedAt => _$this._updatedAt;
   set updatedAt(DateTime? updatedAt) => _$this._updatedAt = updatedAt;
 
-  int? _v;
-  int? get v => _$this._v;
-  set v(int? v) => _$this._v = v;
+  SearchMovieResponseBuilder();
 
-  ListBuilder<CategoryResponse>? _categories;
-  ListBuilder<CategoryResponse> get categories =>
-      _$this._categories ??= new ListBuilder<CategoryResponse>();
-  set categories(ListBuilder<CategoryResponse>? categories) =>
-      _$this._categories = categories;
-
-  String? _movieResponseId;
-  String? get movieResponseId => _$this._movieResponseId;
-  set movieResponseId(String? movieResponseId) =>
-      _$this._movieResponseId = movieResponseId;
-
-  MovieResponseBuilder();
-
-  MovieResponseBuilder get _$this {
+  SearchMovieResponseBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _isActive = $v.isActive;
       _ageType = $v.ageType;
-      _actors = $v.actors?.toBuilder();
-      _directors = $v.directors?.toBuilder();
+      _actors = $v.actors.toBuilder();
+      _directors = $v.directors.toBuilder();
       _id = $v.id;
       _rateStar = $v.rateStar;
       _totalRate = $v.totalRate;
@@ -544,68 +471,64 @@ class MovieResponseBuilder
       _originalLanguage = $v.originalLanguage;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
-      _v = $v.v;
-      _categories = $v.categories?.toBuilder();
-      _movieResponseId = $v.movieResponseId;
       _$v = null;
     }
     return this;
   }
 
   @override
-  void replace(MovieResponse other) {
+  void replace(SearchMovieResponse other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$MovieResponse;
+    _$v = other as _$SearchMovieResponse;
   }
 
   @override
-  void update(void Function(MovieResponseBuilder)? updates) {
+  void update(void Function(SearchMovieResponseBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$MovieResponse build() {
-    _$MovieResponse _$result;
+  _$SearchMovieResponse build() {
+    _$SearchMovieResponse _$result;
     try {
       _$result = _$v ??
-          new _$MovieResponse._(
-              isActive: isActive,
-              ageType: ageType,
-              actors: _actors?.build(),
-              directors: _directors?.build(),
+          new _$SearchMovieResponse._(
+              isActive: BuiltValueNullFieldError.checkNotNull(
+                  isActive, 'SearchMovieResponse', 'isActive'),
+              ageType: BuiltValueNullFieldError.checkNotNull(
+                  ageType, 'SearchMovieResponse', 'ageType'),
+              actors: actors.build(),
+              directors: directors.build(),
               id: BuiltValueNullFieldError.checkNotNull(
-                  id, 'MovieResponse', 'id'),
+                  id, 'SearchMovieResponse', 'id'),
               rateStar: BuiltValueNullFieldError.checkNotNull(
-                  rateStar, 'MovieResponse', 'rateStar'),
+                  rateStar, 'SearchMovieResponse', 'rateStar'),
               totalRate: BuiltValueNullFieldError.checkNotNull(
-                  totalRate, 'MovieResponse', 'totalRate'),
+                  totalRate, 'SearchMovieResponse', 'totalRate'),
               totalFavorite: BuiltValueNullFieldError.checkNotNull(
-                  totalFavorite, 'MovieResponse', 'totalFavorite'),
-              title: title,
+                  totalFavorite, 'SearchMovieResponse', 'totalFavorite'),
+              title: BuiltValueNullFieldError.checkNotNull(
+                  title, 'SearchMovieResponse', 'title'),
               trailerVideoUrl: trailerVideoUrl,
               posterUrl: posterUrl,
               overview: overview,
-              releasedDate: releasedDate,
-              duration: duration,
-              originalLanguage: originalLanguage,
-              createdAt: createdAt,
-              updatedAt: updatedAt,
-              v: BuiltValueNullFieldError.checkNotNull(v, 'MovieResponse', 'v'),
-              categories: _categories?.build(),
-              movieResponseId: movieResponseId);
+              releasedDate: BuiltValueNullFieldError.checkNotNull(
+                  releasedDate, 'SearchMovieResponse', 'releasedDate'),
+              duration:
+                  BuiltValueNullFieldError.checkNotNull(duration, 'SearchMovieResponse', 'duration'),
+              originalLanguage: BuiltValueNullFieldError.checkNotNull(originalLanguage, 'SearchMovieResponse', 'originalLanguage'),
+              createdAt: BuiltValueNullFieldError.checkNotNull(createdAt, 'SearchMovieResponse', 'createdAt'),
+              updatedAt: BuiltValueNullFieldError.checkNotNull(updatedAt, 'SearchMovieResponse', 'updatedAt'));
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'actors';
-        _actors?.build();
+        actors.build();
         _$failedField = 'directors';
-        _directors?.build();
-
-        _$failedField = 'categories';
-        _categories?.build();
+        directors.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'MovieResponse', _$failedField, e.toString());
+            'SearchMovieResponse', _$failedField, e.toString());
       }
       rethrow;
     }

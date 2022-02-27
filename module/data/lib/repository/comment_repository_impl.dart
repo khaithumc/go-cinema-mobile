@@ -40,6 +40,8 @@ class CommentRepositoryImpl implements CommentRepository {
       ),
     );
 
+    logger.d(json);
+
     yield _commentsResponseToComments(CommentsResponse.fromJson(json));
   }
 

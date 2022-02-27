@@ -8,7 +8,7 @@ import 'person.dart';
 part 'movie.g.dart';
 
 abstract class Movie implements Built<Movie, MovieBuilder> {
-   String get id;
+   String? get id;
 
    bool? get isActive;
 
@@ -22,15 +22,15 @@ abstract class Movie implements Built<Movie, MovieBuilder> {
 
    DateTime? get releasedDate;
 
-   int get duration;
+   int? get duration;
 
-   String get originalLanguage;
+   String? get originalLanguage;
 
-   DateTime get createdAt;
+   DateTime? get createdAt;
 
    DateTime? get updatedAt;
 
-   AgeType get ageType;
+   AgeType? get ageType;
 
    List<Person>? get actors;
 

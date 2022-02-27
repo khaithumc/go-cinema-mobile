@@ -19,10 +19,7 @@ class TheatreRepositoryImpl implements TheatreRepository {
   @override
   Stream<BuiltList<Theatre>> getNearbyTheatres(Location? location) {
     final toDomain = (dynamic json) {
-      final response = serializers.deserialize(
-        json,
-        specifiedType: builtListTheatreResponse,
-      ) as BuiltList<TheatreResponse>;
+      final response = deserializeBuiltList<TheatreResponse>(json);
 
       return [for (final r in response) _theatreResponseToTheatre(r)].build();
     };

@@ -102,10 +102,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   }
 
   BuiltList<Movie> _jsonToMovies(dynamic json) {
-    final responses = serializers.deserialize(
-      json,
-      specifiedType: builtListMovieResponse,
-    ) as BuiltList<MovieResponse>;
+    final responses = deserializeBuiltList<MovieResponse>(json).toBuiltList();
 
     return [for (final res in responses) _movieResponseToMovie(res)].build();
   }

@@ -32,7 +32,7 @@ class ManagerUsersBloc extends DisposeCallbackBaseBloc {
 
   factory ManagerUsersBloc(final ManagerRepository managerRepository) {
     //assert(managerRepository != null);
-    print('tysavahsdahsdbad');
+    print('tyyteqtwye');
     final getUsersController = BehaviorSubject<int>();
     final removeUserController =
     PublishSubject<Tuple3<User, DestroyUserType, String?>>();
@@ -119,7 +119,9 @@ class ManagerUsersBloc extends DisposeCallbackBaseBloc {
             () async* {
           isLoadingController.add(true);
           final page = currentLength ~/ 10 + 1;
+          print('jasdkjasd $page');
           final result = await managerRepository.loadUser(page);
+          print('ajdkjasd  $result');
           yield result;
           isLoadingController.add(false);
         },

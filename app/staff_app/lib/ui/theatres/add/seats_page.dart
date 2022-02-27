@@ -8,6 +8,7 @@ import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
+
 import '../../../utils/utils.dart';
 import '../../app_scaffold.dart';
 import '../seat.dart';
@@ -45,10 +46,10 @@ class SeatsPage extends StatefulWidget {
 }
 
 class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
-  late BehaviorSubject<BuiltList<Seat>> changeSeatS;
-  final longSelectedS = BehaviorSubject.seeded(<Seat>{}.build());
+  late BehaviorSubject<BuiltList<Seat?>?> changeSeatS;
+  final longSelectedS = BehaviorSubject<BuiltSet<Seat?>?>.seeded(<Seat?>{}.build());
 
-  late DistinctValueStream<Tuple2<BuiltList<Seat>, BuiltSet<Seat>>> seats$;
+  late DistinctValueStream<Tuple2<BuiltList<Seat?>?, BuiltSet<Seat?>?>> seats$;
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
     seats$ = Rx.combineLatest2(
       changeSeatS,
       longSelectedS,
-          (BuiltList<Seat> a,BuiltSet<Seat> b) => Tuple2<BuiltList<Seat>, BuiltSet<Seat>>(a, b),
+          (BuiltList<Seat?>? a,BuiltSet<Seat?>? b) => Tuple2<BuiltList<Seat?>?, BuiltSet<Seat?>?>(a, b),
     ).shareValueDistinct(
       Tuple2(seedValue, longSelectedS.value),
       sync: true,
@@ -97,10 +98,10 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
         appBar: AppBar(
           title: Text('Seats'),
           actions: [
-            RxStreamBuilder<BuiltSet<Seat>>(
+            RxStreamBuilder<BuiltSet<Seat?>?>(
               stream: longSelectedS,
               builder: (context, data) {
-                if (data.isNotEmpty) {
+                if (data!.isNotEmpty) {
                   return TextButton(
                     child: Text(
                       'Merge',
@@ -135,38 +136,39 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
                 height: 16,
               ),
             ),
-            RxStreamBuilder<Tuple2<BuiltList<Seat>, BuiltSet<Seat>>>(
+            RxStreamBuilder<Tuple2<BuiltList<Seat?>?, BuiltSet<Seat?>?>>(
               stream: seats$,
               builder: (context, snapshot) => SeatsGridWidget(
                 tuple: snapshot,
                 changeSeat: (value) {
                   final acc = changeSeatS.value;
-                  final newSeats = acc.firstWhere(
-                          (e) => e.coordinates == value.coordinates,
-                     /* orElse: () => null*/) !=
+
+                  final Seat? seat = acc?.toList().firstWhereOrNull(
+                          (e) => e?.coordinates == value?.coordinates);
+
+                  final newSeats = seat !=
                       null
                       ? () {
                     final longSelected = longSelectedS.value;
-                    if (longSelected.firstWhere(
-                            (e) => e.coordinates == value.coordinates,
-                        /*orElse: () => null*/) !=
+                    if (longSelected!.firstWhereOrNull(
+                            (e) => e?.coordinates == value?.coordinates) !=
                         null) {
                       longSelectedS.add(
                           longSelected.rebuild((b) => b.remove(value)));
                     }
-                    return acc.rebuild((b) => b.remove(value));
+                    return acc?.rebuild((b) => b.remove(value));
                   }()
-                      : acc.rebuild((b) => b.add(value));
+                      : acc?.rebuild((b) => b.add(value));
                   changeSeatS.add(newSeats);
                 },
                 onLongPressed: (seat) {
                   final longSelected = longSelectedS.value;
-                  final newLongSelected = longSelected.firstWhere(
-                          (e) => e.coordinates == seat.coordinates,
-                      /*orElse: () => null*/) !=
+                  final newLongSelected = longSelected!.firstWhereOrNull(
+                          (e) => e?.coordinates == seat?.coordinates) !=
                       null
                       ? longSelected.rebuild((b) => b.remove(seat))
                       : longSelected.rebuild((b) => b.add(seat));
+
                   longSelectedS.add(newLongSelected);
                 },
               ),
@@ -189,31 +191,31 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
 
   void onMerge(BuildContext context) {
     final longSelected = longSelectedS.value;
-    if (longSelected.length <= 1) {
+    if (longSelected!.length <= 1) {
       return context.showSnackBar('Please select more than 1 seat');
     }
 
-    if (longSelected.map((e) => e.coordinates.y).toSet().length != 1) {
+    if (longSelected.map((e) => e?.coordinates.y).toSet().length != 1) {
       return context.showSnackBar('All seats must be same row');
     }
 
-    final sorted = longSelected.sortedBy<num>((e) => e.coordinates.x);
+    final sorted = longSelected.sortedBy<num>((e) => e!.coordinates.x);
     print(sorted);
     for (var i = 0; i < sorted.length - 1; i++) {
       final cur = sorted[i];
       final after = sorted[i + 1];
-      if (after.coordinates.x - cur.coordinates.x != cur.count) {
+      if (after!.coordinates.x - cur!.coordinates.x != cur.count) {
         return context.showSnackBar('Seats must be consecutive');
       }
     }
 
-    final seats = changeSeatS.value.rebuild((b) {
+    final seats = changeSeatS.value!.rebuild((b) {
       sorted.forEach(b.remove);
 
       final first = sorted.first;
       final merged = Seat(
-        first.row,
-        sorted.map((e) => e.count).reduce((acc, e) => acc + e),
+        first!.row,
+        sorted.map((e) => e!.count).reduce((acc, e) => acc + e),
         first.coordinates,
       );
       print(merged);
@@ -226,9 +228,9 @@ class _SeatsPageState extends State<SeatsPage> with DisposeBagMixin {
 }
 
 class SeatsGridWidget extends StatefulWidget {
-  final Tuple2<BuiltList<Seat>, BuiltSet<Seat>> tuple;
-  final Function1<Seat, void> changeSeat;
-  final Function1<Seat, void> onLongPressed;
+  final Tuple2<BuiltList<Seat?>?, BuiltSet<Seat?>?> tuple;
+  final Function1<Seat?, void> changeSeat;
+  final Function1<Seat?, void> onLongPressed;
 
   const SeatsGridWidget({
     Key? key,
@@ -244,7 +246,7 @@ class SeatsGridWidget extends StatefulWidget {
 class _SeatsGridWidgetState extends State<SeatsGridWidget> {
   late int maxX;
   late int maxY;
-  late Map<Coordinates, Seat> seatByCoordinates;
+  late Map<Coordinates, Seat?> seatByCoordinates;
   late Map<Coordinates, int> columnByCoordinates;
 
   @override
@@ -258,20 +260,20 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
     final seats = widget.tuple.item1;
 
     maxX =
-        seats.map((s) => s.coordinates.x + s.count - 1).fold(MAX_X, math.max);
-    maxY = seats.map((s) => s.coordinates.y).fold(MAX_Y, math.max);
+        seats!.map((s) => s!.coordinates.x + s.count - 1).fold(MAX_X, math.max);
+    maxY = seats.map((s) => s!.coordinates.y).fold(MAX_Y, math.max);
 
-    seatByCoordinates = seats.map((t) => MapEntry(t.coordinates, t)).toMap();
+    seatByCoordinates = seats.map((t) => MapEntry(t!.coordinates, t)).toMap();
     columnByCoordinates = seats
         .groupBy(
-          (s) => s.coordinates.y,
+          (s) => s!.coordinates.y,
           (s) => s,
     )
         .entries
         .expand(
           (e) => e.value
-          .sortedBy<num>((e) => e.coordinates.x)
-          .mapIndexed((i, c) => MapEntry(c.coordinates, i + 1)),
+          .sortedBy<num>((e) => e!.coordinates.x)
+          .mapIndexed((i, c) => MapEntry(c!.coordinates, i + 1)),
     )
         .toMap();
   }
@@ -373,7 +375,7 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       var jj = x - 1;
       while (jj >= 0) {
         cc = Coordinates(jj, y);
-        prevCount = seatByCoordinates[cc]!.count;
+        prevCount = seatByCoordinates[cc]?.count;
         if (prevCount != null) {
           break;
         }
@@ -404,7 +406,7 @@ class _SeatsGridWidgetState extends State<SeatsGridWidget> {
       return SeatWidget(
         seat: seat,
         widthPerSeat: widthPerSeat,
-        isSelected: !widget.tuple.item2.contains(seat),
+        isSelected: !widget.tuple.item2!.contains(seat),
         onTap: () => widget.changeSeat(seat),
         column: columnByCoordinates[coordinates]!,
         onLongPress: () => widget.onLongPressed(seat),
@@ -465,5 +467,14 @@ class SeatWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension IterableExtension<T> on Iterable<T> {
+  T? firstWhereOrNull(bool Function(T element) test) {
+    for (var element in this) {
+      if (test(element)) return element;
+    }
+    return null;
   }
 }

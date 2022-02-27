@@ -18,7 +18,7 @@ abstract class MovieResponse implements Built<MovieResponse, MovieResponseBuilde
    bool? get isActive;
 
   @BuiltValueField(wireName: 'age_type')
-   String get ageType;
+   String? get ageType;
 
    BuiltList<PersonResponse>? get actors;
 
@@ -49,21 +49,22 @@ abstract class MovieResponse implements Built<MovieResponse, MovieResponseBuilde
   @BuiltValueField(wireName: 'released_date')
    DateTime? get releasedDate;
 
-   int get duration;
+   int? get duration;
 
   @BuiltValueField(wireName: 'original_language')
-   String get originalLanguage;
+   String? get originalLanguage;
 
-   DateTime get createdAt;
+   DateTime? get createdAt;
 
    DateTime? get updatedAt;
 
+   @BuiltValueField(wireName: '__v')
    int get v;
 
-   List<CategoryResponse>? get categories;
+   BuiltList<CategoryResponse>? get categories;
 
   @BuiltValueField(wireName: 'movie_response_id')
-   String get movieResponseId;
+   String? get movieResponseId;
 
   factory MovieResponse.fromRawJson(String str) =>
       MovieResponse.fromJson(json.decode(str));

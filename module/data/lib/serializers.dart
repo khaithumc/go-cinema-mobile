@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:data/remote/response/search_movie_response.dart';
 import 'package:utils/utils.dart';
 
 
@@ -28,65 +29,7 @@ import 'remote/response/user_response.dart';
 
 part 'serializers.g.dart';
 
-const builtListMovieResponse = FullType(
-  BuiltList,
-  [FullType(MovieResponse)],
-);
-
-const builtListShowTimeAndTheatreResponse = FullType(
-  BuiltList,
-  [FullType(ShowTimeAndTheatreResponse)],
-);
-
-const builtListTicketResponse = FullType(
-  BuiltList,
-  [FullType(TicketResponse)],
-);
-
-const builtListProductResponse = FullType(
-  BuiltList,
-  [FullType(ProductResponse)],
-);
-
-const builtMapStringReservationResponse = FullType(
-  BuiltMap,
-  [
-    FullType(String),
-    FullType(ReservationResponse),
-  ],
-);
-
-const builtListPromotionResponses = FullType(
-  BuiltList,
-  [FullType(PromotionResponse)],
-);
-
-const builtListNotificationResponse = FullType(
-  BuiltList,
-  [FullType(NotificationResponse)],
-);
-
-const builtListFullReservationResponse = FullType(
-  BuiltList,
-  [FullType(FullReservationResponse)],
-);
-
-const builtListTheatreResponse = FullType(
-  BuiltList,
-  [FullType(TheatreResponse)],
-);
-
-const builtListMovieAndShowTimeResponse = FullType(
-  BuiltList,
-  [FullType(MovieAndShowTimeResponse)],
-);
-
-const builtListCategoryResponse = FullType(
-  BuiltList,
-  [FullType(CategoryResponse)],
-);
-
-@SerializersFor([
+const List<Type> _registeredTypes = [
   UserLocal,
   LocationLocal,
   UserResponse,
@@ -115,54 +58,105 @@ const builtListCategoryResponse = FullType(
   FullReservationResponse,
   ProductAndQuantityResponse,
   MovieAndShowTimeResponse,
-])
-final Serializers _serializers = _$_serializers;
+  SearchMovieResponse,
+];
 
-final Serializers serializers = (_serializers.toBuilder()
-      ..addBuilderFactory(
-        builtListMovieResponse,
-        () => ListBuilder<MovieResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListShowTimeAndTheatreResponse,
-        () => ListBuilder<ShowTimeAndTheatreResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListTicketResponse,
-        () => ListBuilder<TicketResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListProductResponse,
-        () => ListBuilder<ProductResponse>(),
-      )
-      ..addBuilderFactory(
-        builtMapStringReservationResponse,
-        () => MapBuilder<String, ReservationResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListPromotionResponses,
-        () => ListBuilder<PromotionResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListNotificationResponse,
-        () => ListBuilder<NotificationResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListFullReservationResponse,
-        () => ListBuilder<FullReservationResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListTheatreResponse,
-        () => ListBuilder<TheatreResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListMovieAndShowTimeResponse,
-        () => ListBuilder<MovieAndShowTimeResponse>(),
-      )
-      ..addBuilderFactory(
-        builtListCategoryResponse,
-        () => ListBuilder<CategoryResponse>(),
-      )
-      ..add(CustomIso8601DateTimeSerializer())
-      ..addPlugin(StandardJsonPlugin()))
+/// Addition builder factories, if needed.
+final List<BuilderFactory> _factories = [];
+
+@SerializersFor(_registeredTypes)
+final Serializers serializers = (_$serializers.toBuilder()
+  ..add(CustomIso8601DateTimeSerializer())
+  ..addPlugin(StandardJsonPlugin())
+  ..addTypes())
     .build();
+
+class BuilderFactory {
+  final FullType type;
+  final dynamic Function() function;
+
+  BuilderFactory(this.type, this.function);
+}
+
+extension on SerializersBuilder {
+  void addTypes() {
+    for (final t in _registeredTypes) {
+      addBuilderFactory(
+        FullType(BuiltList, [FullType(t)]),
+            () => ListBuilder<dynamic>(),
+      );
+      addBuilderFactory(
+        FullType(BuiltList, [FullType.nullable(t)]),
+            () => ListBuilder<dynamic>(),
+      );
+      logger.d('Registered ${FullType(BuiltList, [FullType(t)])}');
+      logger.d('Registered ${FullType(BuiltList, [FullType.nullable(t)])}');
+    }
+    for (final f in _factories) {
+      addBuilderFactory(f.type, f.function);
+      logger.d('Registered ${f.type}');
+    }
+  }
+}
+
+/// Deserialize [json] to [BuiltList<T>].
+/// [json] is [List] or [Map] and is returned from [jsonDecode].
+/// Example:
+/// ```dart
+/// final json = await _authClient.getJson(uri);
+/// final BuiltList<MyModelResponse> models = deserializeBuiltList<MyModel>(json);
+/// ```
+BuiltList<T> deserializeBuiltList<T extends Object>(Object json) {
+  try {
+    final listOfDynamic = serializers.deserialize(
+      json,
+      specifiedType: FullType(BuiltList, [FullType(T)]),
+    )! as BuiltList<dynamic>;
+    return listOfDynamic.cast<T>().toBuiltList();
+  } on DeserializationError catch (e) {
+    logger.e(
+        '>>>>> Try to add specified type, eg: deserializeBuiltList<MyModel>(json) $e');
+    rethrow;
+  }
+}
+
+BuiltMap<String, T> deserializeBuiltMap<T extends Object>(Object json) {
+  try {
+    final mapOfDynamic = serializers.deserialize(
+      json,
+      specifiedType: FullType(BuiltMap, [FullType(T)])
+    )! as BuiltMap<String, dynamic>;
+
+    return mapOfDynamic as BuiltMap<String, T>;
+  } on DeserializationError catch (e) {
+    logger.e(e);
+    rethrow;
+  }
+}
+
+/*final response = serializers.deserialize(
+  data,
+  specifiedType: builtMapStringReservationResponse,
+) as BuiltMap<String, ReservationResponse>;*/
+
+/// Deserialize [json] to [BuiltList<T?>].
+/// [json] is [List] or [Map] and is returned from [jsonDecode].
+/// Example:
+/// ```dart
+/// final json = await _authClient.getJson(uri);
+/// final BuiltList<MyModelResponse?> models = deserializeBuiltListNullable<MyModelResponse>(json);
+/// ```
+BuiltList<T?> deserializeBuiltListNullable<T extends Object>(Object json) {
+  try {
+    final listOfDynamic = serializers.deserialize(
+      json,
+      specifiedType: FullType(BuiltList, [FullType.nullable(T)]),
+    )! as BuiltList<dynamic>;
+    return listOfDynamic.cast<T?>().toBuiltList();
+  } on DeserializationError catch (_) {
+    logger.e(
+        '>>>>> Try to add specified type, eg: deserializeBuiltListNullable<MyModel>(json)');
+    rethrow;
+  }
+}
+

@@ -11,12 +11,12 @@ part 'show_time_response.g.dart';
 abstract class ShowTimeResponse implements Built<ShowTimeResponse, ShowTimeResponseBuilder> {
 
    @BuiltValueField(wireName: 'is_active')
-   bool get isActive;
+   bool? get isActive;
 
    @BuiltValueField(wireName: '_id')
    String get id;
 
-   ShowTimeResponseMovieResponse get movie;
+   ShowTimeResponseMovieResponse? get movie;
 
    String get theatre;
 

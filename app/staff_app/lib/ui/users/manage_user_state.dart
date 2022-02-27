@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:meta/meta.dart';
 import '../../domain/model/user.dart';
 
@@ -6,11 +7,11 @@ abstract class ManageUserState {}
 enum DestroyUserType { REMOVE, BLOCK, UNBLOCK, CHANGE_ROLE }
 
 class LoadUserSuccess extends ManageUserState {
-  final List<User> users;
+  final BuiltList<User> users;
 
   LoadUserSuccess._({required this.users});
 
-  factory LoadUserSuccess({required List<User> users}) {
+  factory LoadUserSuccess({required BuiltList<User> users}) {
     return LoadUserSuccess._(users: users);
   }
 }

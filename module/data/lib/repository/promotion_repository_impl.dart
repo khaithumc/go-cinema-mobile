@@ -17,10 +17,7 @@ class PromotionRepositoryImpl implements PromotionRepository {
 
   @override
   Stream<BuiltList<Promotion>> getPromotions(String showTimeId) {
-    final jsonToResponses = (dynamic json) => serializers.deserialize(
-          json,
-          specifiedType: builtListPromotionResponses,
-        ) as BuiltList<PromotionResponse>;
+    final jsonToResponses = (dynamic json) => deserializeBuiltList<PromotionResponse>(json).toBuiltList();
 
     final toDomain = (BuiltList<PromotionResponse> responses) => [
           for (final response in responses)

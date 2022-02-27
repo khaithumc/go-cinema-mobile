@@ -42,7 +42,7 @@ abstract class MovieRepository {
   Stream<BuiltMap<DateTime, BuiltList<MovieAndShowTimes>>>
       getShowTimesByTheatreId(String theatreId);
 
-  Stream<BuiltList<Movie>> search({
+  /*Stream<BuiltList<Movie>> search({
     required String query,
     required DateTime showtimeStartTime,
     required DateTime showtimeEndTime,
@@ -53,7 +53,9 @@ abstract class MovieRepository {
     required AgeType ageType,
     required Location? location,
     required BuiltSet<String> selectedCategoryIds,
-  });
+  });*/
+
+  Future<BuiltList<Movie>> search(String title);
 
   Future<void> saveSearchQuery(String query);
 

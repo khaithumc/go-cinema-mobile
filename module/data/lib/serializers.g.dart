@@ -6,7 +6,7 @@ part of 'serializers.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializers _$_serializers = (new Serializers().toBuilder()
+Serializers _$serializers = (new Serializers().toBuilder()
       ..add(CategoryResponse.serializer)
       ..add(CommentResponse.serializer)
       ..add(CommentsResponse.serializer)
@@ -26,6 +26,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(ProductResponse.serializer)
       ..add(PromotionResponse.serializer)
       ..add(ReservationResponse.serializer)
+      ..add(SearchMovieResponse.serializer)
       ..add(SeatResponse.serializer)
       ..add(ShowTimeAndTheatreResponse.serializer)
       ..add(ShowTimeFullResponse.serializer)
@@ -62,6 +63,12 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           const FullType(
               BuiltList, const [const FullType(ProductIdAndQuantity)]),
           () => new ListBuilder<ProductIdAndQuantity>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())

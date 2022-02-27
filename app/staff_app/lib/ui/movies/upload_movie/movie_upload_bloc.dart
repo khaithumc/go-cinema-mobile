@@ -96,7 +96,7 @@ class MovieUploadBloc extends DisposeCallbackBaseBloc {
             releasedDate = input.releasedDate!.toUtc()..
             duration = input.duration..
             originalLanguage = input.originalLanguage..
-            createdAt = null..
+            createdAt = DateTime.now()..
             updatedAt = null..
             ageType = input.ageType..
             actors = input.actors..

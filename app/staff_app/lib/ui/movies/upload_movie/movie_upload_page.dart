@@ -445,10 +445,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
           child: TextButton(
             child: Text('ADD'),
             onPressed: () {
-              print('cliced');
               updateDataForInput();
-              print('cliced2');
-
               print('############' + movieUploadInput.toString());
               bloc.uploadMovie(movieUploadInput);
             },
@@ -602,7 +599,7 @@ class _UploadMoviePageState extends State<UploadMoviePage>
     movieUploadInput.title = controllers[_RowTextType.TITLE]!.text;
     movieUploadInput.overview = controllers[_RowTextType.OVERVIEW]!.text;
     movieUploadInput.duration =
-        int.tryParse(controllers[_RowTextType.DURATION]!.text)!;
+        int.tryParse(controllers[_RowTextType.DURATION]?.text ?? '0') ?? 0;
     movieUploadInput.originalLanguage =
         controllers[_RowTextType.ORIGIN_LANG]!.text;
   }

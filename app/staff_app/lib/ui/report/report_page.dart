@@ -166,7 +166,9 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
   }
 
   Widget buildCharts(BuiltMap<String, int> map, BuildContext context) {
-    final amount_sold = map['amount_sold'];
+    print('231312 $map');
+
+    final amountSold = map['amount_sold'];
     final amount = map['amount'];
 
     final seriesList = [
@@ -175,19 +177,19 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
         domainFn: (t, i) => t.item1,
         measureFn: (t, i) => t.item2,
         data: [
-          Tuple2('Sold', amount_sold!),
-          Tuple2('Not sold yet', amount! - amount_sold),
+          Tuple2('Sold', amountSold!),
+          Tuple2('Not sold yet', amount! - amountSold),
         ],
         colorFn: (t, i) {
           if (i == 0) {
             return charts.MaterialPalette.purple.shadeDefault;
           }
-          return charts.ColorUtil.fromDartColor(Color(0xffCE93D8));
+          return charts.ColorUtil.fromDartColor(const Color(0xffCE93D8));
         },
       ),
     ];
 
-    final tickets_sold = map['tickets_sold'];
+    final ticketsSold = map['tickets_sold'];
     final tickets = map['tickets'];
 
     final seriesList2 = [
@@ -196,30 +198,30 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
         domainFn: (t, i) => t.item1,
         measureFn: (t, i) => t.item2,
         data: [
-          Tuple2('Sold', tickets_sold!),
-          Tuple2('Not sold yet', tickets! - tickets_sold),
+          Tuple2('Sold', ticketsSold!),
+          Tuple2('Not sold yet', tickets! - ticketsSold),
         ],
         colorFn: (t, i) {
           if (i == 0) {
             return charts.MaterialPalette.red.shadeDefault;
           }
-          return charts.ColorUtil.fromDartColor(Color(0xffEF9A9A));
+          return charts.ColorUtil.fromDartColor(const Color(0xffEF9A9A));
         },
       ),
     ];
 
     return ListView(
       children: [
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.width * 1.1,
-          child: charts.PieChart(
+          child: charts.PieChart<String>(
             seriesList,
             animate: true,
             behaviors: [
               charts.DatumLegend(
                 position: charts.BehaviorPosition.bottom,
                 horizontalFirst: false,
-                cellPadding: EdgeInsets.only(right: 4.0, bottom: 4.0),
+                cellPadding: const EdgeInsets.only(right: 4.0, bottom: 4.0),
                 showMeasures: true,
                 legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
                 measureFormatter: (value) =>
@@ -229,16 +231,16 @@ class _ReportPageState extends State<ReportPage> with DisposeBagMixin {
           ),
         ),
         const Divider(),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.width * 1.1,
-          child: charts.PieChart(
+          child: charts.PieChart<String>(
             seriesList2,
             animate: true,
             behaviors: [
               charts.DatumLegend(
                 position: charts.BehaviorPosition.bottom,
                 horizontalFirst: false,
-                cellPadding: EdgeInsets.only(right: 4.0, bottom: 4.0),
+                cellPadding: const EdgeInsets.only(right: 4.0, bottom: 4.0),
                 showMeasures: true,
                 legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
                 measureFormatter: (value) =>

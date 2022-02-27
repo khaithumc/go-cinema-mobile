@@ -34,6 +34,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(PersonResponse)]),
           () => new ListBuilder<PersonResponse>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CategoryResponse)]),
+          () => new ListBuilder<CategoryResponse>())
+      ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(ProductAndQuantityResponse)]),
           () => new ListBuilder<ProductAndQuantityResponse>())

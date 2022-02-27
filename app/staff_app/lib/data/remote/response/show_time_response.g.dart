@@ -23,14 +23,8 @@ class _$ShowTimeResponseSerializer
   Iterable<Object?> serialize(Serializers serializers, ShowTimeResponse object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
-      'is_active',
-      serializers.serialize(object.isActive,
-          specifiedType: const FullType(bool)),
       '_id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
-      'movie',
-      serializers.serialize(object.movie,
-          specifiedType: const FullType(ShowTimeResponseMovieResponse)),
       'theatre',
       serializers.serialize(object.theatre,
           specifiedType: const FullType(String)),
@@ -49,7 +43,21 @@ class _$ShowTimeResponseSerializer
       serializers.serialize(object.updatedAt,
           specifiedType: const FullType(DateTime)),
     ];
-
+    Object? value;
+    value = object.isActive;
+    if (value != null) {
+      result
+        ..add('is_active')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.movie;
+    if (value != null) {
+      result
+        ..add('movie')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(ShowTimeResponseMovieResponse)));
+    }
     return result;
   }
 
@@ -67,7 +75,7 @@ class _$ShowTimeResponseSerializer
       switch (key) {
         case 'is_active':
           result.isActive = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case '_id':
           result.id = serializers.deserialize(value,
@@ -286,11 +294,11 @@ class _$ShowTimeResponseMovieResponseSerializer
 
 class _$ShowTimeResponse extends ShowTimeResponse {
   @override
-  final bool isActive;
+  final bool? isActive;
   @override
   final String id;
   @override
-  final ShowTimeResponseMovieResponse movie;
+  final ShowTimeResponseMovieResponse? movie;
   @override
   final String theatre;
   @override
@@ -309,9 +317,9 @@ class _$ShowTimeResponse extends ShowTimeResponse {
       (new ShowTimeResponseBuilder()..update(updates)).build();
 
   _$ShowTimeResponse._(
-      {required this.isActive,
+      {this.isActive,
       required this.id,
-      required this.movie,
+      this.movie,
       required this.theatre,
       required this.room,
       required this.endTime,
@@ -319,10 +327,7 @@ class _$ShowTimeResponse extends ShowTimeResponse {
       required this.createdAt,
       required this.updatedAt})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        isActive, 'ShowTimeResponse', 'isActive');
     BuiltValueNullFieldError.checkNotNull(id, 'ShowTimeResponse', 'id');
-    BuiltValueNullFieldError.checkNotNull(movie, 'ShowTimeResponse', 'movie');
     BuiltValueNullFieldError.checkNotNull(
         theatre, 'ShowTimeResponse', 'theatre');
     BuiltValueNullFieldError.checkNotNull(room, 'ShowTimeResponse', 'room');
@@ -442,7 +447,7 @@ class ShowTimeResponseBuilder
     if ($v != null) {
       _isActive = $v.isActive;
       _id = $v.id;
-      _movie = $v.movie.toBuilder();
+      _movie = $v.movie?.toBuilder();
       _theatre = $v.theatre;
       _room = $v.room;
       _endTime = $v.endTime;
@@ -471,11 +476,10 @@ class ShowTimeResponseBuilder
     try {
       _$result = _$v ??
           new _$ShowTimeResponse._(
-              isActive: BuiltValueNullFieldError.checkNotNull(
-                  isActive, 'ShowTimeResponse', 'isActive'),
+              isActive: isActive,
               id: BuiltValueNullFieldError.checkNotNull(
                   id, 'ShowTimeResponse', 'id'),
-              movie: movie.build(),
+              movie: _movie?.build(),
               theatre: BuiltValueNullFieldError.checkNotNull(
                   theatre, 'ShowTimeResponse', 'theatre'),
               room: BuiltValueNullFieldError.checkNotNull(
@@ -492,7 +496,7 @@ class ShowTimeResponseBuilder
       late String _$failedField;
       try {
         _$failedField = 'movie';
-        movie.build();
+        _movie?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'ShowTimeResponse', _$failedField, e.toString());

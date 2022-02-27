@@ -4,11 +4,14 @@ import 'package:built_collection/built_collection.dart';
 import 'package:distinct_value_connectable_stream/distinct_value_connectable_stream.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:member_app/ui/home/search/search_movie_bloc/search_movie_bloc.dart';
+import 'package:member_app/ui/home/search/search_movie_bloc/search_movie_state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 import 'package:stream_loader/stream_loader.dart';
@@ -36,233 +39,116 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with DisposeBagMixin {
-  final showtimeStartTimeS = StreamController<DateTime>();
-  final showtimeEndTimeS = StreamController<DateTime>();
-  final minReleasedDateS = StreamController<DateTime>();
-  final maxReleasedDateS = StreamController<DateTime>();
-  final minDurationS = StreamController<int>();
-  final maxDurationS = StreamController<int>();
-  final ageTypeS = StreamController<AgeType>();
 
-  late DistinctValueStream<DateTime> showtimeStartTime$;
-  late DistinctValueStream<DateTime> showtimeEndTime$;
-  late DistinctValueStream<DateTime> minReleasedDate$;
-  late DistinctValueStream<DateTime> maxReleasedDate$;
-  late DistinctValueStream<int> minDuration$;
-  late DistinctValueStream<int> maxDuration$;
-  late DistinctValueStream<AgeType> ageType$;
-
-  LoaderBloc<BuiltList<Movie>>? bloc;
-  BuiltList<Category>? cats;
-  BuiltSet<String>? selectedCatIds;
-
-  @override
-  void initState() {
-    super.initState();
-
-    [
-      showtimeStartTimeS,
-      showtimeEndTimeS,
-      minReleasedDateS,
-      maxReleasedDateS,
-      minDurationS,
-      maxDurationS,
-      ageTypeS
-    ].disposedBy(bag);
-
-    final now = DateTime.now();
-    final start = now.subtract(const Duration(days: 30));
-    final end = now.add(const Duration(days: 30));
-
-    showtimeStartTime$ = showtimeStartTimeS.stream
-        .shareValueDistinct(start, sync: true)
-          ..collect().disposedBy(bag);
-    showtimeEndTime$ = showtimeEndTimeS.stream
-        .shareValueDistinct(end, sync: true)
-          ..collect().disposedBy(bag);
-
-    minReleasedDate$ = minReleasedDateS.stream
-        .shareValueDistinct(start, sync: true)
-          ..collect().disposedBy(bag);
-    maxReleasedDate$ = maxReleasedDateS.stream
-        .shareValueDistinct(end, sync: true)
-          ..collect().disposedBy(bag);
-
-    minDuration$ = minDurationS.stream.shareValueDistinct(30, sync: true)
-      ..collect().disposedBy(bag);
-    maxDuration$ = maxDurationS.stream.shareValueDistinct(60 * 3, sync: true)
-      ..collect().disposedBy(bag);
-
-    ageType$ = ageTypeS.stream.shareValueDistinct(AgeType.P, sync: true)
-      ..collect().disposedBy(bag);
-  }
+  late SearchMovieBloc bloc;
+  late MovieRepository repository;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    repository = Provider.of<MovieRepository>(context);
+    bloc = SearchMovieBloc(repository);
 
-    bloc ??= () {
-      final movieRepo = Provider.of<MovieRepository>(context);
-      final cityRepo = Provider.of<CityRepository>(context);
-
-      final loaderFunction = () => Rx.defer(
-            () {
-              final selectedCatIds = this.selectedCatIds!;
-
-              print('>>>> FETCH ${ageType$.value}');
-              print('>>>> FETCH ${minDuration$.value}');
-              print('>>>> FETCH ${maxDuration$.value}');
-              print('>>>> FETCH ${showtimeStartTime$.value}');
-              print('>>>> FETCH ${showtimeEndTime$.value}');
-              print('>>>> FETCH ${minReleasedDate$.value}');
-              print('>>>> FETCH ${maxReleasedDate$.value}');
-              print('>>>> FETCH ${selectedCatIds.length}');
-
-              return movieRepo.search(
-                query: widget.query,
-                showtimeStartTime: showtimeStartTime$.value,
-                showtimeEndTime: showtimeEndTime$.value,
-                minReleasedDate: minReleasedDate$.value,
-                maxReleasedDate: maxReleasedDate$.value,
-                minDuration: minDuration$.value,
-                maxDuration: maxDuration$.value,
-                ageType: ageType$.value,
-                location: cityRepo.selectedCity$.value.location,
-                selectedCategoryIds: selectedCatIds,
-              );
-            },
-          );
-
-      final _bloc = LoaderBloc<BuiltList<Movie>>(
-        loaderFunction: loaderFunction,
-        refresherFunction: loaderFunction,
-        initialContent: const <Movie>[].build(),
-        logger: print,
-      );
-
-      movieRepo.getCategories().listen((event) {
-        cats = event;
-        selectedCatIds = event.map((c) => c.id).toBuiltSet();
-        _bloc.fetch();
-      }).disposedBy(bag);
-
-      return _bloc;
-    }();
+    bloc.searchMovie(widget.query);
   }
 
   @override
   Widget build(BuildContext context) {
-    final movieRepo = Provider.of<MovieRepository>(context);
-    final bloc = this.bloc!;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.query),
-        actions: [
-          RxStreamBuilder<LoaderState<BuiltList<Movie>>>(
-            stream: bloc.state$,
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const SizedBox();
-              }
-
-              return IconButton(
-                icon: Icon(Icons.filter_alt_outlined),
-                onPressed: () => showFilterSheet(movieRepo),
-              );
-            },
-          ),
-        ],
       ),
-      body: RxStreamBuilder<LoaderState<BuiltList<Movie>>>(
-        stream: bloc.state$,
+      body: BlocBuilder(
+        bloc: bloc,
         builder: (context, state) {
-          if (state.isLoading) {
-            return Center(
-              child: SizedBox(
-                width: 56,
-                height: 56,
-                child: LoadingIndicator(
-                  color: Theme.of(context).accentColor,
-                  indicatorType: Indicator.ballScaleMultiple,
-                ),
-              ),
-            );
-          }
-
-          if (state.error != null) {
+          if (state is SearchMovieStateError) {
             return Center(
               child: MyErrorWidget(
                 errorText: S
                     .of(context)
-                    .error_with_message(getErrorMessage(state.error!)),
-                onPressed: bloc.fetch,
+                    .error_with_message(getErrorMessage(state.exception!)),
+                onPressed: () => bloc.searchMovie(widget.query),
               ),
             );
           }
 
-          final items = state.content!;
+          if(state is SearchMovieStateSuccess) {
+            final items = state.data;
 
-          if (items.isEmpty) {
-            return Center(
-              child: EmptyWidget(
-                message: S.of(context).emptySearchResult,
-              ),
-            );
-          }
+            if (items.isEmpty) {
+              return Center(
+                child: EmptyWidget(
+                  message: S.of(context).emptySearchResult,
+                ),
+              );
+            }
 
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                // margin: const EdgeInsets.only(bottom: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 2,
-                    ),
-                  ],
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  // margin: const EdgeInsets.only(bottom: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                  height: 48,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Text(
+                        S.of(context).count_movie(items.length),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(
+                          fontSize: 16,
+                          color: const Color(0xff687189),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                height: 48,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 16),
-                    Text(
-                      S.of(context).count_movie(items.length),
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
-                            fontSize: 16,
-                            color: const Color(0xff687189),
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 4),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: state.isLoading
-                      ? () => SynchronousFuture(null)
-                      : bloc.refresh,
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) => ViewAllListItem(
-                      item: items[index],
+                const SizedBox(height: 4),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: state is LoadingSearchState
+                        ? () => SynchronousFuture(null)
+                        : () async {
+                       bloc.searchMovie(widget.query);
+                      },
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) => ViewAllListItem(
+                        item: items[index],
+                      ),
                     ),
                   ),
                 ),
+              ],
+            );
+          }
+          return Center(
+            child: SizedBox(
+              width: 56,
+              height: 56,
+              child: LoadingIndicator(
+                color: Theme.of(context).accentColor,
+                indicatorType: Indicator.ballScaleMultiple,
               ),
-            ],
+            ),
           );
         },
       ),
     );
   }
 
-  void showFilterSheet(MovieRepository movieRepo) async {
+  /*void showFilterSheet(MovieRepository movieRepo) async {
     if (cats == null) {
       await movieRepo.getCategories().forEach((event) => cats = event);
       selectedCatIds = cats!.map((c) => c.id).toBuiltSet();
@@ -296,10 +182,10 @@ class _SearchPageState extends State<SearchPage> with DisposeBagMixin {
 
       bloc!.fetch();
     }
-  }
+  }*/
 }
 
-class _FilterBottomSheet extends StatefulWidget {
+/*class _FilterBottomSheet extends StatefulWidget {
   final _SearchPageState searchPageState;
   final ScrollController scrollController;
 
@@ -307,8 +193,9 @@ class _FilterBottomSheet extends StatefulWidget {
 
   @override
   __FilterBottomSheetState createState() => __FilterBottomSheetState();
-}
+}*/
 
+/*
 class __FilterBottomSheetState extends State<_FilterBottomSheet> {
   late AgeType ageType;
   late int minDuration;
@@ -662,3 +549,4 @@ class __FilterBottomSheetState extends State<_FilterBottomSheet> {
     );
   }
 }
+*/

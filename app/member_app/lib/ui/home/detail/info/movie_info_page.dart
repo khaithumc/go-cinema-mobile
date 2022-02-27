@@ -286,7 +286,7 @@ class _MovieInfoPageState extends State<MovieInfoPage>
                   ),
                 ),
               ),
-              RelatedMovies(bloc: relatedBloc!),
+              //RelatedMovies(bloc: relatedBloc!),
             ],
           );
         },

@@ -8,6 +8,7 @@ import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:khaithu/domain/model/age_type.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
@@ -1054,7 +1055,7 @@ class BottomWidget extends StatelessWidget {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          AgeTypeWidget(ageType: movie.ageType),
+                          AgeTypeWidget(ageType: movie.ageType ?? AgeType.P),
                           const SizedBox(width: 8),
                           Text('${movie.duration} minutes'),
                         ],

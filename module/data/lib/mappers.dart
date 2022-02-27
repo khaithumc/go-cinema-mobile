@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:collection/collection.dart';
+import 'package:data/remote/response/search_movie_response.dart';
 import 'package:domain/model/card.dart';
 import 'package:domain/model/category.dart';
 import 'package:domain/model/comment.dart';
@@ -605,4 +606,38 @@ BuiltMap<DateTime, BuiltList<MovieAndShowTimes>>
       .groupListsBy((v) => startOfDay(v.show_time.start_time))
       .map(toMovieAndShowTimes)
       .build();
+}
+
+Movie searchMovieResponseToDomain(SearchMovieResponse r) {
+  return Movie((b) => b..
+  id = r.id..
+  isActive = r.isActive..
+  title = r.title..
+  trailerVideoUrl = r.trailerVideoUrl..
+  posterUrl = r.posterUrl..
+  overview = r.overview..
+  releasedDate = r.releasedDate..
+  duration = r.duration..
+  originalLanguage = r.originalLanguage..
+  createdAt = r.createdAt..
+  updatedAt = r.updatedAt..
+  ageType = r.ageType.ageType()..
+  actors = null..
+  directors = null..
+  categories = null..
+  rateStar = r.rateStar..
+  totalFavorite = r.totalFavorite..
+  totalRate = r.totalRate,
+  );
+}
+
+extension AgeTypeExtension on String {
+  AgeType ageType() =>
+      this == 'P'
+          ? AgeType.P
+          : this == 'C13'
+          ? AgeType.C13
+          : this == 'C16'
+          ? AgeType.C16
+          : AgeType.C18;
 }

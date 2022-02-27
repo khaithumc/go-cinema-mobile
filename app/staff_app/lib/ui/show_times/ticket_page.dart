@@ -6,6 +6,7 @@ import 'package:flutter_bloc_pattern/flutter_bloc_pattern.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:khaithu/domain/model/age_type.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:stream_loader/stream_loader.dart';
 
@@ -600,7 +601,7 @@ class BottomWidget extends StatelessWidget {
 
   final ShowTime showTime;
   final Theatre theatre;
-  final Movie movie;
+  final Movie? movie;
   final BuiltMap<String, Ticket> tickets;
 
   BottomWidget({
@@ -634,7 +635,7 @@ class BottomWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              movie.title ?? '',
+              movie?.title ?? '',
               style: textTheme.headline4!.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
@@ -644,9 +645,9 @@ class BottomWidget extends StatelessWidget {
             const SizedBox(height: 6),
             Row(
               children: [
-                AgeTypeWidget(ageType: movie.ageType),
+                AgeTypeWidget(ageType: movie?.ageType ?? AgeType.P),
                 const SizedBox(width: 8),
-                Text('${movie.duration} minutes'),
+                Text('${movie?.duration} minutes'),
               ],
             ),
             const SizedBox(height: 8),

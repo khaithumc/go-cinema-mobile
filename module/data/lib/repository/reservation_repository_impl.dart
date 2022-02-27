@@ -109,10 +109,7 @@ class ReservationRepositoryImpl implements ReservationRepository {
           socket.emit('join', roomId);
 
           socket.on('reserved', (data) {
-            final response = serializers.deserialize(
-              data,
-              specifiedType: builtMapStringReservationResponse,
-            ) as BuiltMap<String, ReservationResponse>;
+            final response = deserializeBuiltMap<ReservationResponse>(data);
             final map = response.map(
                 (k, v) => MapEntry(k, _reservationResponseToReservation(v)));
 
@@ -166,10 +163,7 @@ class ReservationRepositoryImpl implements ReservationRepository {
     required int perPage,
   }) {
     final mapResult = (dynamic json) {
-      final responses = serializers.deserialize(
-        json,
-        specifiedType: builtListFullReservationResponse,
-      ) as BuiltList<FullReservationResponse>;
+      final responses = deserializeBuiltList<FullReservationResponse>(json);
 
       return [
         for (final r in responses) _fullReservationResponseToReservation(r)

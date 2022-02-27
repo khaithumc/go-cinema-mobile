@@ -162,11 +162,11 @@ User userResponseToUserDomain(UserResponse response) {
     avatar = response.avatar..
     address = response.address..
     birthday = response.birthday ?? DateTime.now()..
-    location = (b.location..replace(locationResponseToLocation(response.location!)))..
+    location = response.location != null ? (b.location..replace(locationResponseToLocation(response.location!))) : null..
     isCompleted = response.is_completed..
     isActive = response.is_active ?? true..
     role = response.role.parseToRole()..
-    theatre = (b.theatre..replace(theatreResponseToTheatre(response.theatre!)))
+    theatre = response.theatre != null ? (b.theatre..replace(theatreResponseToTheatre(response.theatre!))) : null
   );
 }
 
@@ -183,7 +183,7 @@ Movie movieRemoteToDomain(MovieResponse response) {
     originalLanguage = response.originalLanguage..
     createdAt = response.createdAt..
     updatedAt = response.updatedAt..
-    ageType = response.ageType.ageType()..
+    ageType = response.ageType?.ageType() ?? AgeType.P..
     actors = response.actors!.map((e) => personResponseToPerson(e)).toList()..
     directors =
     response.directors!.map((e) => personResponseToPerson(e)).toList()..
@@ -202,10 +202,10 @@ MovieRequest movieDomainToRemote(Movie movie) {
     posterUrl: movie.posterUrl,
     overview: movie.overview,
     releasedDate: movie.releasedDate!.toIso8601String(),
-    duration: movie.duration,
+    duration: movie.duration ?? 0,
     directorIds: movie.directors!.map((e) => e.id).toList(),
     actorIds: movie.actors!.map((e) => e.id).toList(),
-    originalLanguage: movie.originalLanguage,
+    originalLanguage: movie.originalLanguage!,
     ageType: movie.ageType.toString().split('.')[1],
     categoryIds: movie.categories!.map((e) => e.id).toList(),
   );
@@ -293,26 +293,26 @@ ShowTime showTimeResponseToShowTime(ShowTimeResponse r) {
     isActive = r.isActive ?? true..
     id = r.id..
     movie = (b.movie..replace(Movie((a) => a..
-  id = m.id..
-  isActive = m.isActive ?? true..
-  title = m.title..
-  trailerVideoUrl = m.trailerVideoUrl..
-  posterUrl = m.posterUrl..
-  overview = m.overview..
-  releasedDate = m.releasedDate..
-  duration = m.duration..
-  originalLanguage = m.originalLanguage..
-  createdAt = m.createdAt..
-  updatedAt = m.updatedAt..
-  ageType = m.ageType.ageType()..
+  id = m?.id..
+  isActive = m?.isActive ?? true..
+  title = m?.title..
+  trailerVideoUrl = m?.trailerVideoUrl..
+  posterUrl = m?.posterUrl..
+  overview = m?.overview..
+  releasedDate = m?.releasedDate..
+  duration = m?.duration..
+  originalLanguage = m?.originalLanguage..
+  createdAt = m?.createdAt..
+  updatedAt = m?.updatedAt..
+  ageType = m?.ageType.ageType()..
   actors = null..
   directors = null..
   categories = null..
-  rateStar = m.rateStar..
-  totalFavorite = m.totalFavorite..
-  totalRate = m.totalRate,
+  rateStar = m?.rateStar..
+  totalFavorite = m?.totalFavorite..
+  totalRate = m?.totalRate,
   ),))..
-    movieId = m.id..
+    movieId = m?.id..
     theatreId = r.theatre..
     room = r.room..
     endTime = r.endTime..

@@ -23,10 +23,7 @@ class TicketRepositoryImpl implements TicketRepository {
     final json =
         await _authClient.getJson(buildUrl('/seats/tickets/show-times/$id'));
 
-    final tickets = serializers.deserialize(
-      json,
-      specifiedType: builtListTicketResponse,
-    ) as BuiltList<TicketResponse>;
+    final tickets = deserializeBuiltList<TicketResponse>(json);
 
     yield tickets.map(_ticketResponseToTicket).toBuiltList();
   }

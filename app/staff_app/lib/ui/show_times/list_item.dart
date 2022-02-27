@@ -34,7 +34,7 @@ class ShowTimeItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: OctoImage(
-                image: NetworkImage(item!.movie.posterUrl ?? ''),
+                image: NetworkImage(item!.movie?.posterUrl ?? ''),
                 width: 128,
                 height: 86,
                 fit: BoxFit.cover,
@@ -60,10 +60,10 @@ class ShowTimeItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(item?.movie.title ?? ''),
+                  Text(item?.movie?.title ?? ''),
                   const SizedBox(height: 4),
                   Text(
-                    '${item?.movie.duration} mins',
+                    '${item?.movie?.duration} mins',
                     style: textTheme.caption!.copyWith(fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:khaithu/data/serializers.dart';
 import 'package:logger/logger.dart';
 
 import '../../domain/model/exception.dart';
@@ -18,17 +20,12 @@ class ManagerRepositoryImpl implements ManagerRepository {
   ManagerRepositoryImpl(this._authClient);
 
   @override
-  Future<List<User>> loadUser(int page) async {
+  Future<BuiltList<User>> loadUser(int page) async {
     try {
-      final usersRes = await _authClient.getBody(
+      return await _authClient.getBody(
           buildUrl('admin_users/', {'page': '$page', 'per_page': '10'}))
-      as List;
+          .then((json) => deserializeBuiltList<UserResponse>(json).map(userResponseToUserDomain).toBuiltList());
 
-      //logger.d(usersRes);
-
-      return usersRes
-          .map((json) => userResponseToUserDomain(UserResponse.fromJson(json)))
-          .toList();
     } on ErrorResponse catch (e) {
       if (e.statusCode == HttpStatus.notFound) {
         logger.e(e.error);

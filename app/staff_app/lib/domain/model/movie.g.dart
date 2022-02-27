@@ -8,7 +8,7 @@ part of 'movie.dart';
 
 class _$Movie extends Movie {
   @override
-  final String id;
+  final String? id;
   @override
   final bool? isActive;
   @override
@@ -22,15 +22,15 @@ class _$Movie extends Movie {
   @override
   final DateTime? releasedDate;
   @override
-  final int duration;
+  final int? duration;
   @override
-  final String originalLanguage;
+  final String? originalLanguage;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
   @override
-  final AgeType ageType;
+  final AgeType? ageType;
   @override
   final List<Person>? actors;
   @override
@@ -48,32 +48,25 @@ class _$Movie extends Movie {
       (new MovieBuilder()..update(updates)).build();
 
   _$Movie._(
-      {required this.id,
+      {this.id,
       this.isActive,
       this.title,
       this.trailerVideoUrl,
       this.posterUrl,
       this.overview,
       this.releasedDate,
-      required this.duration,
-      required this.originalLanguage,
-      required this.createdAt,
+      this.duration,
+      this.originalLanguage,
+      this.createdAt,
       this.updatedAt,
-      required this.ageType,
+      this.ageType,
       this.actors,
       this.directors,
       this.categories,
       this.rateStar,
       this.totalFavorite,
       this.totalRate})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, 'Movie', 'id');
-    BuiltValueNullFieldError.checkNotNull(duration, 'Movie', 'duration');
-    BuiltValueNullFieldError.checkNotNull(
-        originalLanguage, 'Movie', 'originalLanguage');
-    BuiltValueNullFieldError.checkNotNull(createdAt, 'Movie', 'createdAt');
-    BuiltValueNullFieldError.checkNotNull(ageType, 'Movie', 'ageType');
-  }
+      : super._();
 
   @override
   Movie rebuild(void Function(MovieBuilder) updates) =>
@@ -298,22 +291,18 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
   _$Movie build() {
     final _$result = _$v ??
         new _$Movie._(
-            id: BuiltValueNullFieldError.checkNotNull(id, 'Movie', 'id'),
+            id: id,
             isActive: isActive,
             title: title,
             trailerVideoUrl: trailerVideoUrl,
             posterUrl: posterUrl,
             overview: overview,
             releasedDate: releasedDate,
-            duration: BuiltValueNullFieldError.checkNotNull(
-                duration, 'Movie', 'duration'),
-            originalLanguage: BuiltValueNullFieldError.checkNotNull(
-                originalLanguage, 'Movie', 'originalLanguage'),
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-                createdAt, 'Movie', 'createdAt'),
+            duration: duration,
+            originalLanguage: originalLanguage,
+            createdAt: createdAt,
             updatedAt: updatedAt,
-            ageType: BuiltValueNullFieldError.checkNotNull(
-                ageType, 'Movie', 'ageType'),
+            ageType: ageType,
             actors: actors,
             directors: directors,
             categories: categories,

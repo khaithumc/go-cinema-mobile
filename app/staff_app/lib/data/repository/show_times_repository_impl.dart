@@ -66,7 +66,7 @@ class ShowTimesRepositoryImpl implements ShowTimesRepository {
       },
     );
 
-    print(res);
+    print('hádbahds $res');
   }
 
   @override

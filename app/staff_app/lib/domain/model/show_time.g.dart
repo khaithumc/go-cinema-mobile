@@ -8,13 +8,13 @@ part of 'show_time.dart';
 
 class _$ShowTime extends ShowTime {
   @override
-  final bool isActive;
+  final bool? isActive;
   @override
   final String id;
   @override
-  final Movie movie;
+  final Movie? movie;
   @override
-  final String movieId;
+  final String? movieId;
   @override
   final String theatreId;
   @override
@@ -34,10 +34,10 @@ class _$ShowTime extends ShowTime {
       (new ShowTimeBuilder()..update(updates)).build();
 
   _$ShowTime._(
-      {required this.isActive,
+      {this.isActive,
       required this.id,
-      required this.movie,
-      required this.movieId,
+      this.movie,
+      this.movieId,
       required this.theatreId,
       required this.room,
       required this.startTime,
@@ -46,10 +46,7 @@ class _$ShowTime extends ShowTime {
       required this.updatedAt,
       this.theatre})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(isActive, 'ShowTime', 'isActive');
     BuiltValueNullFieldError.checkNotNull(id, 'ShowTime', 'id');
-    BuiltValueNullFieldError.checkNotNull(movie, 'ShowTime', 'movie');
-    BuiltValueNullFieldError.checkNotNull(movieId, 'ShowTime', 'movieId');
     BuiltValueNullFieldError.checkNotNull(theatreId, 'ShowTime', 'theatreId');
     BuiltValueNullFieldError.checkNotNull(room, 'ShowTime', 'room');
     BuiltValueNullFieldError.checkNotNull(startTime, 'ShowTime', 'startTime');
@@ -161,7 +158,7 @@ class ShowTimeBuilder implements Builder<ShowTime, ShowTimeBuilder> {
     if ($v != null) {
       _isActive = $v.isActive;
       _id = $v.id;
-      _movie = $v.movie.toBuilder();
+      _movie = $v.movie?.toBuilder();
       _movieId = $v.movieId;
       _theatreId = $v.theatreId;
       _room = $v.room;
@@ -192,12 +189,10 @@ class ShowTimeBuilder implements Builder<ShowTime, ShowTimeBuilder> {
     try {
       _$result = _$v ??
           new _$ShowTime._(
-              isActive: BuiltValueNullFieldError.checkNotNull(
-                  isActive, 'ShowTime', 'isActive'),
+              isActive: isActive,
               id: BuiltValueNullFieldError.checkNotNull(id, 'ShowTime', 'id'),
-              movie: movie.build(),
-              movieId: BuiltValueNullFieldError.checkNotNull(
-                  movieId, 'ShowTime', 'movieId'),
+              movie: _movie?.build(),
+              movieId: movieId,
               theatreId: BuiltValueNullFieldError.checkNotNull(
                   theatreId, 'ShowTime', 'theatreId'),
               room: BuiltValueNullFieldError.checkNotNull(
@@ -215,7 +210,7 @@ class ShowTimeBuilder implements Builder<ShowTime, ShowTimeBuilder> {
       late String _$failedField;
       try {
         _$failedField = 'movie';
-        movie.build();
+        _movie?.build();
 
         _$failedField = 'theatre';
         _theatre?.build();

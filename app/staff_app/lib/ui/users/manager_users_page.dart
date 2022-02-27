@@ -90,12 +90,12 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
           _buildListUsers(_bloc),
         ],
       ),
-      floatingActionButton: _isOpeningSlide == true
+      /*floatingActionButton: _isOpeningSlide == true
           ? null
-          : FloatingActionButton(
+          : const FloatingActionButton(
         onPressed: null,
         child: Icon(Icons.add),
-      ),
+      ),*/
     );
   }
 
@@ -106,6 +106,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
     return StreamBuilder<ManageUserState>(
         stream: bloc.renderListStream$,
         builder: (context, snapShort) {
+          print('123123123 $snapShort');
           _listenStateChange(context, snapShort);
           return Expanded(
             child: ListView.builder(
@@ -262,7 +263,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
   void _listenStateChange(
       BuildContext context, AsyncSnapshot<ManageUserState> snapshot) {
     final state = snapshot.data;
-    print('#####13123123 $state');
+    print('##### $state');
     if (state is LoadUserSuccess) {
       print('tywfeyqtwd ${state.users}');
       _listUsers.addAll(

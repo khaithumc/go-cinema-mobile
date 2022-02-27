@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_disposebag/flutter_disposebag.dart';
 import 'package:intl/intl.dart';
+import 'package:khaithu/domain/model/age_type.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/model/movie.dart';
@@ -84,7 +85,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> with DisposeBagMixin {
                         const SizedBox(width: 8),
                         Text('${movie.duration} minutes'),
                         const SizedBox(width: 8),
-                        AgeTypeWidget(ageType: movie.ageType),
+                        AgeTypeWidget(ageType: movie.ageType ?? AgeType.P),
                         const SizedBox(width: 8),
                         Text(releaseDateFormat.format(movie.releasedDate!)),
                       ],

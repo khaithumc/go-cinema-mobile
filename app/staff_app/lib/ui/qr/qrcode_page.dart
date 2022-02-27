@@ -83,7 +83,7 @@ class _QRCodePageState extends State<QRCodePage> with DisposeBagMixin {
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }
