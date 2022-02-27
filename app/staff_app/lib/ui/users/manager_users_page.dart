@@ -191,7 +191,7 @@ class _ManagerUsersPageState extends State<ManagerUsersPage>
                     Tuple3(
                       user,
                       DestroyUserType.CHANGE_ROLE,
-                      theatre!.id,
+                      theatre?.id ?? '',
                     ),
                   );
                 },

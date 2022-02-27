@@ -24,6 +24,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(ShowTimeFullResponse.serializer)
       ..add(ShowTimeResponse.serializer)
       ..add(ShowTimeResponseMovieResponse.serializer)
+      ..add(TheatreResponse.serializer)
       ..add(TicketResponse.serializer)
       ..add(UserLocal.serializer)
       ..add(UserResponse.serializer)
@@ -43,6 +44,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TicketResponse)]),
           () => new ListBuilder<TicketResponse>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())

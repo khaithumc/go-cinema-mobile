@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 
@@ -8,13 +9,13 @@ part 'theatre.g.dart';
 abstract class Theatre implements Built<Theatre, TheatreBuilder> {
    Location get location;
    bool get isActive;
-   List<String> get rooms;
+   BuiltList<String> get rooms;
    String get id;
    String get name;
    String get address;
    String get phoneNumber;
    String get description;
-   String get email;
+   String? get email;
    String get openingHours;
    String get roomSummary;
    DateTime get createdAt;

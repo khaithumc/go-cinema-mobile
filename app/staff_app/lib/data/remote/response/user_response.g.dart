@@ -31,6 +31,13 @@ class _$LocationResponseSerializer
             specifiedType:
                 const FullType(BuiltList, const [const FullType(double)])));
     }
+    value = object.type;
+    if (value != null) {
+      result
+        ..add('type')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -52,6 +59,10 @@ class _$LocationResponseSerializer
                       BuiltList, const [const FullType(double)]))!
               as BuiltList<Object?>);
           break;
+        case 'type':
+          result.type = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
       }
     }
 
@@ -69,6 +80,8 @@ class _$UserResponseSerializer implements StructuredSerializer<UserResponse> {
   Iterable<Object?> serialize(Serializers serializers, UserResponse object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
+      '_id',
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'uid',
       serializers.serialize(object.uid, specifiedType: const FullType(String)),
       'email',
@@ -139,6 +152,10 @@ class _$UserResponseSerializer implements StructuredSerializer<UserResponse> {
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
+        case '_id':
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'uid':
           result.uid = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -189,9 +206,9 @@ class _$UserResponseSerializer implements StructuredSerializer<UserResponse> {
               specifiedType: const FullType(String)) as String;
           break;
         case 'theatre':
-          result.theatre = serializers.deserialize(value,
-                  specifiedType: const FullType(TheatreResponse))
-              as TheatreResponse?;
+          result.theatre.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(TheatreResponse))!
+              as TheatreResponse);
           break;
       }
     }
@@ -203,12 +220,14 @@ class _$UserResponseSerializer implements StructuredSerializer<UserResponse> {
 class _$LocationResponse extends LocationResponse {
   @override
   final BuiltList<double>? coordinates;
+  @override
+  final String? type;
 
   factory _$LocationResponse(
           [void Function(LocationResponseBuilder)? updates]) =>
       (new LocationResponseBuilder()..update(updates)).build();
 
-  _$LocationResponse._({this.coordinates}) : super._();
+  _$LocationResponse._({this.coordinates, this.type}) : super._();
 
   @override
   LocationResponse rebuild(void Function(LocationResponseBuilder) updates) =>
@@ -221,18 +240,21 @@ class _$LocationResponse extends LocationResponse {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is LocationResponse && coordinates == other.coordinates;
+    return other is LocationResponse &&
+        coordinates == other.coordinates &&
+        type == other.type;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, coordinates.hashCode));
+    return $jf($jc($jc(0, coordinates.hashCode), type.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('LocationResponse')
-          ..add('coordinates', coordinates))
+          ..add('coordinates', coordinates)
+          ..add('type', type))
         .toString();
   }
 }
@@ -247,12 +269,17 @@ class LocationResponseBuilder
   set coordinates(ListBuilder<double>? coordinates) =>
       _$this._coordinates = coordinates;
 
+  String? _type;
+  String? get type => _$this._type;
+  set type(String? type) => _$this._type = type;
+
   LocationResponseBuilder();
 
   LocationResponseBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _coordinates = $v.coordinates?.toBuilder();
+      _type = $v.type;
       _$v = null;
     }
     return this;
@@ -273,8 +300,9 @@ class LocationResponseBuilder
   _$LocationResponse build() {
     _$LocationResponse _$result;
     try {
-      _$result =
-          _$v ?? new _$LocationResponse._(coordinates: _coordinates?.build());
+      _$result = _$v ??
+          new _$LocationResponse._(
+              coordinates: _coordinates?.build(), type: type);
     } catch (_) {
       late String _$failedField;
       try {
@@ -292,6 +320,8 @@ class LocationResponseBuilder
 }
 
 class _$UserResponse extends UserResponse {
+  @override
+  final String id;
   @override
   final String uid;
   @override
@@ -323,7 +353,8 @@ class _$UserResponse extends UserResponse {
       (new UserResponseBuilder()..update(updates)).build();
 
   _$UserResponse._(
-      {required this.uid,
+      {required this.id,
+      required this.uid,
       required this.email,
       required this.phone_number,
       required this.full_name,
@@ -337,6 +368,7 @@ class _$UserResponse extends UserResponse {
       required this.role,
       this.theatre})
       : super._() {
+    BuiltValueNullFieldError.checkNotNull(id, 'UserResponse', 'id');
     BuiltValueNullFieldError.checkNotNull(uid, 'UserResponse', 'uid');
     BuiltValueNullFieldError.checkNotNull(email, 'UserResponse', 'email');
     BuiltValueNullFieldError.checkNotNull(
@@ -363,6 +395,7 @@ class _$UserResponse extends UserResponse {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is UserResponse &&
+        id == other.id &&
         uid == other.uid &&
         email == other.email &&
         phone_number == other.phone_number &&
@@ -391,7 +424,9 @@ class _$UserResponse extends UserResponse {
                                     $jc(
                                         $jc(
                                             $jc(
-                                                $jc($jc(0, uid.hashCode),
+                                                $jc(
+                                                    $jc($jc(0, id.hashCode),
+                                                        uid.hashCode),
                                                     email.hashCode),
                                                 phone_number.hashCode),
                                             full_name.hashCode),
@@ -409,6 +444,7 @@ class _$UserResponse extends UserResponse {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('UserResponse')
+          ..add('id', id)
           ..add('uid', uid)
           ..add('email', email)
           ..add('phone_number', phone_number)
@@ -429,6 +465,10 @@ class _$UserResponse extends UserResponse {
 class UserResponseBuilder
     implements Builder<UserResponse, UserResponseBuilder> {
   _$UserResponse? _$v;
+
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
   String? _uid;
   String? get uid => _$this._uid;
@@ -480,15 +520,17 @@ class UserResponseBuilder
   String? get role => _$this._role;
   set role(String? role) => _$this._role = role;
 
-  TheatreResponse? _theatre;
-  TheatreResponse? get theatre => _$this._theatre;
-  set theatre(TheatreResponse? theatre) => _$this._theatre = theatre;
+  TheatreResponseBuilder? _theatre;
+  TheatreResponseBuilder get theatre =>
+      _$this._theatre ??= new TheatreResponseBuilder();
+  set theatre(TheatreResponseBuilder? theatre) => _$this._theatre = theatre;
 
   UserResponseBuilder();
 
   UserResponseBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _id = $v.id;
       _uid = $v.uid;
       _email = $v.email;
       _phone_number = $v.phone_number;
@@ -501,7 +543,7 @@ class UserResponseBuilder
       _is_completed = $v.is_completed;
       _is_active = $v.is_active;
       _role = $v.role;
-      _theatre = $v.theatre;
+      _theatre = $v.theatre?.toBuilder();
       _$v = null;
     }
     return this;
@@ -524,6 +566,8 @@ class UserResponseBuilder
     try {
       _$result = _$v ??
           new _$UserResponse._(
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, 'UserResponse', 'id'),
               uid: BuiltValueNullFieldError.checkNotNull(
                   uid, 'UserResponse', 'uid'),
               email: BuiltValueNullFieldError.checkNotNull(
@@ -545,12 +589,15 @@ class UserResponseBuilder
                   is_active, 'UserResponse', 'is_active'),
               role: BuiltValueNullFieldError.checkNotNull(
                   role, 'UserResponse', 'role'),
-              theatre: theatre);
+              theatre: _theatre?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'location';
         _location?.build();
+
+        _$failedField = 'theatre';
+        _theatre?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'UserResponse', _$failedField, e.toString());

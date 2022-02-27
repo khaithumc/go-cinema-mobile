@@ -12,7 +12,7 @@ class _$Theatre extends Theatre {
   @override
   final bool isActive;
   @override
-  final List<String> rooms;
+  final BuiltList<String> rooms;
   @override
   final String id;
   @override
@@ -24,7 +24,7 @@ class _$Theatre extends Theatre {
   @override
   final String description;
   @override
-  final String email;
+  final String? email;
   @override
   final String openingHours;
   @override
@@ -50,7 +50,7 @@ class _$Theatre extends Theatre {
       required this.address,
       required this.phoneNumber,
       required this.description,
-      required this.email,
+      this.email,
       required this.openingHours,
       required this.roomSummary,
       required this.createdAt,
@@ -68,7 +68,6 @@ class _$Theatre extends Theatre {
         phoneNumber, 'Theatre', 'phoneNumber');
     BuiltValueNullFieldError.checkNotNull(
         description, 'Theatre', 'description');
-    BuiltValueNullFieldError.checkNotNull(email, 'Theatre', 'email');
     BuiltValueNullFieldError.checkNotNull(
         openingHours, 'Theatre', 'openingHours');
     BuiltValueNullFieldError.checkNotNull(
@@ -155,9 +154,9 @@ class TheatreBuilder implements Builder<Theatre, TheatreBuilder> {
   bool? get isActive => _$this._isActive;
   set isActive(bool? isActive) => _$this._isActive = isActive;
 
-  List<String>? _rooms;
-  List<String>? get rooms => _$this._rooms;
-  set rooms(List<String>? rooms) => _$this._rooms = rooms;
+  ListBuilder<String>? _rooms;
+  ListBuilder<String> get rooms => _$this._rooms ??= new ListBuilder<String>();
+  set rooms(ListBuilder<String>? rooms) => _$this._rooms = rooms;
 
   String? _id;
   String? get id => _$this._id;
@@ -214,7 +213,7 @@ class TheatreBuilder implements Builder<Theatre, TheatreBuilder> {
     if ($v != null) {
       _location = $v.location.toBuilder();
       _isActive = $v.isActive;
-      _rooms = $v.rooms;
+      _rooms = $v.rooms.toBuilder();
       _id = $v.id;
       _name = $v.name;
       _address = $v.address;
@@ -252,8 +251,7 @@ class TheatreBuilder implements Builder<Theatre, TheatreBuilder> {
               location: location.build(),
               isActive: BuiltValueNullFieldError.checkNotNull(
                   isActive, 'Theatre', 'isActive'),
-              rooms: BuiltValueNullFieldError.checkNotNull(
-                  rooms, 'Theatre', 'rooms'),
+              rooms: rooms.build(),
               id: BuiltValueNullFieldError.checkNotNull(id, 'Theatre', 'id'),
               name: BuiltValueNullFieldError.checkNotNull(
                   name, 'Theatre', 'name'),
@@ -263,8 +261,7 @@ class TheatreBuilder implements Builder<Theatre, TheatreBuilder> {
                   phoneNumber, 'Theatre', 'phoneNumber'),
               description: BuiltValueNullFieldError.checkNotNull(
                   description, 'Theatre', 'description'),
-              email: BuiltValueNullFieldError.checkNotNull(
-                  email, 'Theatre', 'email'),
+              email: email,
               openingHours: BuiltValueNullFieldError.checkNotNull(
                   openingHours, 'Theatre', 'openingHours'),
               roomSummary: BuiltValueNullFieldError.checkNotNull(
@@ -275,12 +272,16 @@ class TheatreBuilder implements Builder<Theatre, TheatreBuilder> {
                   updatedAt, 'Theatre', 'updatedAt'),
               cover: BuiltValueNullFieldError.checkNotNull(
                   cover, 'Theatre', 'cover'),
-              thumbnail: BuiltValueNullFieldError.checkNotNull(thumbnail, 'Theatre', 'thumbnail'));
+              thumbnail: BuiltValueNullFieldError.checkNotNull(
+                  thumbnail, 'Theatre', 'thumbnail'));
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'location';
         location.build();
+
+        _$failedField = 'rooms';
+        rooms.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Theatre', _$failedField, e.toString());

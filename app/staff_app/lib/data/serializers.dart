@@ -7,6 +7,7 @@ import 'package:khaithu/data/remote/response/movie_response.dart';
 import 'package:khaithu/data/remote/response/person_response.dart';
 import 'package:khaithu/data/remote/response/search_movie_response.dart';
 import 'package:khaithu/data/remote/response/show_time_response.dart';
+import 'package:khaithu/data/remote/response/theatre_response.dart';
 import 'package:khaithu/data/remote/response/user_response.dart';
 import 'package:khaithu/utils/logger.dart';
 
@@ -36,6 +37,7 @@ const List<Type> _registeredTypes = [
   CategoryResponse,
   ShowTimeFullResponse,
   SearchMovieResponse,
+  TheatreResponse,
 ];
 
 /// Addition builder factories, if needed.

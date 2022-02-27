@@ -272,7 +272,7 @@ Theatre theatreResponseToTheatre(TheatreResponse response) {
     id = response.id..
     location = (b.location..replace(locationResponseToLocation(response.location)))..
     isActive = response.isActive ?? true..
-    rooms = response.rooms..
+    rooms = (b.rooms..replace(response.rooms))..
     name = response.name..
     address = response.address..
     phoneNumber = response.phoneNumber..
@@ -392,7 +392,7 @@ Theatre res_theatreResponseToTheatre(Res_TheatreResponse r) {
   longitude = r.location.longitude ?? 0,
   )))..
     isActive = r.is_active ?? true..
-    rooms = r.rooms.asList()..
+    rooms = (b.rooms..replace(r.rooms))..
     id = r.id..
     name = r.name..
     address = r.address..

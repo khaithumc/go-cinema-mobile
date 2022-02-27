@@ -1,92 +1,73 @@
 import 'dart:convert';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+
+import '../../serializers.dart';
 import 'user_response.dart';
 
 // ignore_for_file: prefer_single_quotes
 
-class TheatreResponse {
-  TheatreResponse({
-    required this.location,
-    required this.isActive,
-    required this.rooms,
-    required this.id,
-    required this.name,
-    required this.address,
-    required this.phoneNumber,
-    required this.description,
-    required this.email,
-    required this.openingHours,
-    required this.roomSummary,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.cover,
-    required this.thumbnail,
-  });
+part 'theatre_response.g.dart';
 
-  final LocationResponse location;
-  final bool isActive;
-  final List<String> rooms;
-  final String id;
-  final String name;
-  final String address;
-  final String phoneNumber;
-  final String description;
-  final String email;
-  final String openingHours;
-  final String roomSummary;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String cover;
-  final String thumbnail;
+abstract class TheatreResponse implements Built<TheatreResponse, TheatreResponseBuilder> {
+
+  @BuiltValueField(wireName: 'location')
+   LocationResponse get location;
+
+  @BuiltValueField(wireName: 'is_active')
+   bool get isActive;
+
+  @BuiltValueField(wireName: 'rooms')
+   BuiltList<String> get rooms;
+
+  @BuiltValueField(wireName: '_id')
+   String get id;
+
+  @BuiltValueField(wireName: 'name')
+   String get name;
+
+  @BuiltValueField(wireName: 'address')
+   String get address;
+
+  @BuiltValueField(wireName: 'phone_number')
+   String get phoneNumber;
+
+  @BuiltValueField(wireName: 'description')
+   String get description;
+
+  @BuiltValueField(wireName: 'email')
+   String? get email;
+
+  @BuiltValueField(wireName: 'opening_hours')
+   String get openingHours;
+
+  @BuiltValueField(wireName: 'room_summary')
+   String get roomSummary;
+
+   DateTime get createdAt;
+
+   DateTime get updatedAt;
+
+   String get cover;
+
+   String get thumbnail;
 
   factory TheatreResponse.fromRawJson(String? str) {
     return TheatreResponse.fromJson(jsonDecode(str ?? '{}'));
   }
 
 
-  factory TheatreResponse.fromJson(Map<String, dynamic> json) =>
-      TheatreResponse(
-        location: LocationResponse.fromJson(json["location"]),
-        isActive: json["is_active"],
-        rooms: List<String>.from(json["rooms"].map((x) => x)),
-        id: json["_id"],
-        name: json["name"],
-        address: json["address"],
-        phoneNumber: json["phone_number"],
-        description: json["description"],
-        email: json["email"] ?? '',
-        openingHours: json["opening_hours"],
-        roomSummary: json["room_summary"],
-        createdAt: DateTime.parse(json["createdAt"]).toLocal(),
-        updatedAt: DateTime.parse(json["updatedAt"]).toLocal(),
-        cover: json["cover"],
-        thumbnail: json["thumbnail"],
-      );
+  TheatreResponse._();
 
-  Map<String, dynamic> toJson() {
-    return {
-      'location': {
-        'coordinates': location.longitude == null || location.latitude == null
-            ? null
-            : [
-          location.longitude,
-          location.latitude,
-        ]
-      },
-      'is_active': isActive,
-      'rooms': rooms,
-      '_id': id,
-      'name': name,
-      'address': address,
-      'phone_number': phoneNumber,
-      'description': description,
-      'email': email,
-      'opening_hours': openingHours,
-      'room_summary': roomSummary,
-      'createdAt': createdAt.toUtc().toIso8601String(),
-      'updatedAt': updatedAt.toUtc().toIso8601String(),
-      'cover': cover,
-      'thumbnail': thumbnail,
-    };
-  }
+  factory TheatreResponse([void Function(TheatreResponseBuilder) updates]) = _$TheatreResponse;
+
+  static Serializer<TheatreResponse> get serializer => _$theatreResponseSerializer;
+
+  factory TheatreResponse.fromJson(Map<String, dynamic> json) =>
+      serializers.deserializeWith<TheatreResponse>(serializer, json)!;
+
+  Map<String, Object?> toJson() =>
+      serializers.serializeWith(serializer, this)! as Map<String, Object?>;
 }

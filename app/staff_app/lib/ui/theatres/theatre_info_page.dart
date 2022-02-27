@@ -144,7 +144,7 @@ class TheatreInfoPage extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            theatre.email,
+                            theatre.email ?? '_',
                             style: textStyle,
                           ),
                         ),

@@ -13,6 +13,8 @@ abstract class LocationResponse implements Built<LocationResponse, LocationRespo
    @BuiltValueField(wireName: 'coordinates')
   BuiltList<double>? get coordinates;
 
+   String? get type;
+
   double? get longitude => coordinates.isNullOrEmpty ? null : coordinates![0];
 
   double? get latitude => coordinates.isNullOrEmpty ? null : coordinates![1];
@@ -35,6 +37,12 @@ abstract class LocationResponse implements Built<LocationResponse, LocationRespo
 
 
 abstract class UserResponse implements Built<UserResponse, UserResponseBuilder> {
+
+  @BuiltValueField(wireName: '_id')
+  String get id;
+
+
+
   @BuiltValueField(wireName: 'uid')
   String get uid;
 
